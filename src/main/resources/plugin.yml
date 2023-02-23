@@ -1,0 +1,28 @@
+name: wbUtils
+version: '${project.version}'
+main: wb.plugin.wbutils.wbUtils
+api-version: 1.19
+authors: [ sst4nk0 ]
+description: A plugin with all essential utilities for this server.
+depend: [PlaceholderAPI]
+commands:
+  clearchat:
+    description: Clears the entire chat.
+    permission: wbutils.clearchat
+    usage: /<command>
+    aliases:
+      - cc
+  dealinfo:
+    description: Set the deal's stats
+    permission: wbutils.dealinfo
+    usage: /<command> <deal_id> <stat> <value>
+  dealrecount:
+    description: System command
+    permission: wbutils.dealrecount
+  dealbuy:
+    description: System command
+    permission: wbutils.dealbuy
+  dospecialaction:
+    description: System command
+  dospecialaction2:
+    description: System command
