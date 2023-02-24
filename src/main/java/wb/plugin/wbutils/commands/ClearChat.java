@@ -63,4 +63,5 @@ public class ClearChat implements CommandExecutor {
         }
         return true;
     }
+
 }
