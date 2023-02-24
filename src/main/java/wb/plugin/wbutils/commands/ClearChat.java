@@ -10,72 +10,35 @@ import org.jetbrains.annotations.NotNull;
 
 public class ClearChat implements CommandExecutor {
 
+    /**
+     * Do something.
+     * @param sender  sender
+     * @param command command
+     * @param label   label
+     * @param args    args
+     * @return some boolean
+     */
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(final @NotNull CommandSender sender, final @NotNull Command command, final @NotNull String label, final @NotNull String[] args) {
         if (sender instanceof Player player) {
-            if (player.hasPermission("wbutils.clearchat")){
+            if (player.hasPermission("wbutils.clearchat")) {
                 for (Player playersOnline : Bukkit.getOnlinePlayers()) {
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
-                    playersOnline.sendMessage(" ");
+                    for (byte i = 0; i < 25; i++) {
+                        playersOnline.sendMessage(" ");
+                    }
                     playersOnline.sendMessage(ChatColor.RED + "我 Администратор " + player.getDisplayName() + " очистил чат!");
                 }
             }
         } else {
             System.out.println("[CONSOLEADMIN] Chat has been cleared from the console.");
             for (Player playersOnline : Bukkit.getOnlinePlayers()) {
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
+                for (byte i = 0; i < 25; i++) {
+                    playersOnline.sendMessage(" ");
+                }
                 playersOnline.sendMessage(ChatColor.RED + "我" + " Технический администратор очистил чат!");
             }
         }
         return true;
     }
+
 }

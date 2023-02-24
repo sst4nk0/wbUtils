@@ -9,56 +9,80 @@ public class PlaceholderDealInfo extends PlaceholderExpansion {
 
     private final wbUtils plugin;
 
-    public PlaceholderDealInfo(wbUtils plugin) {
-        this.plugin = plugin;
+    /**
+     * Initialize a constructor.
+     * @param inputPlugin inputPlugin
+     */
+    public PlaceholderDealInfo(final wbUtils inputPlugin) {
+        this.plugin = inputPlugin;
     }
 
-    public boolean persist(){
-        return true;
-    }
+    /**
+     * Do something.
+     * @return some boolean.
+     */
+    public boolean persist() { return true; }
 
+    /**
+     * Do something.
+     * @return some string
+     */
     @Override
     public @NotNull String getIdentifier() {
         return "wbutils";
     }
 
+    /**
+     * Do something.
+     * @return some string
+     */
     @Override
     public @NotNull String getAuthor() {
         return "sst4nk0";
     }
 
+    /**
+     * Do something.
+     * @return some string
+     */
     @Override
     public @NotNull String getVersion() {
         return "1.0.0";
     }
 
+    /**
+     * Do something.
+     * @return some boolean
+     */
     @Override
-    public boolean canRegister(){
-        return true;
+    public boolean canRegister() { return true; }
+
+    /**
+     * Do something.
+     * @param player     player
+     * @param identifier identifier
+     * @return some String
+     */
+    @Override
+    public String onPlaceholderRequest(final Player player, final String identifier) {
+        if (identifier.startsWith("dealowner_")) {
+            String dealId = identifier.replace("dealowner_", "");
+            return FileDealsData.get().getString(dealId + ".owner");
+        } else if (identifier.startsWith("dealcopper_")) {
+            String dealId = identifier.replace("dealcopper_", "");
+            return FileDealsData.get().getString(dealId + ".coins_copper");
+        } else if (identifier.startsWith("dealsilver_")) {
+            String dealId = identifier.replace("dealsilver_", "");
+            return FileDealsData.get().getString(dealId + ".coins_silver");
+        } else if (identifier.startsWith("dealgold_")) {
+            String dealId = identifier.replace("dealgold_", "");
+            return FileDealsData.get().getString(dealId + ".coins_gold");
+        } else if (identifier.startsWith("dealmaterials_")) {
+            String dealId = identifier.replace("dealowner_", "");
+            return FileDealsData.get().getString(dealId + ".materials");
+        } else {
+            return null;
+        }
     }
 
-    @Override
-    public String onPlaceholderRequest(Player p, String identifier) {
-        if (identifier.startsWith("dealowner_")) {
-            String deal_id = identifier.replace("dealowner_","");
-            return FileDealsData.get().getString(deal_id+".owner");
-        }
-        if (identifier.startsWith("dealcopper_")) {
-            String deal_id = identifier.replace("dealcopper_","");
-            return FileDealsData.get().getString(deal_id+".coins_copper");
-        }
-        if (identifier.startsWith("dealsilver_")) {
-            String deal_id = identifier.replace("dealsilver_","");
-            return FileDealsData.get().getString(deal_id+".coins_silver");
-        }
-        if (identifier.startsWith("dealgold_")) {
-            String deal_id = identifier.replace("dealgold_","");
-            return FileDealsData.get().getString(deal_id+".coins_gold");
-        }
-        if (identifier.startsWith("dealmaterials_")) {
-            String deal_id = identifier.replace("dealowner_","");
-            return FileDealsData.get().getString(deal_id+".materials");
-        }
-        return null;
-    }
 }
