@@ -8,11 +8,11 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import wb.plugin.wbutils.wbUtils;
 
-public class setspawn implements CommandExecutor {
+public class SetSpawn implements CommandExecutor {
 
     private final wbUtils plugin;
 
-    public setspawn(wbUtils plugin) {
+    public SetSpawn(wbUtils plugin) {
         this.plugin = plugin;
     }
 
