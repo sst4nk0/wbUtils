@@ -5,11 +5,11 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import wb.plugin.wbutils.wbUtils;
 
-public class placeholder_dealinfo extends PlaceholderExpansion {
+public class PlaceholderDealInfo extends PlaceholderExpansion {
 
     private final wbUtils plugin;
 
-    public placeholder_dealinfo(wbUtils plugin) {
+    public PlaceholderDealInfo(wbUtils plugin) {
         this.plugin = plugin;
     }
 
@@ -41,23 +41,23 @@ public class placeholder_dealinfo extends PlaceholderExpansion {
     public String onPlaceholderRequest(Player p, String identifier) {
         if (identifier.startsWith("dealowner_")) {
             String deal_id = identifier.replace("dealowner_","");
-            return file_dealsdata.get().getString(deal_id+".owner");
+            return FileDealsData.get().getString(deal_id+".owner");
         }
         if (identifier.startsWith("dealcopper_")) {
             String deal_id = identifier.replace("dealcopper_","");
-            return file_dealsdata.get().getString(deal_id+".coins_copper");
+            return FileDealsData.get().getString(deal_id+".coins_copper");
         }
         if (identifier.startsWith("dealsilver_")) {
             String deal_id = identifier.replace("dealsilver_","");
-            return file_dealsdata.get().getString(deal_id+".coins_silver");
+            return FileDealsData.get().getString(deal_id+".coins_silver");
         }
         if (identifier.startsWith("dealgold_")) {
             String deal_id = identifier.replace("dealgold_","");
-            return file_dealsdata.get().getString(deal_id+".coins_gold");
+            return FileDealsData.get().getString(deal_id+".coins_gold");
         }
         if (identifier.startsWith("dealmaterials_")) {
             String deal_id = identifier.replace("dealowner_","");
-            return file_dealsdata.get().getString(deal_id+".materials");
+            return FileDealsData.get().getString(deal_id+".materials");
         }
         return null;
     }

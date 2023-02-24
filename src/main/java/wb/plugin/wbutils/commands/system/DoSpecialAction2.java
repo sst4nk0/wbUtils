@@ -14,10 +14,10 @@ import wb.plugin.wbutils.wbUtils;
 
 import java.util.Random;
 
-public class dospecialaction2 implements CommandExecutor {
+public class DoSpecialAction2 implements CommandExecutor {
 
     wbUtils plugin;
-    public dospecialaction2(wbUtils plugin) { this.plugin = plugin; }
+    public DoSpecialAction2(wbUtils plugin) { this.plugin = plugin; }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {

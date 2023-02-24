@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class command_sys_dealrecount implements CommandExecutor {
+public class CommandSystemDealRecount implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof Player) return true;
@@ -16,9 +16,9 @@ public class command_sys_dealrecount implements CommandExecutor {
             return true;
         }
 
-        int coins_copper = Integer.parseInt(file_dealsdata.get().getString(args[0]+".coins_copper"));
-        int coins_silver = Integer.parseInt(file_dealsdata.get().getString(args[0]+".coins_silver"));
-        int coins_gold = Integer.parseInt(file_dealsdata.get().getString(args[0]+".coins_gold"));
+        int coins_copper = Integer.parseInt(FileDealsData.get().getString(args[0]+".coins_copper"));
+        int coins_silver = Integer.parseInt(FileDealsData.get().getString(args[0]+".coins_silver"));
+        int coins_gold = Integer.parseInt(FileDealsData.get().getString(args[0]+".coins_gold"));
         boolean changed = false;
 
 
@@ -39,9 +39,9 @@ public class command_sys_dealrecount implements CommandExecutor {
         }
 
         if (changed){
-            file_dealsdata.get().set(args[0]+".coins_copper", coins_copper);
-            file_dealsdata.get().set(args[0]+".coins_silver", coins_silver);
-            file_dealsdata.get().set(args[0]+".coins_gold", coins_gold);
+            FileDealsData.get().set(args[0]+".coins_copper", coins_copper);
+            FileDealsData.get().set(args[0]+".coins_silver", coins_silver);
+            FileDealsData.get().set(args[0]+".coins_gold", coins_gold);
         }
 
         return true;
