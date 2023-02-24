@@ -32,32 +32,9 @@ public class ClearChat implements CommandExecutor {
         } else {
             System.out.println("[CONSOLEADMIN] Chat has been cleared from the console.");
             for (Player playersOnline : Bukkit.getOnlinePlayers()) {
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
-                playersOnline.sendMessage(" ");
+                for (byte i = 0; i < 25; i++) {
+                    playersOnline.sendMessage(" ");
+                }
                 playersOnline.sendMessage(ChatColor.RED + "我" + " Технический администратор очистил чат!");
             }
         }
