@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class CommandDealInfo implements CommandExecutor {
+
     /**
      * Do something.
      *
@@ -46,22 +47,22 @@ public class CommandDealInfo implements CommandExecutor {
                 }
                 case "coins_gold" -> {
                     System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + FileDealsData.get().getString(args[0] + ".coins_gold") + "]");
-                    for (Player playersOnline : Bukkit.getOnlinePlayers()) { playersOnline.sendMessage(ChatColor.RED + "我 Администратор " + sender.getName() + " изменил статистику сделки №" + args[0]); }
+                    adminChangedDeal(sender, args);
                     FileDealsData.get().set(args[0] + ".coins_gold", args[2]);
                 }
                 case "coins_silver" -> {
                     System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + FileDealsData.get().getString(args[0] + ".coins_silver") + "]");
-                    for (Player playersOnline : Bukkit.getOnlinePlayers()) { playersOnline.sendMessage(ChatColor.RED + "我 Администратор " + sender.getName() + " изменил статистику сделки №" + args[0]); }
+                    adminChangedDeal(sender, args);
                     FileDealsData.get().set(args[0] + ".coins_silver", args[2]);
                 }
                 case "coins_copper" -> {
                     System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + FileDealsData.get().getString(args[0] + ".coins_copper") + "]");
-                    for (Player playersOnline : Bukkit.getOnlinePlayers()) { playersOnline.sendMessage(ChatColor.RED + "我 Администратор " + sender.getName() + " изменил статистику сделки №" + args[0]); }
+                    adminChangedDeal(sender, args);
                     FileDealsData.get().set(args[0] + ".coins_copper", args[2]);
                 }
                 case "materials" -> {
                     System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + FileDealsData.get().getString(args[0] + ".materials") + "]");
-                    for (Player playersOnline : Bukkit.getOnlinePlayers()) { playersOnline.sendMessage(ChatColor.RED + "我 Администратор " + sender.getName() + " изменил статистику сделки №" + args[0]); }
+                    adminChangedDeal(sender, args);
                     FileDealsData.get().set(args[0] + ".materials", args[2]);
                 }
                 default -> sender.sendMessage(ChatColor.GRAY + "的 Ошибка ввода. Пример: /dealinfo <deal_id> <stat> <value>");
@@ -95,4 +96,17 @@ public class CommandDealInfo implements CommandExecutor {
         }
         return true;
     }
+
+    /**
+     * Send info that admin has changed a deal.
+     *
+     * @param sender sender
+     * @param args   args
+     */
+    private void adminChangedDeal(final CommandSender sender, final String[] args) {
+        for (Player playersOnline : Bukkit.getOnlinePlayers()) {
+            playersOnline.sendMessage(ChatColor.RED + "我 Администратор " + sender.getName() + " изменил статистику сделки №" + args[0]);
+        }
+    }
+
 }
