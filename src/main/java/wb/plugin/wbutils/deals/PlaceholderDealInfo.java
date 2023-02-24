@@ -80,6 +80,11 @@ public class PlaceholderDealInfo extends PlaceholderExpansion {
         } else if (identifier.startsWith("dealmaterials_")) {
             String dealId = identifier.replace("dealmaterials_", "");
             return FileDealsData.get().getString(dealId + ".materials");
+        } else if (identifier.startsWith("dealstatus_")) {
+            String dealId = identifier.replace("dealstatus_", "");
+            int numberMaterials = Integer.parseInt(FileDealsData.get().getString(dealId + ".materials"));
+            if (numberMaterials > -1) { return " "; }
+            else { return "(Сделка неустойчива!)"; }
         } else {
             return null;
         }
