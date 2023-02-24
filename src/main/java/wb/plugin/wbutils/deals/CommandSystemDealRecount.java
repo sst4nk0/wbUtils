@@ -27,33 +27,33 @@ public class CommandSystemDealRecount implements CommandExecutor {
             return true;
         }
 
-        int coinsCopper = Integer.parseInt(Objects.requireNonNull(FileDealsData.get().getString(args[0] + ".coinsCopper")));
-        int coinsSilver = Integer.parseInt(Objects.requireNonNull(FileDealsData.get().getString(args[0] + ".coinsSilver")));
-        int coinsGold = Integer.parseInt(Objects.requireNonNull(FileDealsData.get().getString(args[0] + ".coinsGold")));
+        int coins_copper = Integer.parseInt(Objects.requireNonNull(FileDealsData.get().getString(args[0] + ".coins_copper")));
+        int coins_silver = Integer.parseInt(Objects.requireNonNull(FileDealsData.get().getString(args[0] + ".coins_silver")));
+        int coins_gold = Integer.parseInt(Objects.requireNonNull(FileDealsData.get().getString(args[0] + ".coins_gold")));
         boolean changed = false;
 
         final int maxStackSize = 64;
 
-        if (coinsCopper >= maxStackSize) {
-            while (coinsCopper >= maxStackSize) {
-                coinsCopper -= maxStackSize;
-                coinsSilver++;
+        if (coins_copper >= maxStackSize) {
+            while (coins_copper >= maxStackSize) {
+                coins_copper -= maxStackSize;
+                coins_silver++;
             }
             changed = true;
         }
 
-        if (coinsSilver >= maxStackSize) {
-            while (coinsSilver >= maxStackSize) {
-                coinsSilver -= maxStackSize;
-                coinsGold++;
+        if (coins_silver >= maxStackSize) {
+            while (coins_silver >= maxStackSize) {
+                coins_silver -= maxStackSize;
+                coins_gold++;
             }
             changed = true;
         }
 
         if (changed) {
-            FileDealsData.get().set(args[0] + ".coinsCopper", coinsCopper);
-            FileDealsData.get().set(args[0] + ".coinsSilver", coinsSilver);
-            FileDealsData.get().set(args[0] + ".coinsGold", coinsGold);
+            FileDealsData.get().set(args[0] + ".coins_copper", coins_copper);
+            FileDealsData.get().set(args[0] + ".coins_silver", coins_silver);
+            FileDealsData.get().set(args[0] + ".coins_gold", coins_gold);
         }
 
         return true;
