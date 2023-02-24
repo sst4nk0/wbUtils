@@ -12,14 +12,26 @@ public class SetSpawn implements CommandExecutor {
 
     private final wbUtils plugin;
 
-    public SetSpawn(wbUtils plugin) {
-        this.plugin = plugin;
+    /**
+     * Initialize a constructor.
+     * @param inputPlugin inputPlugin
+     */
+    public SetSpawn(final wbUtils inputPlugin) {
+        this.plugin = inputPlugin;
     }
 
+    /**
+     * Do something.
+     * @param sender  sender
+     * @param command command
+     * @param label   label
+     * @param args    args
+     * @return some boolean
+     */
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (sender instanceof Player p){
-            Location location = p.getLocation();
+    public boolean onCommand(final @NotNull CommandSender sender, final @NotNull Command command, final @NotNull String label, final  @NotNull String[] args) {
+        if (sender instanceof Player player) {
+            Location location = player.getLocation();
 
         }
         return false;
