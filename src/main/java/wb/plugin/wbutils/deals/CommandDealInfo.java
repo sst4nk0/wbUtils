@@ -12,7 +12,6 @@ public class CommandDealInfo implements CommandExecutor {
 
     /**
      * Do something.
-     *
      * @param sender  sender
      * @param command command
      * @param label   label
@@ -99,7 +98,6 @@ public class CommandDealInfo implements CommandExecutor {
 
     /**
      * Send info that admin has changed a deal.
-     *
      * @param sender sender
      * @param args   args
      */
