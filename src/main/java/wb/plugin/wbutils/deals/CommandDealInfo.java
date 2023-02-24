@@ -90,6 +90,10 @@ public class CommandDealInfo implements CommandExecutor {
                     System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + FileDealsData.get().getString(args[0] + ".coins_copper") + "]");
                     FileDealsData.get().set(args[0] + ".coins_copper", args[2]);
                 }
+                case "materials" -> {
+                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + FileDealsData.get().getString(args[0] + ".materials") + "]");
+                    FileDealsData.get().set(args[0] + ".materials", args[2]);
+                }
                 default -> System.out.println("[CONSOLE] [msg] [Ошибка ввода. Пример: /dealinfo <deal_id> <stat> <value>]");
             }
         }

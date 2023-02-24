@@ -78,7 +78,7 @@ public class PlaceholderDealInfo extends PlaceholderExpansion {
             String dealId = identifier.replace("dealgold_", "");
             return FileDealsData.get().getString(dealId + ".coins_gold");
         } else if (identifier.startsWith("dealmaterials_")) {
-            String dealId = identifier.replace("dealowner_", "");
+            String dealId = identifier.replace("dealmaterials_", "");
             return FileDealsData.get().getString(dealId + ".materials");
         } else {
             return null;
