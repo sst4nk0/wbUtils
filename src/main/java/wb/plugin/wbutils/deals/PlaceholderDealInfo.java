@@ -84,7 +84,7 @@ public class PlaceholderDealInfo extends PlaceholderExpansion {
             String dealId = identifier.replace("dealstatus_", "");
             int numberMaterials = Integer.parseInt(FileDealsData.get().getString(dealId + ".materials"));
             if (numberMaterials > -1) { return " "; }
-            else { return "(Сделка неустойчива!)"; }
+            else { return "(сделка неустойчива)"; }
         } else {
             return null;
         }
