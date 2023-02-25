@@ -26,3 +26,6 @@ commands:
     description: System command
   dospecialaction2:
     description: System command
+  purchasepayment:
+    description: System command
+    permission: wbutils.purchasepayment

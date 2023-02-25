@@ -4,6 +4,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import wb.plugin.wbutils.commands.system.DoSpecialAction;
 import wb.plugin.wbutils.commands.system.DoSpecialAction2;
+import wb.plugin.wbutils.commands.system.PurchasePayment;
 import wb.plugin.wbutils.deals.*;
 import wb.plugin.wbutils.commands.ClearChat;
 //import wb.plugin.wbutils.events.JoinQuitEvent;
@@ -24,6 +25,7 @@ public final class wbUtils extends JavaPlugin implements Listener {
         getCommand("clearchat").setExecutor(new ClearChat());
         getCommand("dospecialaction").setExecutor(new DoSpecialAction());
         getCommand("dospecialaction2").setExecutor(new DoSpecialAction2(this));
+        getCommand("purchasepayment").setExecutor(new PurchasePayment());
 
 
         FileDealsData.setup();
