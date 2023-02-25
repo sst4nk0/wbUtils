@@ -134,17 +134,17 @@ public class DoSpecialAction2 implements CommandExecutor {
                             sender.sendMessage(ChatColor.DARK_GREEN + "Капитан: " + ChatColor.GREEN + "Забыл сказать, бесплатно я тебя не повезу.");
                             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_AMBIENT, 1, 1);
                         }
-                    }.runTaskLater(plugin, 230);
+                    }.runTaskLater(plugin, 235);
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            Bukkit.dispatchCommand(console, "dm open seaskipper_0 " + sender.getName());
+                            Bukkit.dispatchCommand(console, "dm open seaskipper " + sender.getName());
                         }
-                    }.runTaskLater(plugin, 125);
+                    }.runTaskLater(plugin, 255);
                     return true;
                 }
                 ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-                Bukkit.dispatchCommand(console, "dm open sea_skipper " + sender.getName());
+                Bukkit.dispatchCommand(console, "dm open seaskipper " + sender.getName());
             }
             case "seakippar_lg0o561dh7" -> {
                 Random random = new Random();
