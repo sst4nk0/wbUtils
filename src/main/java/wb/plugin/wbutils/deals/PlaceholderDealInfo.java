@@ -78,8 +78,13 @@ public class PlaceholderDealInfo extends PlaceholderExpansion {
             String dealId = identifier.replace("dealgold_", "");
             return FileDealsData.get().getString(dealId + ".coins_gold");
         } else if (identifier.startsWith("dealmaterials_")) {
-            String dealId = identifier.replace("dealowner_", "");
+            String dealId = identifier.replace("dealmaterials_", "");
             return FileDealsData.get().getString(dealId + ".materials");
+        } else if (identifier.startsWith("dealstatus_")) {
+            String dealId = identifier.replace("dealstatus_", "");
+            int numberMaterials = Integer.parseInt(FileDealsData.get().getString(dealId + ".materials"));
+            if (numberMaterials > -1) { return " "; }
+            else { return "(сделка неустойчива)"; }
         } else {
             return null;
         }
