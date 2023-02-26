@@ -149,7 +149,7 @@ public class DoSpecialAction2 implements CommandExecutor {
             case "seakippar_lg0o561dh7" -> {
                 Random random = new Random();
                 Player player = (Player) sender;
-                int generatedNumber = random.nextInt(0, 4);
+                int generatedNumber = random.nextInt(0, 7);
 
                 switch (generatedNumber) {
                     case 0 -> {
@@ -248,7 +248,136 @@ public class DoSpecialAction2 implements CommandExecutor {
                                 ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
                                 Bukkit.dispatchCommand(console, "si give misc_stone_dirty 1 " + sender.getName());
                             }
-                        }.runTaskLater(plugin, 350);
+                        }.runTaskLater(plugin, 340);
+                    }
+                    case 4 -> {
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                sender.sendMessage(ChatColor.DARK_GREEN + "Капитан: " + ChatColor.GREEN + "Прошлое путешествие совсем кошмарное вышло, я до сих пор морально опустошён и духовно выжат.");
+                                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_AMBIENT, 1, 1);
+                            }
+                        }.runTaskLater(plugin, 20);
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                sender.sendMessage(ChatColor.WHITE + sender.getName() + ": " + ChatColor.GRAY + "Что в тот раз произошло?");
+                            }
+                        }.runTaskLater(plugin, 95);
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                sender.sendMessage(ChatColor.DARK_GREEN + "Капитан: " + ChatColor.GREEN + "У меня украли любимый алмазный топор.");
+                                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_AMBIENT, 1, 1);
+                            }
+                        }.runTaskLater(plugin, 135);
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                sender.sendMessage(ChatColor.WHITE + sender.getName() + ": " + ChatColor.GRAY + "Откуда у тебя алмазный топор?");
+                            }
+                        }.runTaskLater(plugin, 175);
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                sender.sendMessage(ChatColor.DARK_GREEN + "Капитан: " + ChatColor.GREEN + "Отдолжил у незнакомой варяжки на неопределенный срок...");
+                                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_AMBIENT, 1, 1);
+                            }
+                        }.runTaskLater(plugin, 210);
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                sender.sendMessage(ChatColor.WHITE + sender.getName() + ": " + ChatColor.GRAY + "Боги тебя не простят, ни старые, ни новые!");
+                            }
+                        }.runTaskLater(plugin, 270);
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                sender.sendMessage(ChatColor.DARK_GREEN + "Капитан: " + ChatColor.GREEN + "Ой, только давай без нравоучений, без того тошно.");
+                                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_AMBIENT, 1, 1);
+                            }
+                        }.runTaskLater(plugin, 320);
+                    }
+                    case 5 -> {
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                sender.sendMessage(ChatColor.DARK_GREEN + "Капитан: " + ChatColor.GREEN + "*читает записку*");
+                            }
+                        }.runTaskLater(plugin, 20);
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                sender.sendMessage(ChatColor.DARK_GREEN + "Капитан: " + ChatColor.GREEN + "Мгм, мгм.. Аммм. Еб...");
+                                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_AMBIENT, 1, 2);
+                            }
+                        }.runTaskLater(plugin, 55);
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                sender.sendMessage(ChatColor.WHITE + sender.getName() + ": " + ChatColor.GRAY + "НУ НУ НУ! Что тебя так взволновало?");
+                            }
+                        }.runTaskLater(plugin, 70);
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                sender.sendMessage(ChatColor.DARK_GREEN + "Капитан: " + ChatColor.GREEN + "Ты знал кто такие мужеложцы?");
+                                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_AMBIENT, 1, 1);
+                            }
+                        }.runTaskLater(plugin, 120);
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                sender.sendMessage(ChatColor.WHITE + sender.getName() + ": " + ChatColor.GRAY + "Не озадачивался таким вопросом. Просвятишь?");
+                            }
+                        }.runTaskLater(plugin, 155);
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                sender.sendMessage(ChatColor.DARK_GREEN + "Капитан: " + ChatColor.GREEN + "Давай ты сам узнаешь, а то нам еще вместе плыть.");
+                                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_AMBIENT, 1, 1);
+                            }
+                        }.runTaskLater(plugin, 185);
+                    }
+                    case 6 -> {
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                sender.sendMessage(ChatColor.DARK_GREEN + "Капитан: " + ChatColor.GREEN + "Все только и говорят о новом континенте который мир не видывал. Интересно, какой он? Там есть женщины? Потому что иначе делать там мне нечего.");
+                                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_AMBIENT, 1, 1);
+                            }
+                        }.runTaskLater(plugin, 20);
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 1, 1);
+                            }
+                        }.runTaskLater(plugin, 50);
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_AMBIENT, 1, 1);
+                            }
+                        }.runTaskLater(plugin, 75);
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+                            }
+                        }.runTaskLater(plugin, 105);
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                sender.sendMessage(ChatColor.WHITE + sender.getName() + ": " + ChatColor.GRAY + "А как же увидеть новый мир? Остепениться там? Начать жизнь с чистого листа в новом поселении?");
+                            }
+                        }.runTaskLater(plugin, 200);
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                sender.sendMessage(ChatColor.DARK_GREEN + "Капитан: " + ChatColor.GREEN + "Тебе оно самому надо это всё? Вопрос риторический.");
+                                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_AMBIENT, 1, 1);
+                            }
+                        }.runTaskLater(plugin, 320);
                     }
                 }
             }
