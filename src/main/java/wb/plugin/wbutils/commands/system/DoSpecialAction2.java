@@ -146,11 +146,38 @@ public class DoSpecialAction2 implements CommandExecutor {
                 ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
                 Bukkit.dispatchCommand(console, "dm open seaskipper " + sender.getName());
             }
+            case "seakippar_ht3bko421z" -> {
+                if (!sender.hasPermission("wb.tripescape")) { return true; }
+
+                Player player = (Player) sender;
+                ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+                sender.sendMessage(ChatColor.WHITE + sender.getName() + ": " + ChatColor.GRAY + "Мы уже долго плывём, ты вообще знаешь куда нужно плыть?");
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        sender.sendMessage(ChatColor.DARK_GREEN + "Капитан: " + ChatColor.GREEN + "Этот маршрут...");
+                        player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_AMBIENT, 1, 1);
+                    }
+                }.runTaskLater(plugin, 50);
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        sender.sendMessage(ChatColor.DARK_GREEN + "Капитан: " + ChatColor.GREEN + "Мне страшно по нему плыть, давай лучше развернёмся?");
+                        player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_AMBIENT, 1, 1);
+                    }
+                }.runTaskLater(plugin, 70);
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        Bukkit.dispatchCommand(console, "dm open seaskipper_escape " + sender.getName());
+                    }
+                }.runTaskLater(plugin, 115);
+                return true;
+            }
             case "seakippar_lg0o561dh7" -> {
                 Random random = new Random();
                 Player player = (Player) sender;
                 int generatedNumber = random.nextInt(0, 7);
-
                 switch (generatedNumber) {
                     case 0 -> {
                         new BukkitRunnable() {
