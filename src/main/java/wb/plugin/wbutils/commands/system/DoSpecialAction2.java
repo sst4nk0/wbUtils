@@ -72,6 +72,7 @@ public class DoSpecialAction2 implements CommandExecutor {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
+                            Bukkit.dispatchCommand(console, "si give crate_wooden 1 " + sender.getName() );
                             Bukkit.dispatchCommand(console, "dm open merchant_forest " + sender.getName());
                         }
                     }.runTaskLater(plugin, 250);
@@ -106,20 +107,21 @@ public class DoSpecialAction2 implements CommandExecutor {
                         public void run() {
                             sender.sendMessage(ChatColor.WHITE + sender.getName() + ": " + ChatColor.GRAY + "Мне кирка нужна. Самая простая. Поможете?");
                         }
-                    }.runTaskLater(plugin, 170);
+                    }.runTaskLater(plugin, 180);
                     new BukkitRunnable() {
                         @Override
                         public void run() {
                             sender.sendMessage(ChatColor.DARK_GREEN + "Главный шахтёр: " + ChatColor.GREEN + "Добрє.");
                             player.playSound(player.getLocation(), Sound.ENTITY_EVOKER_HURT, 1, 1);
                         }
-                    }.runTaskLater(plugin, 210);
+                    }.runTaskLater(plugin, 220);
                     new BukkitRunnable() {
                         @Override
                         public void run() {
+                            Bukkit.dispatchCommand(console, "si give crate_wooden 1 " + player.getName() );
                             Bukkit.dispatchCommand(console, "dm open merchant_tool_mineshaft " + sender.getName());
                         }
-                    }.runTaskLater(plugin, 240);
+                    }.runTaskLater(plugin, 245);
                     return true;
                 }
                 ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
@@ -165,27 +167,28 @@ public class DoSpecialAction2 implements CommandExecutor {
                             sender.sendMessage(ChatColor.DARK_GREEN + "Капитан: " + ChatColor.GREEN + "Ты бы видел их воительниц!");
                             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_TRADE, 1, 1);
                         }
-                    }.runTaskLater(plugin, 180);
+                    }.runTaskLater(plugin, 185);
                     new BukkitRunnable() {
                         @Override
                         public void run() {
                             sender.sendMessage(ChatColor.DARK_GREEN + "Капитан: " + ChatColor.GREEN + "Я бы покрутил штурвал их драккара...");
                             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_TRADE, 1, 1);
                         }
-                    }.runTaskLater(plugin, 205);
+                    }.runTaskLater(plugin, 215);
                     new BukkitRunnable() {
                         @Override
                         public void run() {
                             sender.sendMessage(ChatColor.DARK_GREEN + "Капитан: " + ChatColor.GREEN + "Забыл сказать, бесплатно я тебя не повезу.");
                             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_AMBIENT, 1, 1);
                         }
-                    }.runTaskLater(plugin, 235);
+                    }.runTaskLater(plugin, 245);
                     new BukkitRunnable() {
                         @Override
                         public void run() {
+                            Bukkit.dispatchCommand(console, "si give crate_wooden 1 " + player.getName() );
                             Bukkit.dispatchCommand(console, "dm open seaskipper " + sender.getName());
                         }
-                    }.runTaskLater(plugin, 255);
+                    }.runTaskLater(plugin, 270);
                     return true;
                 }
                 ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
