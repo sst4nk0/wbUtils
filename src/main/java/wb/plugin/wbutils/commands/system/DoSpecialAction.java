@@ -3,12 +3,15 @@ package wb.plugin.wbutils.commands.system;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Random;
 
 
 public class DoSpecialAction implements CommandExecutor {
@@ -21,6 +24,8 @@ public class DoSpecialAction implements CommandExecutor {
      * @param args    args
      * @return some boolean
      */
+
+    // команда отвечает за добычу дерева
     @Override
     public boolean onCommand(final @NotNull CommandSender sender, final @NotNull Command command, final @NotNull String label, final @NotNull String[] args) {
         if (!(sender instanceof Player player)) { return true; }
@@ -61,5 +66,4 @@ public class DoSpecialAction implements CommandExecutor {
         }
         return true;
     }
-
 }
