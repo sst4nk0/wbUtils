@@ -12,6 +12,8 @@ import wb.plugin.wbutils.commands.ClearChat;
 
 public final class wbUtils extends JavaPlugin implements Listener {
 
+    private static wbUtils instance;
+
     @Override
     public void onEnable() {
 
@@ -26,7 +28,7 @@ public final class wbUtils extends JavaPlugin implements Listener {
         getCommand("clearchat").setExecutor(new ClearChat());
         getCommand("dospecialaction").setExecutor(new DoSpecialAction());
         getCommand("dospecialaction2").setExecutor(new DoSpecialAction2(this));
-        getCommand("dospecialaction").setExecutor(new DoSpecialAction3());
+        getCommand("dospecialaction3").setExecutor(new DoSpecialAction3());
         getCommand("purchasepayment").setExecutor(new PurchasePayment());
 
 
@@ -36,11 +38,17 @@ public final class wbUtils extends JavaPlugin implements Listener {
 
         getConfig().options().copyDefaults();
         saveDefaultConfig();
+
+        instance = this;
     }
 
     @Override
     public void onDisable() {
         FileDealsData.save();
         saveConfig();
+    }
+
+    public static wbUtils getInstance() {
+        return instance;
     }
 }
