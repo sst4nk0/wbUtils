@@ -16,6 +16,9 @@ commands:
     description: Set the deal's stats
     permission: wbutils.dealinfo
     usage: /<command> <deal_id> <stat> <value>
+  payday:
+    description: Grants an extra payday event
+    permission: wbutils.payday
   dealrecount:
     description: System command
     permission: wbutils.dealrecount

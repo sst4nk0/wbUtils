@@ -1,3 +1,5 @@
+// Команда для вызова диалога-знакомства с NPC
+
 package wb.plugin.wbutils.commands.system;
 
 import org.bukkit.Bukkit;
