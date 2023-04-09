@@ -2,6 +2,7 @@ package wb.plugin.wbutils;
 
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import wb.plugin.wbutils.commands.Payday;
 import wb.plugin.wbutils.commands.system.DoSpecialAction;
 import wb.plugin.wbutils.commands.system.DoSpecialAction2;
 import wb.plugin.wbutils.commands.system.DoSpecialAction3;
@@ -28,7 +29,7 @@ public final class wbUtils extends JavaPlugin implements Listener {
         getCommand("dealinfo").setTabCompleter(new TabCompleterDealInfo());
         getCommand("dealbuy").setExecutor(new CommandSystemDealBuy());
         getCommand("dealrecount").setExecutor(new CommandSystemDealRecount());
-        getCommand("payday").setExecutor(new CommandDealInfo());
+        getCommand("payday").setExecutor(new Payday());
         getCommand("clearchat").setExecutor(new ClearChat());
         getCommand("dospecialaction").setExecutor(new DoSpecialAction());
         getCommand("dospecialaction2").setExecutor(new DoSpecialAction2(this));
