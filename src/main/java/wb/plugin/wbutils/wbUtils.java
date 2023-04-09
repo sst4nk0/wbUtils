@@ -9,6 +9,7 @@ import wb.plugin.wbutils.commands.system.DoSpecialAction3;
 import wb.plugin.wbutils.commands.system.PurchasePayment;
 import wb.plugin.wbutils.deals.*;
 import wb.plugin.wbutils.commands.ClearChat;
+import wb.plugin.wbutils.utilities.SqlActions;
 
 //import wb.plugin.wbutils.events.JoinQuitEvent;
 
@@ -18,10 +19,13 @@ public final class wbUtils extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        instance = this;
 
         new PlaceholderDealInfo(this).register(); // кулдаун
 
         //getServer().getPluginManager().registerEvents(new JoinQuitEvent(), this);
+
+        new SqlActions().firstConnection();
 
         //============ Комманды ========================================================================================
         //getCommand("setspawn").setExecutor(new setspawn(this));
@@ -43,11 +47,10 @@ public final class wbUtils extends JavaPlugin implements Listener {
         FileDealsData.get().options().copyDefaults(true);
         FileDealsData.save();
 
-        getConfig().options().copyDefaults();
+        getConfig().options().copyDefaults(true);
+        //getConfig().options().copyDefaults();
         saveDefaultConfig();
         //==============================================================================================================
-
-        instance = this;
     }
 
     @Override

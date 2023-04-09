@@ -28,7 +28,7 @@ public class CommandSystemDealBuy implements CommandExecutor {
         FileDealsData.get().set(args[0] + ".coins_gold", 0);
         FileDealsData.get().set(args[0] + ".coins_silver", 0);
         FileDealsData.get().set(args[0] + ".coins_copper", 0);
-        FileDealsData.get().set(args[0] + ".materials", 4);
+        FileDealsData.get().set(args[0] + ".materials", 16);
         return true;
     }
 

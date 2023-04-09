@@ -1,3 +1,5 @@
+// Вызов TimeSyncReallife синхронизирует положение солнца в реальной жизни и игре
+
 package wb.plugin.wbutils.utilities;
 
 import org.bukkit.Bukkit;
