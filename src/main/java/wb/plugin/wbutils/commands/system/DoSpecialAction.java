@@ -1,3 +1,5 @@
+// Команда для вызова интерфейса добычи дерева
+
 package wb.plugin.wbutils.commands.system;
 
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -25,7 +27,6 @@ public class DoSpecialAction implements CommandExecutor {
      * @return some boolean
      */
 
-    // команда отвечает за добычу дерева
     @Override
     public boolean onCommand(final @NotNull CommandSender sender, final @NotNull Command command, final @NotNull String label, final @NotNull String[] args) {
         if (!(sender instanceof Player player)) { return true; }

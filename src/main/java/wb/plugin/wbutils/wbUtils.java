@@ -8,6 +8,7 @@ import wb.plugin.wbutils.commands.system.DoSpecialAction3;
 import wb.plugin.wbutils.commands.system.PurchasePayment;
 import wb.plugin.wbutils.deals.*;
 import wb.plugin.wbutils.commands.ClearChat;
+
 //import wb.plugin.wbutils.events.JoinQuitEvent;
 
 public final class wbUtils extends JavaPlugin implements Listener {
@@ -17,27 +18,33 @@ public final class wbUtils extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
 
-        new PlaceholderDealInfo(this).register();
+        new PlaceholderDealInfo(this).register(); // кулдаун
 
         //getServer().getPluginManager().registerEvents(new JoinQuitEvent(), this);
+
+        //============ Комманды ========================================================================================
         //getCommand("setspawn").setExecutor(new setspawn(this));
         getCommand("dealinfo").setExecutor(new CommandDealInfo());
         getCommand("dealinfo").setTabCompleter(new TabCompleterDealInfo());
         getCommand("dealbuy").setExecutor(new CommandSystemDealBuy());
         getCommand("dealrecount").setExecutor(new CommandSystemDealRecount());
+        getCommand("payday").setExecutor(new CommandDealInfo());
         getCommand("clearchat").setExecutor(new ClearChat());
         getCommand("dospecialaction").setExecutor(new DoSpecialAction());
         getCommand("dospecialaction2").setExecutor(new DoSpecialAction2(this));
         getCommand("dospecialaction3").setExecutor(new DoSpecialAction3());
         getCommand("purchasepayment").setExecutor(new PurchasePayment());
+        //==============================================================================================================
 
 
+        //============ Конфиги =========================================================================================
         FileDealsData.setup();
         FileDealsData.get().options().copyDefaults(true);
         FileDealsData.save();
 
         getConfig().options().copyDefaults();
         saveDefaultConfig();
+        //==============================================================================================================
 
         instance = this;
     }

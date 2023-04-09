@@ -7,6 +7,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import wb.plugin.wbutils.utilities.Payday;
+import wb.plugin.wbutils.utilities.SoundDecay;
 
 public class ClearChat implements CommandExecutor {
 
@@ -21,13 +23,12 @@ public class ClearChat implements CommandExecutor {
     @Override
     public boolean onCommand(final @NotNull CommandSender sender, final @NotNull Command command, final @NotNull String label, final @NotNull String[] args) {
         if (sender instanceof Player player) {
-            if (player.hasPermission("wbutils.clearchat")) {
-                for (Player playersOnline : Bukkit.getOnlinePlayers()) {
-                    for (byte i = 0; i < 25; i++) {
-                        playersOnline.sendMessage(" ");
-                    }
-                    playersOnline.sendMessage(ChatColor.RED + "我 Администратор " + player.getDisplayName() + " очистил чат!");
+            if (!player.hasPermission("wbutils.clearchat")) { return true; }
+            for (Player playersOnline : Bukkit.getOnlinePlayers()) {
+                for (byte i = 0; i < 30; i++) {
+                    playersOnline.sendMessage(" ");
                 }
+                playersOnline.sendMessage(ChatColor.RED + "我 Администратор " + player.getDisplayName() + " очистил чат!");
             }
         } else {
             System.out.println("[CONSOLEADMIN] Chat has been cleared from the console.");
