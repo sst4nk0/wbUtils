@@ -7,8 +7,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import wb.plugin.wbutils.utilities.Payday;
-import wb.plugin.wbutils.utilities.SoundDecay;
+import wb.plugin.wbutils.utilities.PaydayGrant;
 
 public class ClearChat implements CommandExecutor {
 
@@ -30,6 +29,7 @@ public class ClearChat implements CommandExecutor {
                 }
                 playersOnline.sendMessage(ChatColor.RED + "我 Администратор " + player.getDisplayName() + " очистил чат!");
             }
+            new PaydayGrant();
         } else {
             System.out.println("[CONSOLEADMIN] Chat has been cleared from the console.");
             for (Player playersOnline : Bukkit.getOnlinePlayers()) {
