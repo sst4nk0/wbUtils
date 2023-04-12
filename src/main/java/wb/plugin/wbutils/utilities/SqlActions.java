@@ -2,9 +2,7 @@ package wb.plugin.wbutils.utilities;
 
 import wb.plugin.wbutils.wbUtils;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class SqlActions{
 
@@ -17,17 +15,28 @@ public class SqlActions{
 
 
     public SqlActions firstConnection() {
+        PreparedStatement stmt = null;
+        ResultSet rs;
+        String query = "CREATE TABLE IF NOT EXISTS wb_deals(id int auto_increment, owner varchar(16), coins_copper int, coins_silver int, coins_gold int, materials int, PRIMARY KEY (id))";
+
         try{
             connection = DriverManager.getConnection(url, username, password);
             System.out.println("Connected to database successfully.");
-            //============ Первоначальная настройка
-            try{
-                String setupTable = "CREATE TABLE IF NOT EXISTS wb_deals(id int auto_increment, owner char, coins_copper int, coins_silver int, coins_gold int, materials int, PRIMARY KEY (id)); " +
-                        "INSERT INTO wb_deals(`id`, `owner`, `coins_copper`, `coins_silver`, `coins_gold`, `materials`) VALUES (NULL, '-', '0', '0', '0', '0')";
-                connection.createStatement().execute(setupTable);
-                System.out.println("First setup is complited.");
-            }catch (SQLException e) {}
-            //============ // ` '
+            try {
+                stmt = connection.prepareStatement(query);
+                stmt.execute();
+
+                rs = stmt.executeQuery("SELECT * FROM wb_deals");
+                int dealsQuantity = 0;
+                while( rs.next() ) { dealsQuantity++; }
+
+                if (dealsQuantity == 0) /*Первоначальная настройка*/ {
+                    String addDeal1 = "INSERT INTO wb_deals(`id`, `owner`, `coins_copper`, `coins_silver`, `coins_gold`, `materials`) VALUES (NULL, '-', '0', '0', '0', '0')";
+                    stmt.addBatch(addDeal1);
+                    stmt.executeBatch();
+                }
+            } catch (SQLException e) {}
+            stmt.close();
             connection.close();
         }catch(SQLException e){
             System.out.println("Failed connection to database.");
@@ -35,23 +44,12 @@ public class SqlActions{
         }
         return null;
     }
-    public SqlActions loadDealStats() {
+    public void loadDealInfo() {
+        ResultSet rs = null;
         try{
-            connection = DriverManager.getConnection(url, username, password);
-            System.out.println("Connected to database successfully.");
-            //============ Первоначальная настройка
-            try{
-                String setupTable = "CREATE TABLE IF NOT EXISTS wb_deals(id int auto_increment, owner char, coins_copper int, coins_silver int, coins_gold int, materials int, PRIMARY KEY (id)); " +
-                        "INSERT INTO wb_deals(`id`, `owner`, `coins_copper`, `coins_silver`, `coins_gold`, `materials`) VALUES (NULL, '-', '0', '0', '0', '0')";
-                connection.createStatement().execute(setupTable);
-                System.out.println("First setup is complited.");
-            }catch (SQLException e) {}
-            //============ // ` '
-            connection.close();
-        }catch(SQLException e){
-            System.out.println("Failed connection to database.");
-            e.printStackTrace();
-        }
-        return null;
+            Statement stmt = connection.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM wb_deals");
+        }catch (SQLException e) {}
+
     }
 }

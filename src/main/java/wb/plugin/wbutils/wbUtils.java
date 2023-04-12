@@ -48,7 +48,6 @@ public final class wbUtils extends JavaPlugin implements Listener {
         FileDealsData.save();
 
         getConfig().options().copyDefaults(true);
-        //getConfig().options().copyDefaults();
         saveDefaultConfig();
         //==============================================================================================================
     }

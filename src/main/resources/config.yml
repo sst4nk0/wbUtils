@@ -1,5 +1,5 @@
 db-connection:
-  address: localhost:3306
+  address: localhost
   database: pagania
   username: root
   password: mypass01
