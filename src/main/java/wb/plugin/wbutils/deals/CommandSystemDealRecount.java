@@ -27,9 +27,9 @@ public class CommandSystemDealRecount implements CommandExecutor {
             return true;
         }
 
-        int coins_copper = Integer.parseInt(Objects.requireNonNull(FileDealsData.get().getString(args[0] + ".coins_copper")));
-        int coins_silver = Integer.parseInt(Objects.requireNonNull(FileDealsData.get().getString(args[0] + ".coins_silver")));
-        int coins_gold = Integer.parseInt(Objects.requireNonNull(FileDealsData.get().getString(args[0] + ".coins_gold")));
+        int coins_copper = Integer.parseInt(DatabaseDeals.getCoinsCopper(Integer.parseInt(args[0])));
+        int coins_silver = Integer.parseInt(DatabaseDeals.getCoinsSilver(Integer.parseInt(args[0])));
+        int coins_gold = Integer.parseInt(DatabaseDeals.getCoinsGold(Integer.parseInt(args[0])));
         boolean changed = false;
 
         final int maxStackSize = 64;
@@ -51,9 +51,9 @@ public class CommandSystemDealRecount implements CommandExecutor {
         }
 
         if (changed) {
-            FileDealsData.get().set(args[0] + ".coins_copper", coins_copper);
-            FileDealsData.get().set(args[0] + ".coins_silver", coins_silver);
-            FileDealsData.get().set(args[0] + ".coins_gold", coins_gold);
+            DatabaseDeals.setCoinsCopper(Integer.parseInt(args[0]), Integer.toString(coins_copper));
+            DatabaseDeals.setCoinsSilver(Integer.parseInt(args[0]), Integer.toString(coins_silver));
+            DatabaseDeals.setCoinsGold(Integer.parseInt(args[0]), Integer.toString(coins_gold));
         }
 
         return true;

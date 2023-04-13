@@ -25,7 +25,12 @@ public final class wbUtils extends JavaPlugin implements Listener {
 
         //getServer().getPluginManager().registerEvents(new JoinQuitEvent(), this);
 
-        new SqlActions().firstConnection();
+        //============ Прогрузка БД ====================================================================================
+        SqlActions sqlactions = new SqlActions();
+        sqlactions.firstConnection();
+        sqlactions.loadDealsInfo();
+        //==============================================================================================================
+
 
         //============ Комманды ========================================================================================
         //getCommand("setspawn").setExecutor(new setspawn(this));
@@ -54,6 +59,9 @@ public final class wbUtils extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        SqlActions sqlactions = new SqlActions();
+        sqlactions.saveDealsInfo();
+
         FileDealsData.save();
         saveConfig();
     }
