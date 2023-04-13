@@ -11,8 +11,6 @@ import wb.plugin.wbutils.deals.*;
 import wb.plugin.wbutils.commands.ClearChat;
 import wb.plugin.wbutils.utilities.SqlActions;
 
-//import wb.plugin.wbutils.events.JoinQuitEvent;
-
 public final class wbUtils extends JavaPlugin implements Listener {
 
     private static wbUtils instance;
@@ -21,9 +19,7 @@ public final class wbUtils extends JavaPlugin implements Listener {
     public void onEnable() {
         instance = this;
 
-        new PlaceholderDealInfo(this).register(); // кулдаун
-
-        //getServer().getPluginManager().registerEvents(new JoinQuitEvent(), this);
+        new PlaceholderDealInfo(this).register();
 
         //============ Прогрузка БД ====================================================================================
         SqlActions sqlactions = new SqlActions();
@@ -33,7 +29,6 @@ public final class wbUtils extends JavaPlugin implements Listener {
 
 
         //============ Комманды ========================================================================================
-        //getCommand("setspawn").setExecutor(new setspawn(this));
         getCommand("dealinfo").setExecutor(new CommandDealInfo());
         getCommand("dealinfo").setTabCompleter(new TabCompleterDealInfo());
         getCommand("dealbuy").setExecutor(new CommandSystemDealBuy());
@@ -48,13 +43,17 @@ public final class wbUtils extends JavaPlugin implements Listener {
 
 
         //============ Конфиги =========================================================================================
-        FileDealsData.setup();
-        FileDealsData.get().options().copyDefaults(true);
-        FileDealsData.save();
-
         getConfig().options().copyDefaults(true);
         saveDefaultConfig();
         //==============================================================================================================
+
+
+        /* вырезанный функционал
+        getServer().getPluginManager().registerEvents(new JoinQuitEvent(), this);
+        getCommand("setspawn").setExecutor(new setspawn(this));
+        FileDealsData.setup();
+        FileDealsData.get().options().copyDefaults(true);
+        FileDealsData.save(); */
     }
 
     @Override
@@ -62,8 +61,10 @@ public final class wbUtils extends JavaPlugin implements Listener {
         SqlActions sqlactions = new SqlActions();
         sqlactions.saveDealsInfo();
 
+
+        /* вырезанный функционал
         FileDealsData.save();
-        saveConfig();
+        saveConfig(); */
     }
 
     public static wbUtils getInstance() {
