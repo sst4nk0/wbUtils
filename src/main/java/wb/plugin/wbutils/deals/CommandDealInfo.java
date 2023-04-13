@@ -29,8 +29,8 @@ public class CommandDealInfo implements CommandExecutor {
             switch (args[1]) {
                 case "owner" -> {
                     Player target = Bukkit.getServer().getPlayerExact(args[2]);
-                    System.out.println("[" + sender.getName() + "] [DEAL] [SET] [number:" + args[0] + "] [to:" + args[2] + "] [from:" + FileDealsData.get().getString(args[0] + ".owner") + "]");
-                    FileDealsData.get().set(args[0] + ".owner", args[2]);
+                    System.out.println("[" + sender.getName() + "] [DEAL] [SET] [number:" + args[0] + "] [to:" + args[2] + "] [from:" + DatabaseDeals.getOwner(Integer.parseInt(args[0])) + "]");
+                    DatabaseDeals.setOwner(Integer.parseInt(args[0]), args[2]);
                     if (args[2].equals("-")) {
                         for (Player playersOnline : Bukkit.getOnlinePlayers()) {
                             playersOnline.sendMessage(ChatColor.RED + "我 Администратор " + sender.getName() + " обнулил сделку №" + args[0]);
@@ -45,24 +45,24 @@ public class CommandDealInfo implements CommandExecutor {
                     }
                 }
                 case "coins_gold" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + FileDealsData.get().getString(args[0] + ".coins_gold") + "]");
+                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + DatabaseDeals.getCoinsGold(Integer.parseInt(args[0])) + "]");
                     adminChangedDeal(sender, args);
-                    FileDealsData.get().set(args[0] + ".coins_gold", args[2]);
+                    DatabaseDeals.setCoinsGold(Integer.parseInt(args[0]), args[2]);
                 }
                 case "coins_silver" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + FileDealsData.get().getString(args[0] + ".coins_silver") + "]");
+                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + DatabaseDeals.getCoinsSilver(Integer.parseInt(args[0])) + "]");
                     adminChangedDeal(sender, args);
-                    FileDealsData.get().set(args[0] + ".coins_silver", args[2]);
+                    DatabaseDeals.setCoinsSilver(Integer.parseInt(args[0]), args[2]);
                 }
                 case "coins_copper" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + FileDealsData.get().getString(args[0] + ".coins_copper") + "]");
+                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + DatabaseDeals.getCoinsCopper(Integer.parseInt(args[0])) + "]");
                     adminChangedDeal(sender, args);
-                    FileDealsData.get().set(args[0] + ".coins_copper", args[2]);
+                    DatabaseDeals.setCoinsCopper(Integer.parseInt(args[0]), args[2]);
                 }
                 case "materials" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + FileDealsData.get().getString(args[0] + ".materials") + "]");
+                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + DatabaseDeals.getMaterials(Integer.parseInt(args[0])) + "]");
                     adminChangedDeal(sender, args);
-                    FileDealsData.get().set(args[0] + ".materials", args[2]);
+                    DatabaseDeals.setMaterials(Integer.parseInt(args[0]), args[2]);
                 }
                 default -> sender.sendMessage(ChatColor.GRAY + "的 Ошибка ввода. Пример: /dealinfo <deal_id> <stat> <value>");
             }
@@ -74,25 +74,25 @@ public class CommandDealInfo implements CommandExecutor {
             switch (args[1]) {
                 case "owner" -> {
                     Player target = Bukkit.getServer().getPlayerExact(args[2]);
-                    System.out.println("[" + sender.getName() + "] [DEAL] [SET] [number:" + args[0] + "] [to:" + args[2] + "] [from:" + FileDealsData.get().getString(args[0] + ".owner") + "]");
+                    System.out.println("[" + sender.getName() + "] [DEAL] [SET] [number:" + args[0] + "] [to:" + args[2] + "] [from:" + DatabaseDeals.getOwner(Integer.parseInt(args[0])) + "]");
                     if (target != null) { target.sendMessage(ChatColor.YELLOW + "我 Сделка №" + args[0] + " теперь ваша!"); }
-                    FileDealsData.get().set(args[0] + ".owner", args[2]);
+                    DatabaseDeals.setOwner(Integer.parseInt(args[0]), args[2]);
                 }
                 case "coins_gold" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + FileDealsData.get().getString(args[0] + ".coins_gold") + "]");
-                    FileDealsData.get().set(args[0] + ".coins_gold", args[2]);
+                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + DatabaseDeals.getCoinsGold(Integer.parseInt(args[0])) + "]");
+                    DatabaseDeals.setCoinsGold(Integer.parseInt(args[0]), args[2]);
                 }
                 case "coins_silver" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + FileDealsData.get().getString(args[0] + ".coins_silver") + "]");
-                    FileDealsData.get().set(args[0] + ".coins_silver", args[2]);
+                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + DatabaseDeals.getCoinsSilver(Integer.parseInt(args[0])) + "]");
+                    DatabaseDeals.setCoinsSilver(Integer.parseInt(args[0]), args[2]);
                 }
                 case "coins_copper" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + FileDealsData.get().getString(args[0] + ".coins_copper") + "]");
-                    FileDealsData.get().set(args[0] + ".coins_copper", args[2]);
+                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + DatabaseDeals.getCoinsCopper(Integer.parseInt(args[0])) + "]");
+                    DatabaseDeals.setCoinsCopper(Integer.parseInt(args[0]), args[2]);
                 }
                 case "materials" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + FileDealsData.get().getString(args[0] + ".materials") + "]");
-                    FileDealsData.get().set(args[0] + ".materials", args[2]);
+                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + DatabaseDeals.getMaterials(Integer.parseInt(args[0])) + "]");
+                    DatabaseDeals.setMaterials(Integer.parseInt(args[0]), args[2]);
                 }
                 default -> System.out.println("[CONSOLE] [msg] [Ошибка ввода. Пример: /dealinfo <deal_id> <stat> <value>]");
             }

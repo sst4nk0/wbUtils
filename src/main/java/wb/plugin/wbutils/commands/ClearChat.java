@@ -7,8 +7,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import wb.plugin.wbutils.utilities.Payday;
-import wb.plugin.wbutils.utilities.SoundDecay;
+import wb.plugin.wbutils.deals.DatabaseDeals;
+import wb.plugin.wbutils.utilities.PaydayGrant;
 
 public class ClearChat implements CommandExecutor {
 

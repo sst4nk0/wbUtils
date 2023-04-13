@@ -2,14 +2,14 @@ package wb.plugin.wbutils;
 
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import wb.plugin.wbutils.commands.Payday;
 import wb.plugin.wbutils.commands.system.DoSpecialAction;
 import wb.plugin.wbutils.commands.system.DoSpecialAction2;
 import wb.plugin.wbutils.commands.system.DoSpecialAction3;
 import wb.plugin.wbutils.commands.system.PurchasePayment;
 import wb.plugin.wbutils.deals.*;
 import wb.plugin.wbutils.commands.ClearChat;
-
-//import wb.plugin.wbutils.events.JoinQuitEvent;
+import wb.plugin.wbutils.utilities.SqlActions;
 
 public final class wbUtils extends JavaPlugin implements Listener {
 
@@ -17,18 +17,23 @@ public final class wbUtils extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        instance = this;
 
-        new PlaceholderDealInfo(this).register(); // кулдаун
+        new PlaceholderDealInfo(this).register();
 
-        //getServer().getPluginManager().registerEvents(new JoinQuitEvent(), this);
+        //============ Прогрузка БД ====================================================================================
+        SqlActions sqlactions = new SqlActions();
+        sqlactions.firstConnection();
+        sqlactions.loadDealsInfo();
+        //==============================================================================================================
+
 
         //============ Комманды ========================================================================================
-        //getCommand("setspawn").setExecutor(new setspawn(this));
         getCommand("dealinfo").setExecutor(new CommandDealInfo());
         getCommand("dealinfo").setTabCompleter(new TabCompleterDealInfo());
         getCommand("dealbuy").setExecutor(new CommandSystemDealBuy());
         getCommand("dealrecount").setExecutor(new CommandSystemDealRecount());
-        getCommand("payday").setExecutor(new CommandDealInfo());
+        getCommand("payday").setExecutor(new Payday());
         getCommand("clearchat").setExecutor(new ClearChat());
         getCommand("dospecialaction").setExecutor(new DoSpecialAction());
         getCommand("dospecialaction2").setExecutor(new DoSpecialAction2(this));
@@ -38,21 +43,28 @@ public final class wbUtils extends JavaPlugin implements Listener {
 
 
         //============ Конфиги =========================================================================================
-        FileDealsData.setup();
-        FileDealsData.get().options().copyDefaults(true);
-        FileDealsData.save();
-
-        getConfig().options().copyDefaults();
+        getConfig().options().copyDefaults(true);
         saveDefaultConfig();
         //==============================================================================================================
 
-        instance = this;
+
+        /* вырезанный функционал
+        getServer().getPluginManager().registerEvents(new JoinQuitEvent(), this);
+        getCommand("setspawn").setExecutor(new setspawn(this));
+        FileDealsData.setup();
+        FileDealsData.get().options().copyDefaults(true);
+        FileDealsData.save(); */
     }
 
     @Override
     public void onDisable() {
+        SqlActions sqlactions = new SqlActions();
+        sqlactions.saveDealsInfo();
+
+
+        /* вырезанный функционал
         FileDealsData.save();
-        saveConfig();
+        saveConfig(); */
     }
 
     public static wbUtils getInstance() {

@@ -1,3 +1,5 @@
+// Вызов SoundDecay приведет к воспроизведению звука с расчетом громкости на основе удаленности от источника звука
+
 package wb.plugin.wbutils.utilities;
 
 import org.bukkit.Location;

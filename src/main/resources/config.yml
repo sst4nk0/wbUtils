@@ -1,3 +1,8 @@
+db-connection:
+  address: localhost
+  database: pagania
+  username: root
+  password: mypass01
 spawn:
   x: 1
   y: 1

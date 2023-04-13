@@ -21,14 +21,18 @@ public class CommandSystemDealBuy implements CommandExecutor {
     @Override
     public boolean onCommand(final @NotNull CommandSender sender, final @NotNull Command command, final @NotNull String label, final @NotNull String[] args) {
         if (sender instanceof Player) { return true; }
+
+        String zeroStat = "0";
+        DatabaseDeals.setOwner(Integer.parseInt(args[0]), args[1]);
+        DatabaseDeals.setCoinsCopper(Integer.parseInt(args[0]), zeroStat);
+        DatabaseDeals.setCoinsSilver(Integer.parseInt(args[0]), zeroStat);
+        DatabaseDeals.setCoinsGold(Integer.parseInt(args[0]), zeroStat);
+        DatabaseDeals.setMaterials(Integer.parseInt(args[0]), "16");
+
         Player target = Bukkit.getServer().getPlayerExact(args[1]);
-        System.out.println("[CONSOLE] [DEAL] [BUY] [number:" + args[0] + "] [to:" + args[1] + "] [from:" + FileDealsData.get().getString(args[0] + ".owner") + "]");
+        System.out.println("[CONSOLE] [DEAL] [BUY] [number:" + args[0] + "] [to:" + args[1] + "] [from:" + DatabaseDeals.getOwner(Integer.parseInt(args[0])) + "]");
         if (target != null) { target.sendMessage(ChatColor.YELLOW + "我 Сделка №" + args[0] + " теперь ваша!"); }
-        FileDealsData.get().set(args[0] + ".owner", args[1]);
-        FileDealsData.get().set(args[0] + ".coins_gold", 0);
-        FileDealsData.get().set(args[0] + ".coins_silver", 0);
-        FileDealsData.get().set(args[0] + ".coins_copper", 0);
-        FileDealsData.get().set(args[0] + ".materials", 4);
+
         return true;
     }
 

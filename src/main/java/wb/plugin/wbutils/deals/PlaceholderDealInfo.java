@@ -66,24 +66,24 @@ public class PlaceholderDealInfo extends PlaceholderExpansion {
     @Override
     public String onPlaceholderRequest(final Player player, final String identifier) {
         if (identifier.startsWith("dealowner_")) {
-            String dealId = identifier.replace("dealowner_", "");
-            return FileDealsData.get().getString(dealId + ".owner");
+            int dealId = Integer.parseInt(identifier.replace("dealowner_", ""));
+            return DatabaseDeals.getOwner(dealId);
         } else if (identifier.startsWith("dealcopper_")) {
-            String dealId = identifier.replace("dealcopper_", "");
-            return FileDealsData.get().getString(dealId + ".coins_copper");
+            int dealId = Integer.parseInt(identifier.replace("dealcopper_", ""));
+            return DatabaseDeals.getCoinsCopper(dealId);
         } else if (identifier.startsWith("dealsilver_")) {
-            String dealId = identifier.replace("dealsilver_", "");
-            return FileDealsData.get().getString(dealId + ".coins_silver");
+            int dealId = Integer.parseInt(identifier.replace("dealsilver_", ""));
+            return DatabaseDeals.getCoinsSilver(dealId);
         } else if (identifier.startsWith("dealgold_")) {
-            String dealId = identifier.replace("dealgold_", "");
-            return FileDealsData.get().getString(dealId + ".coins_gold");
+            int dealId = Integer.parseInt(identifier.replace("dealgold_", ""));
+            return DatabaseDeals.getCoinsGold(dealId);
         } else if (identifier.startsWith("dealmaterials_")) {
-            String dealId = identifier.replace("dealmaterials_", "");
-            return FileDealsData.get().getString(dealId + ".materials");
+            int dealId = Integer.parseInt(identifier.replace("dealmaterials_", ""));
+            return DatabaseDeals.getMaterials(dealId);
         } else if (identifier.startsWith("dealstatus_")) {
-            String dealId = identifier.replace("dealstatus_", "");
-            int numberMaterials = Integer.parseInt(FileDealsData.get().getString(dealId + ".materials"));
-            if (numberMaterials > -1) { return " "; }
+            int dealId = Integer.parseInt(identifier.replace("dealstatus_", ""));
+            int dealMaterials = Integer.parseInt(DatabaseDeals.getMaterials(dealId));
+            if (dealMaterials > -1) { return " "; }
             else { return "(сделка неустойчива)"; }
         } else {
             return null;

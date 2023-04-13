@@ -19,6 +19,7 @@ commands:
   payday:
     description: Grants an extra payday event
     permission: wbutils.payday
+    usage: /<command> <multiplier>
   dealrecount:
     description: System command
     permission: wbutils.dealrecount
