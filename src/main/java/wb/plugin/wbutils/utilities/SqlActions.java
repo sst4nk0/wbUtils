@@ -36,7 +36,7 @@ public class SqlActions{
                 }
 
                 if (dealsQuantity == 0) /*Первоначальная настройка*/ {
-                    String addNewDeal = "INSERT INTO wb_deals(`id`, `owner`, `coins_copper`, `coins_silver`, `coins_gold`, `materials`) VALUES (NULL, '-', '0', '0', '0', '0')";
+                    String addNewDeal = "INSERT INTO wb_deals(`id`, `owner`, `coins_copper`, `coins_silver`, `coins_gold`, `materials`) VALUES (NULL, '-', '0', '0', '0', '16')";
                     for (int i=0; i<27; i++) { stmt.addBatch(addNewDeal); }
                     stmt.executeBatch();
                 }

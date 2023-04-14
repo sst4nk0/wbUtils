@@ -4,12 +4,14 @@ import java.util.ArrayList;
 
 public class DatabaseDeals {
 
-    private static ArrayList<Integer> id = new ArrayList<>(25);
-    private static ArrayList<String> owner = new ArrayList<>(25);
-    private static ArrayList<String> coins_copper = new ArrayList<>(25);
-    private static ArrayList<String> coins_silver = new ArrayList<>(25);
-    private static ArrayList<String> coins_gold = new ArrayList<>(25);
-    private static ArrayList<String> materials = new ArrayList<>(25);
+    private static int DEALS_QUANTITY = 25;
+
+    private static ArrayList<Integer> id = new ArrayList<>(DEALS_QUANTITY);
+    private static ArrayList<String> owner = new ArrayList<>(DEALS_QUANTITY);
+    private static ArrayList<String> coins_copper = new ArrayList<>(DEALS_QUANTITY);
+    private static ArrayList<String> coins_silver = new ArrayList<>(DEALS_QUANTITY);
+    private static ArrayList<String> coins_gold = new ArrayList<>(DEALS_QUANTITY);
+    private static ArrayList<String> materials = new ArrayList<>(DEALS_QUANTITY);
 
 
 
@@ -21,7 +23,6 @@ public class DatabaseDeals {
      * @param coins_silver Set silver coins amount.
      * @param coins_gold Set gold coins amount.
      * @param materials Set materils amount.
-     * @return some boolean
      */
     public static void addDealInfo(int dealId, String owner, String coins_copper, String coins_silver, String coins_gold, String materials) {
         DatabaseDeals.id.add(dealId);
@@ -32,6 +33,10 @@ public class DatabaseDeals {
         DatabaseDeals.materials.add(materials);
     }
 
+
+    public static int getDealsQuantity() {
+        return DEALS_QUANTITY;
+    }
 
     public static String getOwner(int dealId) {
         return DatabaseDeals.owner.get(dealId-1);

@@ -49,6 +49,6 @@ public class TimeSyncReallife{
             case 22 -> Bukkit.dispatchCommand(console, "time set 16000");
             case 23 -> Bukkit.dispatchCommand(console, "time set 17000");
         }
-        playersToNotify.sendMessage(ChatColor.YELLOW + String.format("我 Серверное время - %s", clockFormat.format(timeNow)));
+        playersToNotify.sendMessage(ChatColor.YELLOW + String.format("的 Серверное время - %s", clockFormat.format(timeNow)));
     }
 }
