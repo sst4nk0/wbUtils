@@ -12,8 +12,19 @@ public class DatabaseDeals {
     private static ArrayList<String> materials = new ArrayList<>(25);
 
 
-    public static void addDealInfo(int id, String owner, String coins_copper, String coins_silver, String coins_gold, String materials) {
-        DatabaseDeals.id.add(id);
+
+    /**
+     * Adds deal's statistics to local data storrage.
+     * @param dealId ID of deal to set stats for.
+     * @param owner Set owner of deal.
+     * @param coins_copper Set copper coins amount.
+     * @param coins_silver Set silver coins amount.
+     * @param coins_gold Set gold coins amount.
+     * @param materials Set materils amount.
+     * @return some boolean
+     */
+    public static void addDealInfo(int dealId, String owner, String coins_copper, String coins_silver, String coins_gold, String materials) {
+        DatabaseDeals.id.add(dealId);
         DatabaseDeals.owner.add(owner);
         DatabaseDeals.coins_copper.add(coins_copper);
         DatabaseDeals.coins_silver.add(coins_silver);
@@ -22,19 +33,19 @@ public class DatabaseDeals {
     }
 
 
-    public static String getOwner(int dealId){
+    public static String getOwner(int dealId) {
         return DatabaseDeals.owner.get(dealId-1);
     }
-    public static String getCoinsCopper(int dealId){
+    public static String getCoinsCopper(int dealId) {
         return DatabaseDeals.coins_copper.get(dealId-1);
     }
-    public static String getCoinsSilver(int dealId){
+    public static String getCoinsSilver(int dealId) {
         return DatabaseDeals.coins_silver.get(dealId-1);
     }
-    public static String getCoinsGold(int dealId){
+    public static String getCoinsGold(int dealId) {
         return DatabaseDeals.coins_gold.get(dealId-1);
     }
-    public static String getMaterials(int dealId){
+    public static String getMaterials(int dealId) {
         return DatabaseDeals.materials.get(dealId-1);
     }
 
