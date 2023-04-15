@@ -5,7 +5,6 @@ package wb.plugin.wbutils.utilities;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import wb.plugin.wbutils.deals.DatabaseDeals;
 
 import java.util.HashMap;
@@ -13,7 +12,7 @@ import java.util.HashMap;
 
 public class PaydayGrant {
 
-    private static final HashMap<String, String> warningsToSend = new HashMap<>();; // player(send to) + message(what to send)
+    private static final HashMap<String, String> warningsToSend = new HashMap<>(); // player(send to) + message(what to send)
     private static final HashMap<Integer, String> dealsToReset = new HashMap<>(); // dealId + Owner
 
 
@@ -30,12 +29,11 @@ public class PaydayGrant {
      * Removes owner from inactive deals.
      */
     public void resetDealOwners() {
-
         // Обнуляем сделки
         dealsToReset.forEach((key, value) -> {
             DatabaseDeals.setOwner(key, "-");
             DatabaseDeals.setMaterials(key, "16");
-            warningsToSend.put(value, ChatColor.LIGHT_PURPLE + "我 Ваша сделка была разорвана.");
+            warningsToSend.put(value, ColorPalette.JewelzPurple() + "我 Ваша сделка была разорвана.");
         } );
 
         // Очистка очереди на обнуление
@@ -45,7 +43,7 @@ public class PaydayGrant {
         for (int i = 1; i <= DatabaseDeals.getDealsQuantity(); i++) {
             if (Integer.parseInt(DatabaseDeals.getMaterials(i)) <= -8) {
                 dealsToReset.put(i, DatabaseDeals.getOwner(i));
-                warningsToSend.put(DatabaseDeals.getOwner(i), ChatColor.LIGHT_PURPLE + "我 Ваша сделка вот-вот будет разорвана.");
+                warningsToSend.put(DatabaseDeals.getOwner(i), ColorPalette.JewelzPurple() + "我 Ваша сделка вот-вот будет разорвана.");
             }
         }
     }
@@ -75,4 +73,5 @@ public class PaydayGrant {
             warningsToSend.clear();
         }
     }
+
 }
