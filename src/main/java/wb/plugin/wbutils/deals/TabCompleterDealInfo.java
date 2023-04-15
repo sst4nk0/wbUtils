@@ -25,9 +25,9 @@ public class TabCompleterDealInfo implements TabCompleter {
         switch (args.length) {
             case 1 -> {
                 List<String> tabs = new ArrayList<>();
-                tabs.add("1");
-                tabs.add("2");
-                tabs.add("3");
+                for (int i = 1; i <= DatabaseDeals.getDealsQuantity(); i++){
+                    tabs.add(Integer.toString(i));
+                }
                 for (String s : tabs) {
                     if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
                         commands.add(s);

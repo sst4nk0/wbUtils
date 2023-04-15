@@ -26,7 +26,7 @@ public class PaydayGrant {
 
 
     /**
-     * Removes owner from inactive deals.
+     * Removes owner from inactive deals and prepares a new list of deals to reset after next execution.
      */
     public void resetDealOwners() {
         // Обнуляем сделки
