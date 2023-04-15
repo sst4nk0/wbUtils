@@ -31,9 +31,12 @@ public class PaydayGrant {
     public void resetDealOwners() {
         // Обнуляем сделки
         dealsToReset.forEach((key, value) -> {
-            DatabaseDeals.setOwner(key, "-");
-            DatabaseDeals.setMaterials(key, "16");
-            warningsToSend.put(value, ColorPalette.JewelzPurple() + "我 Ваша сделка была разорвана.");
+            if (Integer.parseInt(DatabaseDeals.getMaterials(key)) < -7)
+            {
+                DatabaseDeals.setOwner(key, "-");
+                DatabaseDeals.setMaterials(key, "16");
+                warningsToSend.put(value, ColorPalette.JewelzPurple() + "我 Ваша сделка была разорвана.");
+            }
         } );
 
         // Очистка очереди на обнуление
@@ -41,7 +44,7 @@ public class PaydayGrant {
 
         // Пополнение очереди на обнуление
         for (int i = 1; i <= DatabaseDeals.getDealsQuantity(); i++) {
-            if (Integer.parseInt(DatabaseDeals.getMaterials(i)) <= -8) {
+            if (Integer.parseInt(DatabaseDeals.getMaterials(i)) < -7) {
                 dealsToReset.put(i, DatabaseDeals.getOwner(i));
                 warningsToSend.put(DatabaseDeals.getOwner(i), ColorPalette.JewelzPurple() + "我 Ваша сделка вот-вот будет разорвана.");
             }
