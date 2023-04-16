@@ -13,10 +13,10 @@ public class CommandSystemTakeItems implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof Player) return true;
 
-        String placeholder = "%itemedit_amount_{#}_{offhand}%";
+        String PLACEHOLDER = "%itemedit_amount_{#}_{offhand}%";
 
         for (int i = 2; i < args.length; i++){
-            String placeholderToParse = placeholder.replace("#", args[i]);
+            String placeholderToParse = PLACEHOLDER.replace("#", args[i]);
             Player player = Bukkit.getPlayer(args[0]);
 
             int amountInHand = Integer.parseInt(PlaceholderAPI.setPlaceholders(player, placeholderToParse));
