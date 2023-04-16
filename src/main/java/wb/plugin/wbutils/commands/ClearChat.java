@@ -1,5 +1,6 @@
 package wb.plugin.wbutils.commands;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -7,8 +8,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import wb.plugin.wbutils.deals.DatabaseDeals;
-import wb.plugin.wbutils.utilities.PaydayGrant;
 
 public class ClearChat implements CommandExecutor {
 

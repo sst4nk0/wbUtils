@@ -13,21 +13,10 @@ public class PurchasePayment implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        /*if (sender instanceof Player) { return true; }
-        if (args.length < 3) {
-            System.out.println("[CONSOLE] [msg] [Ошибка ввода. Пример: /purchasepayment <player> <quantity> <cointype>]");
-            return true;
-        }
-        Player targetPlayer = Bukkit.getServer().getPlayerExact(args[0]);
-        if (targetPlayer == null) {
-            System.out.println("[CONSOLE] [msg] [Ошибка никнейма. Игрок не в сети]");
-            return true;
-        }
-        отключено для экономии ресурсов. если все хорошо, можно включить*/
-
+        if (sender instanceof Player) return true;
         Player targetPlayer = Bukkit.getServer().getPlayerExact(args[0]);
         ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-        switch (args[2]) { //purchasepayment sst4nk0 64 gold
+        switch (args[2]) {
             case "copper" -> {
                 int copperCoinsAmount = Integer.parseInt(PlaceholderAPI.setPlaceholders(targetPlayer, "%itemedit_amount_{currency_copper_coin}_{inventory}%"));
                 if (copperCoinsAmount == 0 | copperCoinsAmount < Integer.parseInt(args[1])) {

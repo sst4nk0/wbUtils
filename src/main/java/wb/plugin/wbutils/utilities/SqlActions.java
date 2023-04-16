@@ -17,43 +17,48 @@ public class SqlActions{
 
 
 
+
     public void firstConnection() {
-        PreparedStatement stmt = null;
-        ResultSet rs;
-        String query = "CREATE TABLE IF NOT EXISTS wb_deals(id int auto_increment, owner varchar(16), coins_copper int, coins_silver int, coins_gold int, materials int, PRIMARY KEY (id))";
+        String createTableQuery = "CREATE TABLE IF NOT EXISTS wb_deals(id int auto_increment, owner varchar(16), coins_copper int, coins_silver int, coins_gold int, materials int, PRIMARY KEY (id))";
+        String selectQuery = "SELECT COUNT(*) FROM wb_deals";
+        String insertQuery = "INSERT INTO wb_deals(owner, coins_copper, coins_silver, coins_gold, materials) VALUES (?, ?, ?, ?, ?)";
 
-        try{
-            connection = DriverManager.getConnection(url, username, password);
-            System.out.println("Connected to database successfully.");
-            try {
-                stmt = connection.prepareStatement(query);
-                stmt.execute();
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement createTableStmt = connection.prepareStatement(createTableQuery);
+             PreparedStatement selectStmt = connection.prepareStatement(selectQuery);
+             PreparedStatement insertStmt = connection.prepareStatement(insertQuery)) {
 
-                rs = stmt.executeQuery("SELECT * FROM wb_deals");
-                int dealsQuantity = 0;
-                while( rs.next() ) {
-                    dealsQuantity++;
+            // Create table if not exists
+            createTableStmt.execute();
+
+            // Check if the table is empty and insert initial data
+            ResultSet rs = selectStmt.executeQuery();
+            if (rs.next() && rs.getInt(1) == 0) {
+                insertStmt.setString(1, "-");
+                insertStmt.setInt(2, 0);
+                insertStmt.setInt(3, 0);
+                insertStmt.setInt(4, 0);
+                insertStmt.setInt(5, 16);
+
+                for (int i = 0; i < 27; i++) {
+                    insertStmt.addBatch();
                 }
 
-                if (dealsQuantity == 0) /*Первоначальная настройка*/ {
-                    String addNewDeal = "INSERT INTO wb_deals(`id`, `owner`, `coins_copper`, `coins_silver`, `coins_gold`, `materials`) VALUES (NULL, '-', '0', '0', '0', '0')";
-                    for (int i=0; i<27; i++) { stmt.addBatch(addNewDeal); }
-                    stmt.executeBatch();
-                }
-            } catch (SQLException e) {}
-            stmt.close();
-            connection.close();
-        }catch(SQLException e) {
+                insertStmt.executeBatch();
+            }
+
+        } catch (SQLException e) {
             System.out.println("Failed connection to database.");
             e.printStackTrace();
         }
     }
 
+
     public void saveDealsInfo() {
         try {
             connection = DriverManager.getConnection(url, username, password);
             Statement stmt = connection.createStatement();
-            try{
+            try {
                 for (int i=1; i<26; i++) {
                     String owner = DatabaseDeals.getOwner(i);
                     String coins_copper = DatabaseDeals.getCoinsCopper(i);
@@ -66,7 +71,7 @@ public class SqlActions{
                 stmt.executeBatch();
                 stmt.close();
                 connection.close();
-            }catch(SQLException e) {
+            } catch(SQLException e) {
                 System.out.println("Failed connection to database.");
                 e.printStackTrace();
             }
@@ -80,7 +85,7 @@ public class SqlActions{
         PreparedStatement stmt = null;
         ResultSet rs;
         String query = "SELECT * FROM wb_deals";
-        try{
+        try {
             connection = DriverManager.getConnection(url, username, password);
             try {
                 stmt = connection.prepareStatement(query);
