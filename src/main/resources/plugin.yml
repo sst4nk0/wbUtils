@@ -21,8 +21,9 @@ commands:
     permission: wbutils.payday
     usage: /<command> <multiplier>
   dealrecount:
-    description: System command
+    description: System command | Recounts coins in deal storage from low-tiers to higer-tiers
     permission: wbutils.dealrecount
+    usage: /<command> <deal_id> <nickname>
   dealbuy:
     description: System command
     permission: wbutils.dealbuy
@@ -32,6 +33,10 @@ commands:
     description: System command
   dospecialaction3:
     description: System command
+  takeitems:
+    description: System command | Removes selected items from player's inventory and sends them to material storage of a deal
+    permission: wbutils.takeitems
+    usage: /<command> <nickname> <deal_id> <itemedit_name1> <itemedit_nameX>
   purchasepayment:
     description: System command
     permission: wbutils.purchasepayment

@@ -12,11 +12,10 @@ public class Payday implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof Player player) {
             if (!player.hasPermission("wbutils.payday")) { return true; }
+            System.out.println("[" + sender.getName() + "] [CMD] [payday] [multiplier:" + args[0] + "]");
+        } else {
             new PaydayGrant();
-            return true;
-        }else{
-            new PaydayGrant();
-            return true;
         }
+        return true;
     }
 }

@@ -60,13 +60,25 @@ public class DatabaseDeals {
     public static void setCoinsCopper(int dealId, String newQuantity) {
         coins_copper.set(dealId-1, newQuantity);
     }
+    public static void setCoinsCopper(int dealId, int newQuantity) {
+        coins_copper.set(dealId-1, Integer.toString(newQuantity));
+    }
     public static void setCoinsSilver(int dealId, String newQuantity) {
         coins_silver.set(dealId-1, newQuantity);
+    }
+    public static void setCoinsSilver(int dealId, int newQuantity) {
+        coins_silver.set(dealId-1, Integer.toString(newQuantity));
     }
     public static void setCoinsGold(int dealId, String newQuantity) {
         coins_gold.set(dealId-1, newQuantity);
     }
+    public static void setCoinsGold(int dealId, int newQuantity) {
+        coins_gold.set(dealId-1, Integer.toString(newQuantity));
+    }
     public static void setMaterials(int dealId, String newQuantity) {
         materials.set(dealId-1, newQuantity);
+    }
+    public static void setMaterials(int dealId, int newQuantity) {
+        materials.set(dealId-1, Integer.toString(newQuantity));
     }
 }
