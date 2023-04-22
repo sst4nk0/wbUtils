@@ -35,7 +35,7 @@ public final class wbUtils extends JavaPlugin implements Listener {
         getCommand("dospecialaction").setExecutor(new DoSpecialAction());
         getCommand("dospecialaction2").setExecutor(new DoSpecialAction2(this));
         getCommand("dospecialaction3").setExecutor(new DoSpecialAction3());
-        getCommand("takeitems").setExecutor(new CommandSystemTakeItems());
+        getCommand("dealtakeitems").setExecutor(new CommandSystemTakeItems());
         getCommand("purchasepayment").setExecutor(new PurchasePayment());
         //==============================================================================================================
 

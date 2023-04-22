@@ -20,7 +20,7 @@ public class PaydayGrant {
     public PaydayGrant() {
         resetDealOwners();
         new SqlActions().saveDealsInfo();
-        sendNotification();
+        sendNotifications();
     }
 
 
@@ -55,7 +55,7 @@ public class PaydayGrant {
     /**
      * Broadcasts special payday notification to everyone online.
      */
-    public void sendNotification() {
+    public void sendNotifications() {
         String SPACE_STRING = "";
 
         for (Player playersOnline : Bukkit.getOnlinePlayers()) {
