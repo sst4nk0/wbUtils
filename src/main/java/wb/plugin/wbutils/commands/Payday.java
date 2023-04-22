@@ -18,7 +18,7 @@ public class Payday implements CommandExecutor {
         if (sender instanceof Player player) {
             if (!player.hasPermission("wbutils.payday")) { return true; }
             new PaydayGrant();
-            System.out.println("[" + sender.getName() + "] [CMD] [payday] [multiplier:" + args[0] + "]");
+            System.out.println("[" + sender.getName() + "] [CMD] [PAYDAY] [multiplier:" + args[0] + "]");
         } else {
             new PaydayGrant();
         }
