@@ -75,7 +75,7 @@ public class CommandDealInfo implements CommandExecutor {
             }
         } else {
             if (args.length < 3) {
-                System.out.println("[CONSOLE] [msg] [Ошибка ввода. Пример: /dealinfo <deal_id> <stat> <value>]");
+                System.out.println("[CONSOLE] [MSG] [Ошибка ввода. Пример: /dealinfo <deal_id> <stat> <value>]");
                 return true;
             }
             int dealId = Integer.parseInt(args[0].replaceAll("\\D+",""));

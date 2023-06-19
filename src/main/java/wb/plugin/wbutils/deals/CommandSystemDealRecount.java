@@ -33,7 +33,7 @@ public class CommandSystemDealRecount implements CommandExecutor {
         if (sender instanceof Player) { return true; }
         if (!sender.hasPermission("wbutils.dealrecount")) { return true; }
         if (args.length < 2) {
-            System.out.println("[CONSOLE] [msg] [Ошибка ввода. Пример: /dealrecount <deal_id> <sender_name>]");
+            System.out.println("[CONSOLE] [MSG] [Ошибка ввода. Пример: /dealrecount <deal_id> <sender_name>]");
             return true;
         }
         if (perUserCooldowns.containsKey(args[1])) {
