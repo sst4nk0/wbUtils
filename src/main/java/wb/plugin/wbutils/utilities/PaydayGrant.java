@@ -35,7 +35,7 @@ public class PaydayGrant {
             {
                 DatabaseDeals.setOwner(key, "-");
                 DatabaseDeals.setMaterials(key, "16");
-                warningsToSend.put(value, ColorPalette.JewelzPurple() + "我 Ваша сделка была разорвана.");
+                warningsToSend.put(value, ColorPalette.JEWELZ_PURPLE + "我 Ваша сделка была разорвана.");
             }
         } );
 
@@ -46,7 +46,7 @@ public class PaydayGrant {
         for (int i = 1; i <= DatabaseDeals.getDealsQuantity(); i++) {
             if (Integer.parseInt(DatabaseDeals.getMaterials(i)) < -7) {
                 dealsToReset.put(i, DatabaseDeals.getOwner(i));
-                warningsToSend.put(DatabaseDeals.getOwner(i), ColorPalette.JewelzPurple() + "我 Ваша сделка вот-вот будет разорвана.");
+                warningsToSend.put(DatabaseDeals.getOwner(i), ColorPalette.JEWELZ_PURPLE + "我 Ваша сделка вот-вот будет разорвана.");
             }
         }
     }

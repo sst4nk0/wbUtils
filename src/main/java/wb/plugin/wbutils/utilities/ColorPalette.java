@@ -2,10 +2,8 @@ package wb.plugin.wbutils.utilities;
 
 import net.md_5.bungee.api.ChatColor;
 
-public class ColorPalette {
+public record ColorPalette() {
 
-    public static ChatColor JewelzPurple() {
-        return ChatColor.of("#80247C");
-    }
+    public static final ChatColor JEWELZ_PURPLE = ChatColor.of("#80247C");
 
 }
