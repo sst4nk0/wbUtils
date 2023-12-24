@@ -6,12 +6,13 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
-group = "wb.plugin"
+group = "com.github.sst4nk0"
 version = "0.09"
 description = "wbUtils"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 repositories {
@@ -23,25 +24,18 @@ repositories {
     maven { url = uri("https://repo.maven.apache.org/maven2/") }
 }
 
-//dependencies {
-//    api(libs.org.testng.testng)
-//    compileOnly(libs.me.clip.placeholderapi)
-//    compileOnly(libs.com.github.emanondev.itemedit)
-//    compileOnly(libs.io.papermc.paper.paper.api)
-//}
-
 dependencies {
     compileOnly("me.clip:placeholderapi:2.11.2")
     compileOnly("com.github.emanondev:ItemEdit:2.20")
     compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT")
-    api("org.testng:testng:7.8.0")
+    testCompileOnly("org.testng:testng:7.8.0")
 }
 
-//publishing {
-//    publications.create<MavenPublication>("maven") {
-//        from(components["java"])
-//    }
-//}
+publishing {
+    publications.create<MavenPublication>("maven") {
+        from(components["java"])
+    }
+}
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
