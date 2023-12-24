@@ -32,7 +32,7 @@ public class DoSpecialAction3 implements CommandExecutor {
         if (args.length != 2) { return true; }
         if (perUserCooldowns.containsKey(player.getUniqueId())) {
             long timeElapsed = System.currentTimeMillis() - perUserCooldowns.get(player.getUniqueId());
-            if (timeElapsed <= 2000) { return true; }
+            if (timeElapsed <= 1000) { return true; }
             else { runProcess(sender, args, player);}
             return true;
         }
@@ -48,6 +48,8 @@ public class DoSpecialAction3 implements CommandExecutor {
                 case "copper_dl6mghd049" -> {
                     if (isNotAbleToMine(sender, args, player)) return true;
 
+                    ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+                    Bukkit.dispatchCommand(console, String.format("rpg admin exp give %s mining 2", player.getName()));
                     final String pickaxeInHand = getPickaxeType(player);
                     mineOre(args[1], player, pickaxeInHand, "copper");
                 }
@@ -57,6 +59,8 @@ public class DoSpecialAction3 implements CommandExecutor {
                     final String pickaxeInHand = getPickaxeType(player);
                     if (!pickaxeInHand.equals("Каменная")) { //(pickaxeInHand.equals("Железная") | pickaxeInHand.equals("Золотая"))
                         mineOre(args[1], player, pickaxeInHand, "iron");
+                        ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+                        Bukkit.dispatchCommand(console, String.format("rpg admin exp give %s mining 5", player.getName()));
                     } else {
                         sender.sendMessage(ChatColor.GRAY + "的 Возьми в руку подходящую кирку или получи её у главного шахтёра.");
                     }
@@ -67,6 +71,8 @@ public class DoSpecialAction3 implements CommandExecutor {
                     final String pickaxeInHand = getPickaxeType(player);
                     if (!pickaxeInHand.equals("Каменная")) { //(pickaxeInHand.equals("Железная") | pickaxeInHand.equals("Золотая"))
                         mineOre(args[1], player, pickaxeInHand, "gold");
+                        ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+                        Bukkit.dispatchCommand(console, String.format("rpg admin exp give %s mining 10", player.getName()));
                     } else {
                         sender.sendMessage(ChatColor.GRAY + "的 Возьми в руку подходящую кирку или получи её у главного шахтёра.");
                     }
@@ -77,6 +83,8 @@ public class DoSpecialAction3 implements CommandExecutor {
                     final String pickaxeInHand = getPickaxeType(player);
                     if (pickaxeInHand.equals("Золотая")) {
                         mineOre(args[1], player, pickaxeInHand, "redspice");
+                        ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+                        Bukkit.dispatchCommand(console, String.format("rpg admin exp give %s mining 20", player.getName()));
                     } else {
                         sender.sendMessage(ChatColor.GRAY + "的 Возьми в руку подходящую кирку или получи её у главного шахтёра.");
                     }
