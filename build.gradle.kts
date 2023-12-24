@@ -21,7 +21,6 @@ repositories {
     maven { url = uri("https://jitpack.io") }
     maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
     maven { url = uri("https://oss.sonatype.org/content/groups/public/") }
-    maven { url = uri("https://repo.maven.apache.org/maven2/") }
 }
 
 dependencies {
