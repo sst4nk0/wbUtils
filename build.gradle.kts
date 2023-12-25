@@ -26,7 +26,7 @@ repositories {
 dependencies {
     compileOnly("me.clip:placeholderapi:2.11.5")
     compileOnly("com.github.emanondev:ItemEdit:2.20")
-    compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT")
     testCompileOnly("org.testng:testng:7.8.0")
 }
 
