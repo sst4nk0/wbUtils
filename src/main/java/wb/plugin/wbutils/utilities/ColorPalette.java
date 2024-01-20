@@ -1,9 +1,9 @@
 package wb.plugin.wbutils.utilities;
 
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextColor;
 
 public record ColorPalette() {
 
-    public static final ChatColor JEWELZ_PURPLE = ChatColor.of("#80247C");
+    public static final TextColor JEWELZ_PURPLE = TextColor.color(128, 36, 124);
 
 }
