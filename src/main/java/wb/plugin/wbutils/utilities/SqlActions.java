@@ -1,10 +1,13 @@
 package wb.plugin.wbutils.utilities;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
 import wb.plugin.wbutils.WbUtils;
 import wb.plugin.wbutils.deals.DatabaseDeals;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,11 +15,42 @@ import java.sql.Statement;
 
 public class SqlActions {
 
-    public static final String URL = String.format("jdbc:mysql://%s/%s?allowMultiQueries=true",
-            WbUtils.getInstance().getConfig().getString("db-connection.address"),
-            WbUtils.getInstance().getConfig().getString("db-connection.database"));
-    public static final String USERNAME = WbUtils.getInstance().getConfig().getString("db-connection.username");
-    public static final String PASSWORD = WbUtils.getInstance().getConfig().getString("db-connection.password");
+    private final HikariDataSource ds;
+
+    public SqlActions() {
+        final HikariConfig config = getHikariBasicConfig();
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        config.addDataSourceProperty("useServerPrepStmts", "true");
+        config.addDataSourceProperty("useLocalSessionState", "true");
+        config.addDataSourceProperty("rewriteBatchedStatements", "true");
+        config.addDataSourceProperty("cacheResultSetMetadata", "true");
+        config.addDataSourceProperty("cacheServerConfiguration", "true");
+        config.addDataSourceProperty("elideSetAutoCommits", "true");
+        ds = new HikariDataSource(config);
+    }
+
+    @NotNull
+    private static HikariConfig getHikariBasicConfig() {
+        final FileConfiguration configuration = WbUtils.getInstance().getConfig();
+        final HikariConfig config = new HikariConfig();
+
+        config.setMaximumPoolSize(10);
+        config.setDriverClassName("org.mariadb.jdbc.Driver");
+
+        final String database = configuration.getString("db-connection.database");
+        final String address = configuration.getString("db-connection.address");
+        final String url = String.format("jdbc:mariadb://%s/%s", address, database);
+        config.setJdbcUrl(url);
+
+        final String username = configuration.getString("db-connection.username");
+        config.setUsername(username);
+
+        final String password = configuration.getString("db-connection.password");
+        config.setPassword(password);
+        return config;
+    }
 
     private static String getAddNewDeal(final int i) {
         final String owner = DatabaseDeals.getOwner(i);
@@ -28,7 +62,7 @@ public class SqlActions {
     }
 
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        return ds.getConnection();
     }
 
     public void firstConnection() {
