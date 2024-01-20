@@ -20,10 +20,10 @@ public class PaydayGrant {
     private final IDatabaseDeals databaseDeals;
 
     public PaydayGrant(final ISqlActions sqlActions, final IDatabaseDeals databaseDeals) {
+        this.databaseDeals = databaseDeals;
         resetDealOwners();
         sqlActions.saveDealsInfo();
         sendNotifications();
-        this.databaseDeals = databaseDeals;
     }
 
     /**
