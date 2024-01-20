@@ -3,17 +3,17 @@ package wb.plugin.wbutils.deals;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import wb.plugin.wbutils.wbUtils;
+import wb.plugin.wbutils.WbUtils;
 
 public class PlaceholderDealInfo extends PlaceholderExpansion {
 
-    private final wbUtils plugin;
+    private final WbUtils plugin;
 
     /**
      * Initialize a constructor.
      * @param inputPlugin inputPlugin
      */
-    public PlaceholderDealInfo(final wbUtils inputPlugin) {
+    public PlaceholderDealInfo(final WbUtils inputPlugin) {
         this.plugin = inputPlugin;
     }
 

@@ -1,17 +1,17 @@
 package wb.plugin.wbutils.utilities;
 
 import wb.plugin.wbutils.deals.DatabaseDeals;
-import wb.plugin.wbutils.wbUtils;
+import wb.plugin.wbutils.WbUtils;
 
 import java.sql.*;
 
 public class SqlActions{
 
     public String url = String.format("jdbc:mysql://%s/%s?allowMultiQueries=true",
-            wbUtils.getInstance().getConfig().getString("db-connection.address"),
-            wbUtils.getInstance().getConfig().getString("db-connection.database"));
-    public String username = wbUtils.getInstance().getConfig().getString("db-connection.username");
-    public String password = wbUtils.getInstance().getConfig().getString("db-connection.password");
+            WbUtils.getInstance().getConfig().getString("db-connection.address"),
+            WbUtils.getInstance().getConfig().getString("db-connection.database"));
+    public String username = WbUtils.getInstance().getConfig().getString("db-connection.username");
+    public String password = WbUtils.getInstance().getConfig().getString("db-connection.password");
     public Connection connection = null;
 
 

@@ -12,19 +12,19 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-import wb.plugin.wbutils.wbUtils;
+import wb.plugin.wbutils.WbUtils;
 
 import java.util.Random;
 
 public class DoSpecialAction2 implements CommandExecutor {
 
-    private final wbUtils plugin;
+    private final WbUtils plugin;
 
     /**
      * Initialize a constructor.
      * @param inputPlugin inputPlugin
      */
-    public DoSpecialAction2(final wbUtils inputPlugin) {
+    public DoSpecialAction2(final WbUtils inputPlugin) {
         this.plugin = inputPlugin;
     }
 

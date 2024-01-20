@@ -8,9 +8,9 @@ import wb.plugin.wbutils.deals.*;
 import wb.plugin.wbutils.commands.ClearChat;
 import wb.plugin.wbutils.utilities.SqlActions;
 
-public final class wbUtils extends JavaPlugin implements Listener {
+public final class WbUtils extends JavaPlugin implements Listener {
 
-    private static wbUtils instance;
+    private static WbUtils instance;
 
     @Override
     public void onEnable() {
@@ -65,7 +65,7 @@ public final class wbUtils extends JavaPlugin implements Listener {
         saveConfig(); */
     }
 
-    public static wbUtils getInstance() {
+    public static WbUtils getInstance() {
         return instance;
     }
 }

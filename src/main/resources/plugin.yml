@@ -1,6 +1,6 @@
 name: wbUtils
 version: '${project.version}'
-main: wb.plugin.wbutils.wbUtils
+main: wb.plugin.wbutils.WbUtils
 api-version: 1.19
 authors: [ sst4nk0 ]
 description: A plugin with all essential utilities for this server.

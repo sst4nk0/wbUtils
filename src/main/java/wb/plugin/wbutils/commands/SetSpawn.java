@@ -6,17 +6,17 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import wb.plugin.wbutils.wbUtils;
+import wb.plugin.wbutils.WbUtils;
 
 public class SetSpawn implements CommandExecutor {
 
-    private final wbUtils plugin;
+    private final WbUtils plugin;
 
     /**
      * Initialize a constructor.
      * @param inputPlugin inputPlugin
      */
-    public SetSpawn(final wbUtils inputPlugin) {
+    public SetSpawn(final WbUtils inputPlugin) {
         this.plugin = inputPlugin;
     }
 
