@@ -3,6 +3,7 @@ package wb.plugin.wbutils.events;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,7 +24,8 @@ public class JoinQuitEvent implements Listener {
         final TextComponent prefix = Component.text("加 ");
         final TextComponent content;
         final Player player = jEvent.getPlayer();
-        final String playerName = player.getDisplayName();
+        final Component displayNameComponent = player.displayName();
+        final String playerName = PlainTextComponentSerializer.plainText().serialize(displayNameComponent);
         final NamedTextColor color = NamedTextColor.YELLOW;
         if (player.hasPlayedBefore()) {
             switch (random.nextInt(0, 7)) {
@@ -49,7 +51,8 @@ public class JoinQuitEvent implements Listener {
         final TextComponent prefix = Component.text("放 ");
         final TextComponent content;
         final Player player = qEvent.getPlayer();
-        final String playerName = player.getDisplayName();
+        final Component displayNameComponent = player.displayName();
+        final String playerName = PlainTextComponentSerializer.plainText().serialize(displayNameComponent);
         final NamedTextColor color = NamedTextColor.YELLOW;
         switch (random.nextInt(0, 7)) {
             case 0 -> content = Component.text(playerName + " устал от нашей компании.", color);
