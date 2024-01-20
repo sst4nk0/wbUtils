@@ -11,7 +11,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class SqlActions {
 
@@ -50,15 +49,6 @@ public class SqlActions {
         final String password = configuration.getString("db-connection.password");
         config.setPassword(password);
         return config;
-    }
-
-    private static String getAddNewDeal(final int i) {
-        final String owner = DatabaseDeals.getOwner(i);
-        final String coins_copper = DatabaseDeals.getCoinsCopper(i);
-        final String coins_silver = DatabaseDeals.getCoinsSilver(i);
-        final String coins_gold = DatabaseDeals.getCoinsGold(i);
-        final String materials = DatabaseDeals.getMaterials(i);
-        return String.format("UPDATE `wb_deals` SET `owner` = '%s', `coins_copper` = '%s', `coins_silver` = '%s', `coins_gold` = '%s', `materials` = '%s' WHERE `id` = '%s'", owner, coins_copper, coins_silver, coins_gold, materials, i);
     }
 
     public Connection getConnection() throws SQLException {
@@ -100,10 +90,19 @@ public class SqlActions {
     }
 
     public void saveDealsInfo() {
-        try (final Connection connection = getConnection(); final Statement stmt = connection.createStatement()) {
+        final String updateQuery = "UPDATE `wb_deals` SET `owner` = ?, `coins_copper` = ?, `coins_silver` = ?, `coins_gold` = ?, `materials` = ? WHERE `id` = ?";
+
+        try (final Connection connection = getConnection();
+             final PreparedStatement stmt = connection.prepareStatement(updateQuery)) {
+
             for (int i = 1; i < 26; i++) {
-                final String addNewDeal = getAddNewDeal(i);
-                stmt.addBatch(addNewDeal);
+                stmt.setString(1, DatabaseDeals.getOwner(i));
+                stmt.setString(2, DatabaseDeals.getCoinsCopper(i));
+                stmt.setString(3, DatabaseDeals.getCoinsSilver(i));
+                stmt.setString(4, DatabaseDeals.getCoinsGold(i));
+                stmt.setString(5, DatabaseDeals.getMaterials(i));
+                stmt.setInt(6, i);
+                stmt.addBatch();
             }
             stmt.executeBatch();
         } catch (SQLException e) {
