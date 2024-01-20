@@ -3,7 +3,7 @@ plugins {
     idea
     `java-library`
     `maven-publish`
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.papermc.paperweight.userdev") version "1.5.11"
 }
 
 group = "com.github.sst4nk0"
@@ -16,6 +16,7 @@ java {
 }
 
 repositories {
+    gradlePluginPortal()
     mavenCentral()
     maven { url = uri("https://repo.extendedclip.com/content/repositories/placeholderapi/") }
     maven { url = uri("https://jitpack.io") }
@@ -24,9 +25,9 @@ repositories {
 }
 
 dependencies {
+    paperweight.paperDevBundle("1.19.3-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.5")
     compileOnly("com.github.emanondev:ItemEdit:2.20")
-    compileOnly("io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT")
     testCompileOnly("org.testng:testng:7.9.0")
 }
 
@@ -36,14 +37,20 @@ publishing {
     }
 }
 
-tasks.withType<JavaCompile> {
-    options.encoding = "UTF-8"
-}
+tasks {
+    assemble {
+        dependsOn(reobfJar)
+    }
 
-tasks.withType<Javadoc> {
-    options.encoding = "UTF-8"
-}
+    withType<JavaCompile> {
+        options.encoding = "UTF-8"
+    }
 
-tasks.named<Test>("test") {
-    useTestNG()
+    withType<Javadoc> {
+        options.encoding = "UTF-8"
+    }
+
+    named<Test>("test") {
+        useTestNG()
+    }
 }
