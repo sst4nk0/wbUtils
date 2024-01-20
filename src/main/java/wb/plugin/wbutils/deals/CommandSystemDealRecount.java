@@ -15,9 +15,11 @@ import java.util.HashMap;
 public class CommandSystemDealRecount implements CommandExecutor {
 
     private final HashMap<String, Long> perUserCooldowns;  // кулдауны на флуд
+    private final IDatabaseDeals databaseDeals;
 
-    public CommandSystemDealRecount() {
+    public CommandSystemDealRecount(final IDatabaseDeals databaseDeals) {
         this.perUserCooldowns = new HashMap<>();
+        this.databaseDeals = databaseDeals;
     }
 
     /**
@@ -50,9 +52,9 @@ public class CommandSystemDealRecount implements CommandExecutor {
     private void runProcess(@NotNull String @NotNull [] args) {
         perUserCooldowns.put(args[1], System.currentTimeMillis());
 
-        int coins_copper = Integer.parseInt(DatabaseDeals.getCoinsCopper(Integer.parseInt(args[0])));
-        int coins_silver = Integer.parseInt(DatabaseDeals.getCoinsSilver(Integer.parseInt(args[0])));
-        int coins_gold = Integer.parseInt(DatabaseDeals.getCoinsGold(Integer.parseInt(args[0])));
+        int coins_copper = Integer.parseInt(databaseDeals.getCoinsCopper(Integer.parseInt(args[0])));
+        int coins_silver = Integer.parseInt(databaseDeals.getCoinsSilver(Integer.parseInt(args[0])));
+        int coins_gold = Integer.parseInt(databaseDeals.getCoinsGold(Integer.parseInt(args[0])));
         boolean changed = false;
 
         final int maxStackSize = 64;
@@ -75,9 +77,9 @@ public class CommandSystemDealRecount implements CommandExecutor {
 
         if (changed) {
             Player player = Bukkit.getPlayerExact(args[1]);
-            DatabaseDeals.setCoinsCopper(Integer.parseInt(args[0]), Integer.toString(coins_copper));
-            DatabaseDeals.setCoinsSilver(Integer.parseInt(args[0]), Integer.toString(coins_silver));
-            DatabaseDeals.setCoinsGold(Integer.parseInt(args[0]), Integer.toString(coins_gold));
+            databaseDeals.setCoinsCopper(Integer.parseInt(args[0]), Integer.toString(coins_copper));
+            databaseDeals.setCoinsSilver(Integer.parseInt(args[0]), Integer.toString(coins_silver));
+            databaseDeals.setCoinsGold(Integer.parseInt(args[0]), Integer.toString(coins_gold));
             player.sendMessage(ChatColor.DARK_GREEN + "Кладовщик: " + ChatColor.GREEN + "Всё, пересчитал. Надо будет отдохнуть сегодня за кружечкой светлого нефильтрованного.");
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_AMBIENT, 1, 1);
         }

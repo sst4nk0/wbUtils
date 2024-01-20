@@ -11,8 +11,16 @@ import java.util.List;
 
 public class TabCompleterDealInfo implements TabCompleter {
 
+    private final IDatabaseDeals databaseDeals;
+
+    public TabCompleterDealInfo(final IDatabaseDeals databaseDeals) {
+        super();
+        this.databaseDeals = databaseDeals;
+    }
+
     /**
      * Do something.
+     *
      * @param sender  sender
      * @param command command
      * @param alias   alias
@@ -20,12 +28,13 @@ public class TabCompleterDealInfo implements TabCompleter {
      * @return some List
      */
     @Override
-    public @Nullable List<String> onTabComplete(final @NotNull CommandSender sender, final @NotNull Command command, final @NotNull String alias, final @NotNull String[] args) {
+    public @Nullable List<String> onTabComplete(final @NotNull CommandSender sender, final @NotNull Command command,
+                                                final @NotNull String alias, final @NotNull String[] args) {
         List<String> commands = new ArrayList<>();
         switch (args.length) {
             case 1 -> {
                 List<String> tabs = new ArrayList<>();
-                for (int i = 1; i <= DatabaseDeals.getDealsQuantity(); i++){
+                for (int i = 1; i <= databaseDeals.getDealsQuantity(); i++) {
                     tabs.add(Integer.toString(i));
                 }
                 for (String s : tabs) {
@@ -52,8 +61,9 @@ public class TabCompleterDealInfo implements TabCompleter {
             case 3 -> {
                 return commands;
             }
+            default -> {
+                return null;
+            }
         }
-        return null;
     }
-
 }

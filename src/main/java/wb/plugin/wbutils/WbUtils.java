@@ -1,50 +1,43 @@
 package wb.plugin.wbutils;
 
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import wb.plugin.wbutils.commands.Payday;
-import wb.plugin.wbutils.commands.system.*;
-import wb.plugin.wbutils.deals.*;
 import wb.plugin.wbutils.commands.ClearChat;
+import wb.plugin.wbutils.commands.Payday;
+import wb.plugin.wbutils.commands.system.DoSpecialAction;
+import wb.plugin.wbutils.commands.system.DoSpecialAction2;
+import wb.plugin.wbutils.commands.system.DoSpecialAction3;
+import wb.plugin.wbutils.commands.system.PurchasePayment;
+import wb.plugin.wbutils.deals.CommandDealInfo;
+import wb.plugin.wbutils.deals.CommandSystemDealBuy;
+import wb.plugin.wbutils.deals.CommandSystemDealRecount;
+import wb.plugin.wbutils.deals.CommandSystemTakeItems;
+import wb.plugin.wbutils.deals.DatabaseDeals;
+import wb.plugin.wbutils.deals.IDatabaseDeals;
+import wb.plugin.wbutils.deals.PlaceholderDealInfo;
+import wb.plugin.wbutils.deals.TabCompleterDealInfo;
+import wb.plugin.wbutils.utilities.ISqlActions;
 import wb.plugin.wbutils.utilities.SqlActions;
+
+import java.sql.SQLException;
+import java.util.Objects;
 
 public final class WbUtils extends JavaPlugin implements Listener {
 
-    private static WbUtils instance;
+    private ISqlActions sqlActions;
+    private IDatabaseDeals databaseDeals;
 
     @Override
     public void onEnable() {
-        instance = this;
+        databaseDeals = new DatabaseDeals();
 
-        new PlaceholderDealInfo(this).register();
+        new PlaceholderDealInfo(this, databaseDeals).register();
 
-        //============ Прогрузка БД ====================================================================================
-        SqlActions sqlactions = new SqlActions();
-        sqlactions.firstConnection();
-        sqlactions.loadDealsInfo();
-        //==============================================================================================================
-
-
-        //============ Комманды ========================================================================================
-        getCommand("dealinfo").setExecutor(new CommandDealInfo());
-        getCommand("dealinfo").setTabCompleter(new TabCompleterDealInfo());
-        getCommand("dealbuy").setExecutor(new CommandSystemDealBuy());
-        getCommand("dealrecount").setExecutor(new CommandSystemDealRecount());
-        getCommand("payday").setExecutor(new Payday());
-        getCommand("clearchat").setExecutor(new ClearChat());
-        getCommand("dospecialaction").setExecutor(new DoSpecialAction());
-        getCommand("dospecialaction2").setExecutor(new DoSpecialAction2(this));
-        getCommand("dospecialaction3").setExecutor(new DoSpecialAction3());
-        getCommand("dealtakeitems").setExecutor(new CommandSystemTakeItems());
-        getCommand("purchasepayment").setExecutor(new PurchasePayment());
-        //==============================================================================================================
-
-
-        //============ Конфиги =========================================================================================
-        getConfig().options().copyDefaults(true);
-        saveDefaultConfig();
-        //==============================================================================================================
-
+        initializeDatabase();
+        registerCommands();
+        loadConfiguration();
 
         /* вырезанный функционал
         getServer().getPluginManager().registerEvents(new JoinQuitEvent(), this);
@@ -54,18 +47,51 @@ public final class WbUtils extends JavaPlugin implements Listener {
         FileDealsData.save(); */
     }
 
+    private void initializeDatabase() {
+        sqlActions = new SqlActions(this, databaseDeals);
+        sqlActions.initialize();
+        sqlActions.loadDealsInfo();
+    }
+
+    private void registerCommands() {
+        registerCommand("dealinfo", new CommandDealInfo(databaseDeals));
+        registerCommand("dealbuy", new CommandSystemDealBuy(databaseDeals));
+        registerCommand("dealrecount", new CommandSystemDealRecount(databaseDeals));
+        registerCommand("payday", new Payday(sqlActions, databaseDeals));
+        registerCommand("clearchat", new ClearChat());
+        registerCommand("dospecialaction", new DoSpecialAction());
+        registerCommand("dospecialaction2", new DoSpecialAction2(this));
+        registerCommand("dospecialaction3", new DoSpecialAction3());
+        registerCommand("dealtakeitems", new CommandSystemTakeItems(databaseDeals));
+        registerCommand("purchasepayment", new PurchasePayment());
+
+        registerTabCompleter("dealinfo", new TabCompleterDealInfo(databaseDeals));
+    }
+
+    private void registerCommand(final String name, final CommandExecutor executor) {
+        Objects.requireNonNull(getCommand(name)).setExecutor(executor);
+    }
+
+    private void registerTabCompleter(final String name, final TabCompleter executor) {
+        Objects.requireNonNull(getCommand(name)).setTabCompleter(executor);
+    }
+
+    private void loadConfiguration() {
+        getConfig().options().copyDefaults(true);
+        saveDefaultConfig();
+    }
+
     @Override
     public void onDisable() {
-        SqlActions sqlactions = new SqlActions();
-        sqlactions.saveDealsInfo();
-
+        sqlActions.saveDealsInfo();
+        try {
+            sqlActions.getConnection().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         /* вырезанный функционал
         FileDealsData.save();
         saveConfig(); */
-    }
-
-    public static WbUtils getInstance() {
-        return instance;
     }
 }

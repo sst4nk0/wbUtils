@@ -10,6 +10,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class CommandDealInfo implements CommandExecutor {
 
+    private final IDatabaseDeals databaseDeals;
+
+    public CommandDealInfo(final IDatabaseDeals databaseDeals) {
+        super();
+        this.databaseDeals = databaseDeals;
+    }
+
     /**
      * Do something.
      * @param sender  sender
@@ -30,14 +37,14 @@ public class CommandDealInfo implements CommandExecutor {
             int dealId = Integer.parseInt(args[0]);
             String argValue = args[2].replaceAll("[^\\d-]", "");
             if (argValue.equals("-")) argValue = "0";
-            if (dealId <= 0 || dealId > DatabaseDeals.getDealsQuantity()) return true;
+            if (dealId <= 0 || dealId > databaseDeals.getDealsQuantity()) return true;
 
             switch (args[1]) {
                 case "owner" -> {
                     Player target = Bukkit.getServer().getPlayerExact(args[2]);
 
-                    System.out.println("[" + sender.getName() + "] [DEAL] [SET] [number:" + args[0] + "] [to:" + args[2] + "] [from:" + DatabaseDeals.getOwner(Integer.parseInt(args[0])) + "]");
-                    DatabaseDeals.setOwner(dealId, args[2]);
+                    System.out.println("[" + sender.getName() + "] [DEAL] [SET] [number:" + args[0] + "] [to:" + args[2] + "] [from:" + databaseDeals.getOwner(Integer.parseInt(args[0])) + "]");
+                    databaseDeals.setOwner(dealId, args[2]);
                     if (args[2].equals("-")) {
                         for (Player playersOnline : Bukkit.getOnlinePlayers()) {
                             playersOnline.sendMessage(ChatColor.RED + "我 Администратор " + sender.getName() + " обнулил сделку №" + args[0]);
@@ -52,24 +59,24 @@ public class CommandDealInfo implements CommandExecutor {
                     }
                 }
                 case "coins_gold" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + DatabaseDeals.getCoinsGold(Integer.parseInt(args[0])) + "]");
+                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + databaseDeals.getCoinsGold(Integer.parseInt(args[0])) + "]");
                     adminChangedDeal(sender, args);
-                    DatabaseDeals.setCoinsGold(dealId, argValue);
+                    databaseDeals.setCoinsGold(dealId, argValue);
                 }
                 case "coins_silver" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + DatabaseDeals.getCoinsSilver(Integer.parseInt(args[0])) + "]");
+                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + databaseDeals.getCoinsSilver(Integer.parseInt(args[0])) + "]");
                     adminChangedDeal(sender, args);
-                    DatabaseDeals.setCoinsSilver(dealId, argValue);
+                    databaseDeals.setCoinsSilver(dealId, argValue);
                 }
                 case "coins_copper" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + DatabaseDeals.getCoinsCopper(Integer.parseInt(args[0])) + "]");
+                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + databaseDeals.getCoinsCopper(Integer.parseInt(args[0])) + "]");
                     adminChangedDeal(sender, args);
-                    DatabaseDeals.setCoinsCopper(dealId, argValue);
+                    databaseDeals.setCoinsCopper(dealId, argValue);
                 }
                 case "materials" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + DatabaseDeals.getMaterials(Integer.parseInt(args[0])) + "]");
+                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + databaseDeals.getMaterials(Integer.parseInt(args[0])) + "]");
                     adminChangedDeal(sender, args);
-                    DatabaseDeals.setMaterials(dealId, argValue);
+                    databaseDeals.setMaterials(dealId, argValue);
                 }
                 default -> sender.sendMessage(ChatColor.GRAY + "的 Ошибка ввода. Пример: /dealinfo <deal_id> <stat> <value>");
             }
@@ -80,30 +87,30 @@ public class CommandDealInfo implements CommandExecutor {
             }
             int dealId = Integer.parseInt(args[0].replaceAll("\\D+",""));
             String argValue = args[2].replaceAll("\\D+","");
-            if (dealId <= 0 || dealId > DatabaseDeals.getDealsQuantity()) return true;
+            if (dealId <= 0 || dealId > databaseDeals.getDealsQuantity()) return true;
 
             switch (args[1]) {
                 case "owner" -> {
                     Player target = Bukkit.getServer().getPlayerExact(args[2]);
-                    System.out.println("[" + sender.getName() + "] [DEAL] [SET] [number:" + args[0] + "] [to:" + args[2] + "] [from:" + DatabaseDeals.getOwner(Integer.parseInt(args[0])) + "]");
+                    System.out.println("[" + sender.getName() + "] [DEAL] [SET] [number:" + args[0] + "] [to:" + args[2] + "] [from:" + databaseDeals.getOwner(Integer.parseInt(args[0])) + "]");
                     if (target != null) { target.sendMessage(ChatColor.YELLOW + "我 Сделка №" + args[0] + " теперь ваша!"); }
-                    DatabaseDeals.setOwner(dealId, args[2]);
+                    databaseDeals.setOwner(dealId, args[2]);
                 }
                 case "coins_gold" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + DatabaseDeals.getCoinsGold(Integer.parseInt(args[0])) + "]");
-                    DatabaseDeals.setCoinsGold(dealId, argValue);
+                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + databaseDeals.getCoinsGold(Integer.parseInt(args[0])) + "]");
+                    databaseDeals.setCoinsGold(dealId, argValue);
                 }
                 case "coins_silver" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + DatabaseDeals.getCoinsSilver(Integer.parseInt(args[0])) + "]");
-                    DatabaseDeals.setCoinsSilver(dealId, argValue);
+                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + databaseDeals.getCoinsSilver(Integer.parseInt(args[0])) + "]");
+                    databaseDeals.setCoinsSilver(dealId, argValue);
                 }
                 case "coins_copper" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + DatabaseDeals.getCoinsCopper(Integer.parseInt(args[0])) + "]");
-                    DatabaseDeals.setCoinsCopper(dealId, argValue);
+                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + databaseDeals.getCoinsCopper(Integer.parseInt(args[0])) + "]");
+                    databaseDeals.setCoinsCopper(dealId, argValue);
                 }
                 case "materials" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + DatabaseDeals.getMaterials(Integer.parseInt(args[0])) + "]");
-                    DatabaseDeals.setMaterials(dealId, argValue);
+                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + args[2] + "] [previous:" + databaseDeals.getMaterials(Integer.parseInt(args[0])) + "]");
+                    databaseDeals.setMaterials(dealId, argValue);
                 }
                 default -> System.out.println("[CONSOLE] [msg] [Ошибка ввода. Пример: /dealinfo <deal_id> <stat> <value>]");
             }

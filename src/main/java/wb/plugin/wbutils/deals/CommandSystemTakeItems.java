@@ -9,13 +9,22 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class CommandSystemTakeItems implements CommandExecutor {
+
+    private final IDatabaseDeals databaseDeals;
+
+    public CommandSystemTakeItems(final IDatabaseDeals databaseDeals) {
+        super();
+        this.databaseDeals = databaseDeals;
+    }
+
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
+                             @NotNull String label, @NotNull String[] args) {
         if (sender instanceof Player) return true;
 
         String PLACEHOLDER = "%itemedit_amount_{#}_{offhand}%";
 
-        for (int i = 2; i < args.length; i++){
+        for (int i = 2; i < args.length; i++) {
             String placeholderToParse = PLACEHOLDER.replace("#", args[i]);
             Player player = Bukkit.getPlayer(args[0]);
 
@@ -24,8 +33,8 @@ public class CommandSystemTakeItems implements CommandExecutor {
             if (amountInHand > 0) {
                 player.getInventory().setItemInOffHand(null);
                 int dealId = Integer.parseInt(args[1]);
-                int newQuantity = Integer.parseInt(DatabaseDeals.getMaterials(dealId))+amountInHand;
-                DatabaseDeals.setMaterials(dealId, newQuantity);
+                int newQuantity = Integer.parseInt(databaseDeals.getMaterials(dealId)) + amountInHand;
+                databaseDeals.setMaterials(dealId, Integer.toString(newQuantity));
                 return true;
             }
         }

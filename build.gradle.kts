@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.github.sst4nk0"
-version = "0.09"
+version = "0.2.0"
 description = "wbUtils"
 
 java {

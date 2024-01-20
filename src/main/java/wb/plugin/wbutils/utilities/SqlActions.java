@@ -3,21 +3,29 @@ package wb.plugin.wbutils.utilities;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import wb.plugin.wbutils.WbUtils;
-import wb.plugin.wbutils.deals.DatabaseDeals;
+import wb.plugin.wbutils.deals.IDatabaseDeals;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class SqlActions {
+public class SqlActions implements ISqlActions {
 
-    private final HikariDataSource ds;
+    private final DataSource ds;
+    private final IDatabaseDeals databaseDeals;
 
-    public SqlActions() {
-        final HikariConfig config = getHikariBasicConfig();
+    public SqlActions(final JavaPlugin plugin, final IDatabaseDeals databaseDeals) {
+        this.databaseDeals = databaseDeals;
+        ds = getDataSource(plugin.getConfig());
+    }
+
+    @NotNull
+    private static HikariDataSource getDataSource(final FileConfiguration pluginConfig) {
+        final HikariConfig config = getHikariBasicConfig(pluginConfig);
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
@@ -27,35 +35,34 @@ public class SqlActions {
         config.addDataSourceProperty("cacheResultSetMetadata", "true");
         config.addDataSourceProperty("cacheServerConfiguration", "true");
         config.addDataSourceProperty("elideSetAutoCommits", "true");
-        ds = new HikariDataSource(config);
+        return new HikariDataSource(config);
     }
 
     @NotNull
-    private static HikariConfig getHikariBasicConfig() {
-        final FileConfiguration configuration = WbUtils.getInstance().getConfig();
-        final HikariConfig config = new HikariConfig();
+    private static HikariConfig getHikariBasicConfig(final FileConfiguration pluginConfig) {
+        final HikariConfig hikariConfig = new HikariConfig();
 
-        config.setMaximumPoolSize(10);
-        config.setDriverClassName("org.mariadb.jdbc.Driver");
+        hikariConfig.setMaximumPoolSize(10);
+        hikariConfig.setDriverClassName("org.mariadb.jdbc.Driver");
 
-        final String database = configuration.getString("db-connection.database");
-        final String address = configuration.getString("db-connection.address");
+        final String database = pluginConfig.getString("db-connection.database");
+        final String address = pluginConfig.getString("db-connection.address");
         final String url = String.format("jdbc:mariadb://%s/%s", address, database);
-        config.setJdbcUrl(url);
+        hikariConfig.setJdbcUrl(url);
 
-        final String username = configuration.getString("db-connection.username");
-        config.setUsername(username);
+        final String username = pluginConfig.getString("db-connection.username");
+        hikariConfig.setUsername(username);
 
-        final String password = configuration.getString("db-connection.password");
-        config.setPassword(password);
-        return config;
+        final String password = pluginConfig.getString("db-connection.password");
+        hikariConfig.setPassword(password);
+        return hikariConfig;
     }
 
     public Connection getConnection() throws SQLException {
         return ds.getConnection();
     }
 
-    public void firstConnection() {
+    public void initialize() {
         try (final Connection connection = getConnection()) {
             createTableIfNotExists(connection);
             if (isTableEmpty(connection)) {
@@ -105,11 +112,11 @@ public class SqlActions {
              final PreparedStatement stmt = connection.prepareStatement(updateQuery)) {
 
             for (int i = 1; i < 26; i++) {
-                stmt.setString(1, DatabaseDeals.getOwner(i));
-                stmt.setString(2, DatabaseDeals.getCoinsCopper(i));
-                stmt.setString(3, DatabaseDeals.getCoinsSilver(i));
-                stmt.setString(4, DatabaseDeals.getCoinsGold(i));
-                stmt.setString(5, DatabaseDeals.getMaterials(i));
+                stmt.setString(1, databaseDeals.getOwner(i));
+                stmt.setString(2, databaseDeals.getCoinsCopper(i));
+                stmt.setString(3, databaseDeals.getCoinsSilver(i));
+                stmt.setString(4, databaseDeals.getCoinsGold(i));
+                stmt.setString(5, databaseDeals.getMaterials(i));
                 stmt.setInt(6, i);
                 stmt.addBatch();
             }
@@ -126,7 +133,7 @@ public class SqlActions {
              final PreparedStatement stmt = connection.prepareStatement(query);
              final ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                DatabaseDeals.addDealInfo(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
+                databaseDeals.addDealInfo(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
             }
         } catch (SQLException e) {
             System.out.println("Failed connection to database.");
