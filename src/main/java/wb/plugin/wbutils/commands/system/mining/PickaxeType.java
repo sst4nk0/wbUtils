@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.commands.system;
+package wb.plugin.wbutils.commands.system.mining;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;

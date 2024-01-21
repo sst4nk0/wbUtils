@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.commands.system;
+package wb.plugin.wbutils.commands.system.mining;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
