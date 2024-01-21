@@ -7,7 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import wb.plugin.wbutils.commands.ClearChat;
 import wb.plugin.wbutils.commands.Payday;
 import wb.plugin.wbutils.commands.system.DoSpecialAction2;
-import wb.plugin.wbutils.commands.system.DoSpecialAction3;
+import wb.plugin.wbutils.commands.system.MiningActionHandler;
 import wb.plugin.wbutils.commands.system.WoodcuttingActionHandler;
 import wb.plugin.wbutils.commands.system.PurchasePayment;
 import wb.plugin.wbutils.deals.CommandDealInfo;
@@ -61,7 +61,7 @@ public final class WbUtils extends JavaPlugin implements Listener {
         registerCommand("clearchat", new ClearChat());
         registerCommand("dospecialaction", new WoodcuttingActionHandler());
         registerCommand("dospecialaction2", new DoSpecialAction2(this));
-        registerCommand("dospecialaction3", new DoSpecialAction3());
+        registerCommand("dospecialaction3", new MiningActionHandler());
         registerCommand("dealtakeitems", new CommandSystemTakeItems(databaseDeals));
         registerCommand("purchasepayment", new PurchasePayment());
 
