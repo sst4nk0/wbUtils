@@ -11,22 +11,12 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
 public class WoodcuttingActionHandler implements CommandExecutor {
 
     private static final String PERMISSION_PREFIX = "wb.woodobtain.";
     private static final String DM_COMMAND_FORMAT = "dm open %s %s";
     private static final String LP_COMMAND_FORMAT = "lp user %s permission settemp %s false %ds";
     private static final byte PERMISSION_EXPIRY_TIME = 59;
-    private static final ConcurrentMap<String, String> WOOD_JOB = new ConcurrentHashMap<>();
-
-    static {
-        WOOD_JOB.put("oak_ehmyzz2lgq", "job_oak");
-        WOOD_JOB.put("spruce_yy974jutou", "job_spruce");
-        WOOD_JOB.put("birch_t899c168nx", "job_birch");
-    }
 
     private static void sendErrorMessageToPlayer(final Player player, final String permission) {
         final String permissionExpiryTime = "%luckperms_expiry_time_" + permission + '%';
@@ -55,8 +45,9 @@ public class WoodcuttingActionHandler implements CommandExecutor {
             return true;
         }
 
-        final String woodType = args[0];
-        final String job = WOOD_JOB.get(woodType);
+        final String woodId = args[0];
+        final WoodType wood = WoodType.fromWoodId(woodId);
+        final String job = wood.getWoodJobName();
         final String permissionBody = args[1];
         handleWoodcuttingCommand(player, permissionBody, job);
         return true;
