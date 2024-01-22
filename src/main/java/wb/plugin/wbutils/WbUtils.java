@@ -83,6 +83,9 @@ public final class WbUtils extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        if (sqlActions == null) {
+            return;
+        }
         sqlActions.saveDealsInfo();
         try {
             sqlActions.getConnection().close();
