@@ -12,12 +12,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-import java.util.Random;
-
+import java.util.concurrent.ThreadLocalRandom;
 
 public class JoinQuitEvent implements Listener {
-
-    private final Random random = new Random();
 
     @EventHandler
     public void onPlayerJoin(final @NotNull PlayerJoinEvent jEvent) {
@@ -28,6 +25,7 @@ public class JoinQuitEvent implements Listener {
         final String playerName = PlainTextComponentSerializer.plainText().serialize(displayNameComponent);
         final NamedTextColor color = NamedTextColor.YELLOW;
         if (player.hasPlayedBefore()) {
+            final ThreadLocalRandom random = ThreadLocalRandom.current();
             switch (random.nextInt(0, 7)) {
                 case 0 -> content = Component.text(playerName + " почтил нас своим присутствием.", color);
                 case 1 -> content = Component.text(playerName + " решил заглянуть к нам.", color);
@@ -54,6 +52,7 @@ public class JoinQuitEvent implements Listener {
         final Component displayNameComponent = player.displayName();
         final String playerName = PlainTextComponentSerializer.plainText().serialize(displayNameComponent);
         final NamedTextColor color = NamedTextColor.YELLOW;
+        final ThreadLocalRandom random = ThreadLocalRandom.current();
         switch (random.nextInt(0, 7)) {
             case 0 -> content = Component.text(playerName + " устал от нашей компании.", color);
             case 1 -> content = Component.text(playerName + " решил сделать перерыв.", color);
