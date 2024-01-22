@@ -24,9 +24,12 @@ import wb.plugin.wbutils.usecases.MiningActionUseCase;
 
 import java.sql.SQLException;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class WbUtils extends JavaPlugin implements Listener {
 
+    private static final Logger LOGGER = Logger.getLogger(WbUtils.class.getName());
     private ISqlActions sqlActions;
     private IDatabaseDeals databaseDeals;
 
@@ -90,11 +93,13 @@ public final class WbUtils extends JavaPlugin implements Listener {
         if (sqlActions == null) {
             return;
         }
-        sqlActions.saveDealsInfo();
+
         try {
-            sqlActions.getConnection().close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            sqlActions.saveDealsInfo();
+            sqlActions.getConnection().commit();
+            sqlActions.closeConnection();
+        } catch (final SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error closing SQL connection", e);
         }
 
         /* вырезанный функционал

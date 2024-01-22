@@ -10,8 +10,11 @@ import org.jetbrains.annotations.NotNull;
 import wb.plugin.wbutils.entities.Deal;
 import wb.plugin.wbutils.adapters.IDatabaseDeals;
 
+import java.util.logging.Logger;
+
 public class DealInfoCommand implements CommandExecutor {
 
+    private static final Logger LOGGER = Logger.getLogger(DealInfoCommand.class.getName());
     private final IDatabaseDeals databaseDeals;
 
     public DealInfoCommand(final IDatabaseDeals databaseDeals) {
@@ -47,7 +50,7 @@ public class DealInfoCommand implements CommandExecutor {
                 case "owner" -> {
                     Player target = Bukkit.getServer().getPlayerExact(playerName);
 
-                    System.out.println("[" + sender.getName() + "] [DEAL] [SET] [number:" + args[0] + "] [to:" + playerName + "] [from:" + deal.owner() + "]");
+                    LOGGER.info("[" + sender.getName() + "] [DEAL] [SET] [number:" + args[0] + "] [to:" + playerName + "] [from:" + deal.owner() + "]");
                     Deal newDeal = new Deal(deal.id(), playerName, deal.coins_copper(), deal.coins_silver(), deal.coins_gold(), deal.materials());
                     databaseDeals.setDeal(dealId, newDeal);
                     if (playerName.equals("-")) {
@@ -64,25 +67,25 @@ public class DealInfoCommand implements CommandExecutor {
                     }
                 }
                 case "coins_gold" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.coins_gold() + "]");
+                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.coins_gold() + "]");
                     adminChangedDeal(sender, args);
                     Deal newDeal = new Deal(deal.id(), deal.owner(), deal.coins_copper(), deal.coins_silver(), argValue, deal.materials());
                     databaseDeals.setDeal(dealId, newDeal);
                 }
                 case "coins_silver" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.coins_silver() + "]");
+                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.coins_silver() + "]");
                     adminChangedDeal(sender, args);
                     Deal newDeal = new Deal(deal.id(), deal.owner(), deal.coins_copper(), argValue, deal.coins_gold(), deal.materials());
                     databaseDeals.setDeal(dealId, newDeal);
                 }
                 case "coins_copper" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.coins_copper() + "]");
+                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.coins_copper() + "]");
                     adminChangedDeal(sender, args);
                     Deal newDeal = new Deal(deal.id(), deal.owner(), argValue, deal.coins_silver(), deal.coins_gold(), deal.materials());
                     databaseDeals.setDeal(dealId, newDeal);
                 }
                 case "materials" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.materials() + "]");
+                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.materials() + "]");
                     adminChangedDeal(sender, args);
                     Deal newDeal = new Deal(deal.id(), deal.owner(), deal.coins_copper(), deal.coins_silver(), deal.coins_gold(), argValue);
                     databaseDeals.setDeal(dealId, newDeal);
@@ -91,7 +94,7 @@ public class DealInfoCommand implements CommandExecutor {
             }
         } else {
             if (args.length < 3) {
-                System.out.println("[CONSOLE] [MSG] [Ошибка ввода. Пример: /dealinfo <deal_id> <stat> <value>]");
+                LOGGER.info("[CONSOLE] [MSG] [Ошибка ввода. Пример: /dealinfo <deal_id> <stat> <value>]");
                 return true;
             }
             final String playerName = args[2];
@@ -103,32 +106,32 @@ public class DealInfoCommand implements CommandExecutor {
             switch (args[1]) {
                 case "owner" -> {
                     Player target = Bukkit.getServer().getPlayerExact(playerName);
-                    System.out.println("[" + sender.getName() + "] [DEAL] [SET] [number:" + args[0] + "] [to:" + playerName + "] [from:" + deal.owner() + "]");
+                    LOGGER.info("[" + sender.getName() + "] [DEAL] [SET] [number:" + args[0] + "] [to:" + playerName + "] [from:" + deal.owner() + "]");
                     if (target != null) { target.sendMessage(ChatColor.YELLOW + "我 Сделка №" + args[0] + " теперь ваша!"); }
                     Deal newDeal = new Deal(deal.id(), playerName, deal.coins_copper(), deal.coins_silver(), deal.coins_gold(), deal.materials());
                     databaseDeals.setDeal(dealId, newDeal);
                 }
                 case "coins_gold" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.coins_gold() + "]");
+                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.coins_gold() + "]");
                     Deal newDeal = new Deal(deal.id(), deal.owner(), deal.coins_copper(), deal.coins_silver(), argValue, deal.materials());
                     databaseDeals.setDeal(dealId, newDeal);
                 }
                 case "coins_silver" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.coins_silver() + "]");
+                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.coins_silver() + "]");
                     Deal newDeal = new Deal(deal.id(), deal.owner(), deal.coins_copper(), argValue, deal.coins_gold(), deal.materials());
                     databaseDeals.setDeal(dealId, newDeal);
                 }
                 case "coins_copper" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.coins_copper() + "]");
+                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.coins_copper() + "]");
                     Deal newDeal = new Deal(deal.id(), deal.owner(), argValue, deal.coins_silver(), deal.coins_gold(), deal.materials());
                     databaseDeals.setDeal(dealId, newDeal);
                 }
                 case "materials" -> {
-                    System.out.println("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.materials() + "]");
+                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.materials() + "]");
                     Deal newDeal = new Deal(deal.id(), deal.owner(), deal.coins_copper(), deal.coins_silver(), deal.coins_gold(), argValue);
                     databaseDeals.setDeal(dealId, newDeal);
                 }
-                default -> System.out.println("[CONSOLE] [msg] [Ошибка ввода. Пример: /dealinfo <deal_id> <stat> <value>]");
+                default -> LOGGER.info("[CONSOLE] [msg] [Ошибка ввода. Пример: /dealinfo <deal_id> <stat> <value>]");
             }
         }
         return true;

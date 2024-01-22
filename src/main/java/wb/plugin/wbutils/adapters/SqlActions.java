@@ -12,11 +12,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SqlActions implements ISqlActions {
 
-    private final DataSource ds;
+    private static final Logger LOGGER = Logger.getLogger(SqlActions.class.getName());
     private final IDatabaseDeals databaseDeals;
+    private final DataSource ds;
 
     public SqlActions(final JavaPlugin plugin, final IDatabaseDeals databaseDeals) {
         this.databaseDeals = databaseDeals;
@@ -62,15 +65,18 @@ public class SqlActions implements ISqlActions {
         return ds.getConnection();
     }
 
+    public void closeConnection() throws SQLException {
+        ds.getConnection().close();
+    }
+
     public void initialize() {
         try (final Connection connection = getConnection()) {
             createTableIfNotExists(connection);
             if (isTableEmpty(connection)) {
                 insertInitialData(connection);
             }
-        } catch (SQLException e) {
-            System.out.println("Failed connection to database.");
-            e.printStackTrace();
+        } catch (final SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to initialize database", e);
         }
     }
 
@@ -122,9 +128,8 @@ public class SqlActions implements ISqlActions {
                 stmt.addBatch();
             }
             stmt.executeBatch();
-        } catch (SQLException e) {
-            System.out.println("Failed connection to database.");
-            e.printStackTrace();
+        } catch (final SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to save deals info", e);
         }
     }
 
@@ -137,9 +142,8 @@ public class SqlActions implements ISqlActions {
                 Deal deal = new Deal(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
                 databaseDeals.addDeal(deal);
             }
-        } catch (SQLException e) {
-            System.out.println("Failed connection to database.");
-            e.printStackTrace();
+        } catch (final SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to load deals info", e);
         }
     }
 }

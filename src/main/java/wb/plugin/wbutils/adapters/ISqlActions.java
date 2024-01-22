@@ -12,4 +12,6 @@ public interface ISqlActions {
     void saveDealsInfo();
 
     Connection getConnection() throws SQLException;
+
+    void closeConnection() throws SQLException;
 }

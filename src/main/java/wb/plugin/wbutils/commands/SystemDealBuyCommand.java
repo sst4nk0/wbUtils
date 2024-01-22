@@ -1,17 +1,21 @@
 package wb.plugin.wbutils.commands;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import wb.plugin.wbutils.entities.Deal;
 import wb.plugin.wbutils.adapters.IDatabaseDeals;
+import wb.plugin.wbutils.entities.Deal;
+
+import java.util.logging.Logger;
 
 public class SystemDealBuyCommand implements CommandExecutor {
 
+    private static final Logger LOGGER = Logger.getLogger(SystemDealBuyCommand.class.getName());
     private final IDatabaseDeals databaseDeals;
 
     public SystemDealBuyCommand(final IDatabaseDeals databaseDeals) {
@@ -36,19 +40,19 @@ public class SystemDealBuyCommand implements CommandExecutor {
         }
 
         final String zeroStat = "0";
-        String dealIdString = args[0];
-        int dealId = Integer.parseInt(dealIdString);
-        String owner = args[1];
-        Deal deal = new Deal(dealId, owner, zeroStat, zeroStat, zeroStat, "16");
+        final String dealIdString = args[0];
+        final int dealId = Integer.parseInt(dealIdString);
+        final String owner = args[1];
+        final Deal deal = new Deal(dealId, owner, zeroStat, zeroStat, zeroStat, "16");
         databaseDeals.setDeal(dealId, deal);
 
-        Player target = Bukkit.getServer().getPlayerExact(owner);
-        System.out.println("[CONSOLE] [DEAL] [BUY] [number:" + dealIdString + "] [to:" + owner + "] [from:" + deal.owner() + "]");
+        final Player target = Bukkit.getServer().getPlayerExact(owner);
+        LOGGER.info(() -> "[CONSOLE] [DEAL] [BUY] [number:" + dealId + "] [to:" + owner + "] [from:" + deal.owner() + ']');
         if (target != null) {
-            target.sendMessage(ChatColor.YELLOW + "我 Сделка №" + dealIdString + " теперь ваша!");
+            final String content = "我 Сделка №" + dealIdString + " теперь ваша!";
+            target.sendMessage(Component.text(content, NamedTextColor.YELLOW));
         }
 
         return true;
     }
-
 }

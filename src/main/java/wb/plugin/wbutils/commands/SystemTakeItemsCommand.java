@@ -7,8 +7,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import wb.plugin.wbutils.entities.Deal;
 import wb.plugin.wbutils.adapters.IDatabaseDeals;
+import wb.plugin.wbutils.entities.Deal;
 
 public class SystemTakeItemsCommand implements CommandExecutor {
 
@@ -20,27 +20,30 @@ public class SystemTakeItemsCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
-                             @NotNull String label, @NotNull String[] args) {
-        if (sender instanceof Player) return true;
+    public boolean onCommand(final @NotNull CommandSender sender, final @NotNull Command command,
+                             final @NotNull String label, final @NotNull String[] args) {
+        if (sender instanceof Player) {
+            return true;
+        }
 
-        String PLACEHOLDER = "%itemedit_amount_{#}_{offhand}%";
-
+        final String placeholder = "%itemedit_amount_{#}_{offhand}%";
         for (int i = 2; i < args.length; i++) {
-            String placeholderToParse = PLACEHOLDER.replace("#", args[i]);
-            Player player = Bukkit.getPlayer(args[0]);
+            final String placeholderToParse = placeholder.replace("#", args[i]);
+            final Player player = Bukkit.getPlayer(args[0]);
 
-            int amountInHand = Integer.parseInt(PlaceholderAPI.setPlaceholders(player, placeholderToParse));
-
-            if (amountInHand > 0) {
-                player.getInventory().setItemInOffHand(null);
-                int dealId = Integer.parseInt(args[1]);
-                Deal deal = databaseDeals.getDeal(dealId);
-                int newQuantity = Integer.parseInt(deal.materials()) + amountInHand;
-                Deal newDeal = new Deal(deal.id(), deal.owner(), deal.coins_copper(), deal.coins_silver(), deal.coins_gold(), Integer.toString(newQuantity));
-                databaseDeals.setDeal(dealId, newDeal);
-                return true;
+            final int amountInHand = Integer.parseInt(PlaceholderAPI.setPlaceholders(player, placeholderToParse));
+            if (amountInHand <= 0) {
+                continue;
             }
+
+            player.getInventory().setItemInOffHand(null);
+            final int dealId = Integer.parseInt(args[1]);
+            final Deal deal = databaseDeals.getDeal(dealId);
+            final int newQuantity = Integer.parseInt(deal.materials()) + amountInHand;
+            final Deal newDeal = new Deal(deal.id(), deal.owner(), deal.coins_copper(), deal.coins_silver(),
+                    deal.coins_gold(), Integer.toString(newQuantity));
+            databaseDeals.setDeal(dealId, newDeal);
+            return true;
         }
         return true;
     }

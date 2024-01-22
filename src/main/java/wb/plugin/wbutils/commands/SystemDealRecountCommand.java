@@ -1,5 +1,8 @@
 package wb.plugin.wbutils.commands;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -12,9 +15,11 @@ import wb.plugin.wbutils.entities.Deal;
 import wb.plugin.wbutils.adapters.IDatabaseDeals;
 
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 public class SystemDealRecountCommand implements CommandExecutor {
 
+    private static final Logger LOGGER = Logger.getLogger(SystemDealRecountCommand.class.getName());
     private final HashMap<String, Long> perUserCooldowns;  // кулдауны на флуд
     private final IDatabaseDeals databaseDeals;
 
@@ -33,14 +38,16 @@ public class SystemDealRecountCommand implements CommandExecutor {
      */
     @Override
     public boolean onCommand(final @NotNull CommandSender sender, final @NotNull Command command, final @NotNull String label, final @NotNull String[] args) {
-        if (sender instanceof Player) { return true; }
-        if (!sender.hasPermission("wbutils.dealrecount")) { return true; }
-        if (args.length < 2) {
-            System.out.println("[CONSOLE] [MSG] [Ошибка ввода. Пример: /dealrecount <deal_id> <sender_name>]");
+        if (sender instanceof Player || !sender.hasPermission("wbutils.dealrecount")) {
             return true;
+        } else if (args.length < 2) {
+            LOGGER.info("[CONSOLE] [MSG] [Ошибка ввода. Пример: /dealrecount <deal_id> <sender_name>]");
+            return false;
         }
-        if (perUserCooldowns.containsKey(args[1])) {
-            long timeElapsed = System.currentTimeMillis() - perUserCooldowns.get(args[1]);
+
+        final String senderName = args[1];
+        if (perUserCooldowns.containsKey(senderName)) {
+            long timeElapsed = System.currentTimeMillis() - perUserCooldowns.get(senderName);
             if (timeElapsed <= 5000) { return true; }
             else { runProcess(args); }
             return true;
@@ -50,12 +57,13 @@ public class SystemDealRecountCommand implements CommandExecutor {
         return true;
     }
 
-    private void runProcess(@NotNull String @NotNull [] args) {
-        perUserCooldowns.put(args[1], System.currentTimeMillis());
+    private void runProcess(@NotNull final String @NotNull [] args) {
+        final String senderName = args[1];
+        perUserCooldowns.put(senderName, System.currentTimeMillis());
 
-        String dealIdString = args[0];
-        int dealId = Integer.parseInt(dealIdString);
-        Deal deal = databaseDeals.getDeal(dealId);
+        final String dealIdString = args[0];
+        final int dealId = Integer.parseInt(dealIdString);
+        final Deal deal = databaseDeals.getDeal(dealId);
         int coins_copper = Integer.parseInt(deal.coins_copper());
         int coins_silver = Integer.parseInt(deal.coins_silver());
         int coins_gold = Integer.parseInt(deal.coins_gold());
@@ -80,12 +88,17 @@ public class SystemDealRecountCommand implements CommandExecutor {
         }
 
         if (changed) {
-            Player player = Bukkit.getPlayerExact(args[1]);
-            Deal newDeal = new Deal(deal.id(), deal.owner(), Integer.toString(coins_copper), Integer.toString(coins_silver), Integer.toString(coins_gold), deal.materials());
+            final Player player = Bukkit.getPlayerExact(senderName);
+            final Deal newDeal = new Deal(deal.id(), deal.owner(), Integer.toString(coins_copper), Integer.toString(coins_silver), Integer.toString(coins_gold), deal.materials());
             databaseDeals.setDeal(dealId, newDeal);
-            player.sendMessage(ChatColor.DARK_GREEN + "Кладовщик: " + ChatColor.GREEN + "Всё, пересчитал. Надо будет отдохнуть сегодня за кружечкой светлого нефильтрованного.");
+
+            final TextComponent greenContent = Component.text("Всё, пересчитал. " +
+                    "Надо будет отдохнуть сегодня за кружечкой светлого нефильтрованного.", NamedTextColor.GREEN);
+            final TextComponent message = Component.text("Кладовщик: ", NamedTextColor.DARK_GREEN)
+                    .append(greenContent);
+
+            player.sendMessage(message);
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_AMBIENT, 1, 1);
         }
     }
-
 }

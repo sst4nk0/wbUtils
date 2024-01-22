@@ -35,9 +35,7 @@ public class MiningActionUseCase {
     private static @NotNull Optional<PickaxeType> getPickaxeType(@NotNull Player player) {
         final @NotNull Component pickaxeDisplayName = getPickaxeDisplayName(player);
         final @NotNull String pickaxeName = PlainTextComponentSerializer.plainText().serialize(pickaxeDisplayName);
-        System.out.println(pickaxeName);
         final @NotNull String pickaxeTypeName = pickaxeName.substring(0, pickaxeName.length() - 6);
-        System.out.println(pickaxeTypeName);
         final @NotNull Optional<PickaxeType> pickaxeType = PickaxeType.fromTypeName(pickaxeTypeName);
         return pickaxeType;
     }
