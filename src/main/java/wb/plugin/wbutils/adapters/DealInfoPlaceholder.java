@@ -1,11 +1,10 @@
-package wb.plugin.wbutils.commands;
+package wb.plugin.wbutils.adapters;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import wb.plugin.wbutils.entities.Deal;
-import wb.plugin.wbutils.adapters.IDatabaseDeals;
 
 public class DealInfoPlaceholder extends PlaceholderExpansion {
 

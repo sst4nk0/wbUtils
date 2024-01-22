@@ -16,7 +16,7 @@ import wb.plugin.wbutils.commands.SystemDealRecountCommand;
 import wb.plugin.wbutils.commands.SystemTakeItemsCommand;
 import wb.plugin.wbutils.adapters.DatabaseDeals;
 import wb.plugin.wbutils.adapters.IDatabaseDeals;
-import wb.plugin.wbutils.commands.DealInfoPlaceholder;
+import wb.plugin.wbutils.adapters.DealInfoPlaceholder;
 import wb.plugin.wbutils.commands.DealInfoTabCompleter;
 import wb.plugin.wbutils.adapters.ISqlActions;
 import wb.plugin.wbutils.adapters.SqlActions;
