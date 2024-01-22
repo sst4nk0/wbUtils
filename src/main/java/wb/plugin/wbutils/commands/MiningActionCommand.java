@@ -2,172 +2,112 @@ package wb.plugin.wbutils.commands;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import wb.plugin.wbutils.entities.OreType;
-import wb.plugin.wbutils.entities.PickaxeType;
+import org.jetbrains.annotations.Nullable;
+import wb.plugin.wbutils.usecases.MiningActionResponse;
+import wb.plugin.wbutils.usecases.MiningActionUseCase;
 import wb.plugin.wbutils.utilities.SoundDecay;
 
-import java.util.Random;
+import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class MiningActionCommand implements CommandExecutor {
 
     /**
      * Flood cooldown for mining command.
      */
-    private static final ConcurrentMap<UUID, Long> USER_COOLDOWN = new ConcurrentHashMap<>();
-    private static final String PERMISSION_PREFIX = "wb.oreobtain.";
-    private static final String LP_COMMAND_FORMAT = "lp user %s permission settemp %s false %ds";
-    private static final String SI_GIVE_FORMAT = "si give resource_%s %s %s";
-    private static final String GIVE_MINING_EXP_FORMAT = "rpg admin exp give %s mining %s";
+    private static final ConcurrentMap<UUID, Long> USER_CMD_COOLDOWN = new ConcurrentHashMap<>();
     private static final int COOLDOWN_DURATION_NS = 1_000_000_000;
-    private static final byte PERMISSION_EXPIRY_TIME = 59;
-    private static final Random random = new Random();
+    private static final String PERMISSION_PREFIX = "wb.oreobtain.";
+    private static final String EXPIRY_TIME_FORMAT = "%%luckperms_expiry_time_%s%%";
+
+    private final MiningActionUseCase miningActionUseCase;
+
+    public MiningActionCommand(final MiningActionUseCase miningActionUseCase) {
+        this.miningActionUseCase = miningActionUseCase;
+    }
 
     private static boolean hasCooldownElapsed(final UUID playerId) {
-        if (USER_COOLDOWN.containsKey(playerId)) {
-            long timeElapsed = System.nanoTime() - USER_COOLDOWN.get(playerId);
-            return timeElapsed > COOLDOWN_DURATION_NS;
+        if (USER_CMD_COOLDOWN.containsKey(playerId)) {
+            long timeElapsed = System.nanoTime() - USER_CMD_COOLDOWN.get(playerId);
+            return timeElapsed >= COOLDOWN_DURATION_NS;
         }
         return true;
     }
 
-    private static void runProcess(final @NotNull CommandSender sender, final @NotNull String @NotNull [] args,
-                                   final Player player) {
-        final String oreId = args[0];
-        final OreType oreType = OreType.fromOreId(oreId);
-        final String permissionBody = args[1];
-        if (!isValidOreAndAbleToMine(sender, oreType, permissionBody, player)) {
-            return;
+    private static void handleResponse(final @NotNull Player player, final @NotNull MiningActionResponse status,
+                                       final String permissionBody) {
+        final @Nullable String content;
+        switch (status) {
+            case ON_COOLDOWN -> content = handleOnCooldown(player, permissionBody);
+            case NO_PICKAXE -> content = handleNoPickaxe();
+            case INVALID_PICKAXE -> content = handleInvalidPickaxe();
+            case PITY -> content = handlePity(player);
+            case SUCCESS -> content = handleSuccess(player);
+            default -> throw new IllegalStateException("Unexpected value: " + status);
         }
 
-        final String pickaxeName = getPickaxeDisplayName(player);
-        final PickaxeType pickaxeType = getValidPickaxeType(sender, pickaxeName);
-        if (pickaxeType == null || !isPickaxeStrongEnough(sender, pickaxeType, oreType)) {
-            return;
+        if (content != null) {
+            final TextComponent message = Component.text(content, NamedTextColor.GRAY);
+            player.sendMessage(message);
         }
-
-        final String oreName = oreType.getOreName();
-        mineOre(permissionBody, player, pickaxeType, oreName);
-        giveMiningExp(player, oreType);
     }
 
-    private static boolean isValidOreAndAbleToMine(final @NotNull CommandSender sender, final OreType oreType,
-                                                   final String permissionBody, final Player player) {
-        return oreType != null && isAbleToMine(sender, permissionBody, player);
-    }
-
-    private static boolean isAbleToMine(final @NotNull CommandSender sender, final @NotNull String permissionBody,
-                                        final Player player) {
-        return hasPermission(sender, permissionBody, player) && hasPickaxeInHand(sender, player);
-    }
-
-    private static boolean hasPermission(final @NotNull CommandSender sender, final @NotNull String permissionBody,
-                                         final Player player) {
+    @NotNull
+    private static String handleOnCooldown(@NotNull Player player, String permissionBody) {
         final String permission = PERMISSION_PREFIX + permissionBody;
-        if (sender.hasPermission(permission)) {
-            return true;
-        }
-
-        final String permissionExpiryTime = "%luckperms_expiry_time_" + permission + '%';
+        final String permissionExpiryTime = String.format(EXPIRY_TIME_FORMAT, permission);
         final String time = PlaceholderAPI.setPlaceholders(player, permissionExpiryTime);
         final String seconds = time.replace("s", "");
-        final String message = "的 Можно будет снова добыть через " + seconds + " секунд(ы).";
-        sender.sendMessage(Component.text(message, NamedTextColor.GRAY));
-        return false;
+        return "的 Можно будет снова добыть через " + seconds + " секунд(ы).";
     }
 
-    private static boolean hasPickaxeInHand(final @NotNull CommandSender sender, final Player player) {
-        if (!PlaceholderAPI.setPlaceholders(player, "%checkitem_inhand:main,namecontains:кирка%").equals("yes")) {
-            final String message = "的 Возьми в руку подходящую кирку или получи её у главного шахтёра.";
-            sender.sendMessage(Component.text(message, NamedTextColor.GRAY));
-            return false;
-        }
-        return true;
+    @NotNull
+    private static String handleNoPickaxe() {
+        return "的 Возьми в руку кирку или получи её у главного шахтёра.";
     }
 
-    private static String getPickaxeDisplayName(final Player player) {
-        String pickaxeInHand = player.getInventory().getItemInMainHand().getItemMeta().getDisplayName();
-        return pickaxeInHand.substring(2, pickaxeInHand.length() - 6);
+    @NotNull
+    private static String handleInvalidPickaxe() {
+        return "的 Возьми в руку подходящую кирку или получи её у главного шахтёра.";
     }
 
-    private static PickaxeType getValidPickaxeType(final @NotNull CommandSender sender, final String pickaxe) {
-        final PickaxeType pickaxeType = PickaxeType.fromDisplayName(pickaxe);
-        if (pickaxeType == null) {
-            final String message = "的 Возьми в руку подходящую кирку или получи её у главного шахтёра.";
-            sender.sendMessage(Component.text(message, NamedTextColor.GRAY));
-        }
-        return pickaxeType;
+    @NotNull
+    private static String handlePity(@NotNull Player player) {
+        final ThreadLocalRandom random = ThreadLocalRandom.current();
+        final String sound = "custom.pagania.pickaxe-dig" + random.nextInt(1, 3);
+        playSound(player, sound);
+        return "的 Разбить породу не вышло, продолжай копать!";
     }
 
-    private static boolean isPickaxeStrongEnough(final @NotNull CommandSender sender, final PickaxeType pickaxeType,
-                                                 final OreType oreType) {
-        if (pickaxeType.getMiningStrength() < oreType.getStrength()) {
-            final String message = "的 Возьми в руку подходящую кирку или получи её у главного шахтёра.";
-            sender.sendMessage(Component.text(message, NamedTextColor.GRAY));
-            return false;
-        }
-        return true;
+    @Nullable
+    private static String handleSuccess(@NotNull Player player) {
+        playSound(player, "custom.pagania.pickaxe-dig3");
+        return null;
     }
 
-    private static void mineOre(final String permissionBody, final Player player, final PickaxeType pickaxeType,
-                                final String oreName) {
-        player.swingMainHand();
+    private static void playSound(final @NotNull Player player, final @NotNull String sound) {
         final Location playerLocation = player.getLocation();
-        if (isLucky(pickaxeType)) {
-            executeCommands(permissionBody, player, pickaxeType, oreName);
-            playSound(playerLocation, "custom.pagania.pickaxe-dig3");
-        } else {
-            final String message = "的 Разбить породу не вышло, продолжай копать!";
-            player.sendMessage(Component.text(message, NamedTextColor.GRAY));
-            playSound(playerLocation, "custom.pagania.pickaxe-dig" + random.nextInt(1, 3));
-        }
-    }
-
-    private static boolean isLucky(final PickaxeType pickaxeType) {
-        final int generatedNumber = random.nextInt(0, 100);
-        final byte luckPercent = pickaxeType.getLuckPercent();
-        return generatedNumber < luckPercent;
-    }
-
-    private static void executeCommands(final String permissionBody, final Player player,
-                                        final PickaxeType pickaxeType, final String oreName) {
-        final ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-        final String playerName = player.getName();
-        final String permission = PERMISSION_PREFIX + permissionBody;
-
-        final String lpCommand = String.format(LP_COMMAND_FORMAT, playerName, permission, PERMISSION_EXPIRY_TIME);
-        Bukkit.dispatchCommand(console, lpCommand);
-
-        final String siGiveCommand = String.format(SI_GIVE_FORMAT, oreName, pickaxeType.getMineQuantity(), playerName);
-        Bukkit.dispatchCommand(console, siGiveCommand);
-    }
-
-    private static void playSound(final Location playerLocation, final String sound) {
         final byte range = 18;
-        for (final Entity target : playerLocation.getWorld().getNearbyEntities(playerLocation, range, range, range)) {
-            if (target instanceof Player playerToPlay) new SoundDecay(playerToPlay, playerLocation, sound, range);
+        final World world = playerLocation.getWorld();
+        final Collection<Entity> nearbyEntities = world.getNearbyEntities(playerLocation, range, range, range);
+        for (final Entity target : nearbyEntities) {
+            if (target instanceof Player playerToPlay) {
+                new SoundDecay(playerToPlay, playerLocation, sound, range);
+            }
         }
-    }
-
-    private static void giveMiningExp(final Player player, final OreType oreType) {
-        final String playerName = player.getName();
-        final byte oreTypeExp = oreType.getExp();
-
-        final ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-        final String giveExpCommand = String.format(GIVE_MINING_EXP_FORMAT, playerName, oreTypeExp);
-        Bukkit.dispatchCommand(console, giveExpCommand);
     }
 
     @Override
@@ -176,12 +116,17 @@ public class MiningActionCommand implements CommandExecutor {
         if (!(sender instanceof Player player) || args.length != 2) {
             return true;
         }
-
         final UUID playerId = player.getUniqueId();
-        if (hasCooldownElapsed(playerId)) {
-            runProcess(sender, args, player);
-            USER_COOLDOWN.put(playerId, System.nanoTime());
+        if (!hasCooldownElapsed(playerId)) {
+            return true;
         }
+
+        USER_CMD_COOLDOWN.put(playerId, System.nanoTime());
+
+        final String oreId = args[0];
+        final String permissionBody = args[1];
+        final MiningActionResponse response = miningActionUseCase.executeAction(oreId, permissionBody, player);
+        handleResponse(player, response, permissionBody);
 
         return true;
     }

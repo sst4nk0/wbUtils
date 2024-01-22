@@ -1,5 +1,8 @@
 package wb.plugin.wbutils.entities;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -13,28 +16,30 @@ public enum PickaxeType {
 
     static {
         for (final PickaxeType type : values()) {
-            BY_DISPLAY_NAME.put(type.displayName, type);
+            BY_DISPLAY_NAME.put(type.typeName, type);
         }
     }
 
-    private final String displayName;
+    @NotNull
+    private final String typeName;
     private final byte miningStrength;
     private final byte digChance;
     private final byte mineQuantity;
 
-    PickaxeType(final String displayName, final byte miningStrength, final byte digChance, final byte mineQuantity) {
-        this.displayName = displayName;
+    PickaxeType(final @NotNull String typeName, final byte miningStrength, final byte digChance,
+                final byte mineQuantity) {
+        this.typeName = typeName;
         this.miningStrength = miningStrength;
         this.digChance = digChance;
         this.mineQuantity = mineQuantity;
     }
 
-    public static PickaxeType fromDisplayName(final String findName) {
-        return BY_DISPLAY_NAME.get(findName);
+    public static @NotNull Optional<PickaxeType> fromTypeName(final @NotNull String findName) {
+        return Optional.ofNullable(BY_DISPLAY_NAME.get(findName));
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public @NotNull String getTypeName() {
+        return typeName;
     }
 
     public byte getMiningStrength() {

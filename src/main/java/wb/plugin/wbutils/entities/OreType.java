@@ -1,5 +1,8 @@
 package wb.plugin.wbutils.entities;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -18,32 +21,35 @@ public enum OreType {
         }
     }
 
+    @NotNull
     private final String oreId;
+    @NotNull
     private final String oreName;
-    private final byte strength;
+    private final byte miningStrength;
     private final byte exp;
 
-    OreType(final String oreId, final String oreName, final byte strength, final byte exp) {
+    OreType(final @NotNull String oreId, final @NotNull String oreName, final byte miningStrength, final byte exp) {
         this.oreId = oreId;
         this.oreName = oreName;
-        this.strength = strength;
+        this.miningStrength = miningStrength;
         this.exp = exp;
     }
 
-    public static OreType fromOreId(final String findArg) {
-        return BY_ID.get(findArg);
+    @NotNull
+    public static Optional<OreType> fromOreId(final String oreId) {
+        return Optional.ofNullable(BY_ID.get(oreId));
     }
 
-    public String getOreId() {
+    public @NotNull String getOreId() {
         return oreId;
     }
 
-    public String getOreName() {
+    public @NotNull String getOreName() {
         return oreName;
     }
 
-    public byte getStrength() {
-        return strength;
+    public byte getMiningStrength() {
+        return miningStrength;
     }
 
     public byte getExp() {
