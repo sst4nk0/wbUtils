@@ -8,6 +8,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import wb.plugin.wbutils.entities.Deal;
 import wb.plugin.wbutils.adapters.IDatabaseDeals;
 import wb.plugin.wbutils.adapters.ISqlActions;
 import wb.plugin.wbutils.utilities.ColorPalette;
@@ -35,10 +36,11 @@ public class PaydayGrant {
     public void resetDealOwners() {
         // Обнуляение сделки
         final TextColor color = ColorPalette.JEWELZ_PURPLE;
-        dealsToReset.forEach((key, value) -> {
-            if (Integer.parseInt(databaseDeals.getMaterials(key)) < -7) {
-                databaseDeals.setOwner(key, "-");
-                databaseDeals.setMaterials(key, "16");
+        dealsToReset.forEach((dealId, value) -> {
+            Deal deal = databaseDeals.getDeal(dealId);
+            if (Integer.parseInt(deal.materials()) < -7) {
+                Deal newDeal = new Deal(deal.id(), "-", deal.coins_copper(), deal.coins_silver(), deal.coins_gold(), "16");
+                databaseDeals.setDeal(dealId, newDeal);
                 warningsToSend.put(value, Component.text("我 Ваша сделка была разорвана.", color));
             }
         });
@@ -47,10 +49,11 @@ public class PaydayGrant {
         dealsToReset.clear();
 
         // Пополнение очереди на обнуление
-        for (int i = 1; i <= databaseDeals.getDealsQuantity(); i++) {
-            if (Integer.parseInt(databaseDeals.getMaterials(i)) < -7) {
-                final String owner = databaseDeals.getOwner(i);
-                dealsToReset.put(i, owner);
+        for (int dealId = 1; dealId <= databaseDeals.getDealsQuantity(); dealId++) {
+            Deal deal = databaseDeals.getDeal(dealId);
+            if (Integer.parseInt(deal.materials()) < -7) {
+                final String owner = deal.owner();
+                dealsToReset.put(dealId, owner);
                 warningsToSend.put(owner, Component.text("我 Ваша сделка вот-вот будет разорвана.", color));
             }
         }

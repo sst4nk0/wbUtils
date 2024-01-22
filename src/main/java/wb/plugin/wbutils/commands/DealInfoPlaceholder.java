@@ -4,6 +4,7 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import wb.plugin.wbutils.entities.Deal;
 import wb.plugin.wbutils.adapters.IDatabaseDeals;
 
 public class DealInfoPlaceholder extends PlaceholderExpansion {
@@ -80,22 +81,28 @@ public class DealInfoPlaceholder extends PlaceholderExpansion {
     public String onPlaceholderRequest(final Player player, final String identifier) {
         if (identifier.startsWith("dealowner_")) {
             int dealId = Integer.parseInt(identifier.replace("dealowner_", ""));
-            return databaseDeals.getOwner(dealId);
+            Deal deal = databaseDeals.getDeal(dealId);
+            return deal.owner();
         } else if (identifier.startsWith("dealcopper_")) {
             int dealId = Integer.parseInt(identifier.replace("dealcopper_", ""));
-            return databaseDeals.getCoinsCopper(dealId);
+            Deal deal = databaseDeals.getDeal(dealId);
+            return deal.coins_copper();
         } else if (identifier.startsWith("dealsilver_")) {
             int dealId = Integer.parseInt(identifier.replace("dealsilver_", ""));
-            return databaseDeals.getCoinsSilver(dealId);
+            Deal deal = databaseDeals.getDeal(dealId);
+            return deal.coins_silver();
         } else if (identifier.startsWith("dealgold_")) {
             int dealId = Integer.parseInt(identifier.replace("dealgold_", ""));
-            return databaseDeals.getCoinsGold(dealId);
+            Deal deal = databaseDeals.getDeal(dealId);
+            return deal.coins_gold();
         } else if (identifier.startsWith("dealmaterials_")) {
             int dealId = Integer.parseInt(identifier.replace("dealmaterials_", ""));
-            return databaseDeals.getMaterials(dealId);
+            Deal deal = databaseDeals.getDeal(dealId);
+            return deal.materials();
         } else if (identifier.startsWith("dealstatus_")) {
             int dealId = Integer.parseInt(identifier.replace("dealstatus_", ""));
-            int dealMaterials = Integer.parseInt(databaseDeals.getMaterials(dealId));
+            Deal deal = databaseDeals.getDeal(dealId);
+            int dealMaterials = Integer.parseInt(deal.materials());
             if (dealMaterials > -1) {
                 return " ";
             } else {

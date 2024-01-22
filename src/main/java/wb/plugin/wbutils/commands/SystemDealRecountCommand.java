@@ -8,6 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import wb.plugin.wbutils.entities.Deal;
 import wb.plugin.wbutils.adapters.IDatabaseDeals;
 
 import java.util.HashMap;
@@ -52,9 +53,12 @@ public class SystemDealRecountCommand implements CommandExecutor {
     private void runProcess(@NotNull String @NotNull [] args) {
         perUserCooldowns.put(args[1], System.currentTimeMillis());
 
-        int coins_copper = Integer.parseInt(databaseDeals.getCoinsCopper(Integer.parseInt(args[0])));
-        int coins_silver = Integer.parseInt(databaseDeals.getCoinsSilver(Integer.parseInt(args[0])));
-        int coins_gold = Integer.parseInt(databaseDeals.getCoinsGold(Integer.parseInt(args[0])));
+        String dealIdString = args[0];
+        int dealId = Integer.parseInt(dealIdString);
+        Deal deal = databaseDeals.getDeal(dealId);
+        int coins_copper = Integer.parseInt(deal.coins_copper());
+        int coins_silver = Integer.parseInt(deal.coins_silver());
+        int coins_gold = Integer.parseInt(deal.coins_gold());
         boolean changed = false;
 
         final int maxStackSize = 64;
@@ -77,9 +81,8 @@ public class SystemDealRecountCommand implements CommandExecutor {
 
         if (changed) {
             Player player = Bukkit.getPlayerExact(args[1]);
-            databaseDeals.setCoinsCopper(Integer.parseInt(args[0]), Integer.toString(coins_copper));
-            databaseDeals.setCoinsSilver(Integer.parseInt(args[0]), Integer.toString(coins_silver));
-            databaseDeals.setCoinsGold(Integer.parseInt(args[0]), Integer.toString(coins_gold));
+            Deal newDeal = new Deal(deal.id(), deal.owner(), Integer.toString(coins_copper), Integer.toString(coins_silver), Integer.toString(coins_gold), deal.materials());
+            databaseDeals.setDeal(dealId, newDeal);
             player.sendMessage(ChatColor.DARK_GREEN + "Кладовщик: " + ChatColor.GREEN + "Всё, пересчитал. Надо будет отдохнуть сегодня за кружечкой светлого нефильтрованного.");
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_AMBIENT, 1, 1);
         }

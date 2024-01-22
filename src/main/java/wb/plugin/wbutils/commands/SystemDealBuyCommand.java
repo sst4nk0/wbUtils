@@ -7,6 +7,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import wb.plugin.wbutils.entities.Deal;
 import wb.plugin.wbutils.adapters.IDatabaseDeals;
 
 public class SystemDealBuyCommand implements CommandExecutor {
@@ -35,16 +36,16 @@ public class SystemDealBuyCommand implements CommandExecutor {
         }
 
         final String zeroStat = "0";
-        databaseDeals.setOwner(Integer.parseInt(args[0]), args[1]);
-        databaseDeals.setCoinsCopper(Integer.parseInt(args[0]), zeroStat);
-        databaseDeals.setCoinsSilver(Integer.parseInt(args[0]), zeroStat);
-        databaseDeals.setCoinsGold(Integer.parseInt(args[0]), zeroStat);
-        databaseDeals.setMaterials(Integer.parseInt(args[0]), "16");
+        String dealIdString = args[0];
+        int dealId = Integer.parseInt(dealIdString);
+        String owner = args[1];
+        Deal deal = new Deal(dealId, owner, zeroStat, zeroStat, zeroStat, "16");
+        databaseDeals.setDeal(dealId, deal);
 
-        Player target = Bukkit.getServer().getPlayerExact(args[1]);
-        System.out.println("[CONSOLE] [DEAL] [BUY] [number:" + args[0] + "] [to:" + args[1] + "] [from:" + databaseDeals.getOwner(Integer.parseInt(args[0])) + "]");
+        Player target = Bukkit.getServer().getPlayerExact(owner);
+        System.out.println("[CONSOLE] [DEAL] [BUY] [number:" + dealIdString + "] [to:" + owner + "] [from:" + deal.owner() + "]");
         if (target != null) {
-            target.sendMessage(ChatColor.YELLOW + "我 Сделка №" + args[0] + " теперь ваша!");
+            target.sendMessage(ChatColor.YELLOW + "我 Сделка №" + dealIdString + " теперь ваша!");
         }
 
         return true;

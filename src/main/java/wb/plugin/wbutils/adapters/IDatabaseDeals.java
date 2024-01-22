@@ -1,28 +1,14 @@
 package wb.plugin.wbutils.adapters;
 
+import wb.plugin.wbutils.entities.Deal;
+
 public interface IDatabaseDeals {
 
-    String getMaterials(int dealId);
+    void setDeal(int dealId, Deal deal);
 
-    void setOwner(int dealId, String owner);
-
-    void setMaterials(int dealId, String materials);
-
-    String getOwner(int dealId);
+    Deal getDeal(int dealId);
 
     int getDealsQuantity();
 
-    void addDealInfo(int dealId, String owner, String coins_copper, String coins_silver, String coins_gold, String materials);
-
-    String getCoinsCopper(int dealId);
-
-    String getCoinsSilver(int dealId);
-
-    String getCoinsGold(int dealId);
-
-    void setCoinsCopper(int dealId, String newQuantity);
-
-    void setCoinsSilver(int dealId, String newQuantity);
-
-    void setCoinsGold(int dealId, String newQuantity);
+    void addDeal(Deal deal);
 }

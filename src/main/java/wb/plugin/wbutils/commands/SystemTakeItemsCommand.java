@@ -7,6 +7,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import wb.plugin.wbutils.entities.Deal;
 import wb.plugin.wbutils.adapters.IDatabaseDeals;
 
 public class SystemTakeItemsCommand implements CommandExecutor {
@@ -34,8 +35,10 @@ public class SystemTakeItemsCommand implements CommandExecutor {
             if (amountInHand > 0) {
                 player.getInventory().setItemInOffHand(null);
                 int dealId = Integer.parseInt(args[1]);
-                int newQuantity = Integer.parseInt(databaseDeals.getMaterials(dealId)) + amountInHand;
-                databaseDeals.setMaterials(dealId, Integer.toString(newQuantity));
+                Deal deal = databaseDeals.getDeal(dealId);
+                int newQuantity = Integer.parseInt(deal.materials()) + amountInHand;
+                Deal newDeal = new Deal(deal.id(), deal.owner(), deal.coins_copper(), deal.coins_silver(), deal.coins_gold(), Integer.toString(newQuantity));
+                databaseDeals.setDeal(dealId, newDeal);
                 return true;
             }
         }

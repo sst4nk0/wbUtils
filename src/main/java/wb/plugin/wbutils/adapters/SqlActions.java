@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import wb.plugin.wbutils.entities.Deal;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -110,12 +111,13 @@ public class SqlActions implements ISqlActions {
         try (final Connection connection = getConnection();
              final PreparedStatement stmt = connection.prepareStatement(updateQuery)) {
 
-            for (int i = 1; i < 26; i++) {
-                stmt.setString(1, databaseDeals.getOwner(i));
-                stmt.setString(2, databaseDeals.getCoinsCopper(i));
-                stmt.setString(3, databaseDeals.getCoinsSilver(i));
-                stmt.setString(4, databaseDeals.getCoinsGold(i));
-                stmt.setString(5, databaseDeals.getMaterials(i));
+            for (int i = 1; i < databaseDeals.getDealsQuantity() + 1; i++) {
+                Deal deal = databaseDeals.getDeal(i);
+                stmt.setString(1, deal.owner());
+                stmt.setString(2, deal.coins_copper());
+                stmt.setString(3, deal.coins_silver());
+                stmt.setString(4, deal.coins_gold());
+                stmt.setString(5, deal.materials());
                 stmt.setInt(6, i);
                 stmt.addBatch();
             }
@@ -132,7 +134,8 @@ public class SqlActions implements ISqlActions {
              final PreparedStatement stmt = connection.prepareStatement(query);
              final ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                databaseDeals.addDealInfo(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
+                Deal deal = new Deal(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
+                databaseDeals.addDeal(deal);
             }
         } catch (SQLException e) {
             System.out.println("Failed connection to database.");
