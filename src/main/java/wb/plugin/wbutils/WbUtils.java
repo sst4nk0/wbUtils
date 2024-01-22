@@ -21,6 +21,7 @@ import wb.plugin.wbutils.commands.DealInfoTabCompleter;
 import wb.plugin.wbutils.adapters.ISqlActions;
 import wb.plugin.wbutils.adapters.SqlActions;
 import wb.plugin.wbutils.usecases.ClearChatUseCase;
+import wb.plugin.wbutils.usecases.DealInfoUseCase;
 import wb.plugin.wbutils.usecases.MiningActionUseCase;
 
 import java.sql.SQLException;
@@ -71,7 +72,7 @@ public final class WbUtils extends JavaPlugin implements Listener {
         registerCommand("dealtakeitems", new SystemTakeItemsCommand(databaseDeals));
         registerCommand("purchasepayment", new PurchasePaymentCommand());
 
-        registerTabCompleter("dealinfo", new DealInfoTabCompleter(databaseDeals));
+        registerTabCompleter("dealinfo", new DealInfoTabCompleter(new DealInfoUseCase(databaseDeals)));
     }
 
     private void registerCommand(final String name, final CommandExecutor executor) {

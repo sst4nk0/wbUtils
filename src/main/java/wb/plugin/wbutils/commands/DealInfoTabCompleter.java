@@ -6,61 +6,38 @@ import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wb.plugin.wbutils.adapters.IDatabaseDeals;
+import wb.plugin.wbutils.usecases.DealInfoUseCase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class DealInfoTabCompleter implements TabCompleter {
 
-    private final IDatabaseDeals databaseDeals;
+    private final DealInfoUseCase dealInfoUseCase;
 
-    public DealInfoTabCompleter(final IDatabaseDeals databaseDeals) {
-        super();
-        this.databaseDeals = databaseDeals;
+    public DealInfoTabCompleter(final DealInfoUseCase dealInfoUseCase) {
+        this.dealInfoUseCase = dealInfoUseCase;
     }
 
-    /**
-     * Do something.
-     *
-     * @param sender  sender
-     * @param command command
-     * @param alias   alias
-     * @param args    args
-     * @return some List
-     */
     @Override
     public @Nullable List<String> onTabComplete(final @NotNull CommandSender sender, final @NotNull Command command,
                                                 final @NotNull String alias, final @NotNull String[] args) {
-        List<String> commands = new ArrayList<>();
         switch (args.length) {
             case 1 -> {
-                List<String> tabs = new ArrayList<>();
-                for (int i = 1; i <= databaseDeals.getDealsQuantity(); i++) {
-                    tabs.add(Integer.toString(i));
-                }
-                for (String s : tabs) {
-                    if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
-                        commands.add(s);
-                    }
-                }
-                return commands;
+                final Predicate<String> filter = s -> s.toLowerCase().startsWith(args[0].toLowerCase());
+                final CompletableFuture<Stream<String>> tabsFuture = dealInfoUseCase.getDealIds(filter);
+                return tabsFuture.join().toList();
             }
             case 2 -> {
-                List<String> tabs = new ArrayList<>();
-                tabs.add("owner");
-                tabs.add("materials");
-                tabs.add("coins_gold");
-                tabs.add("coins_silver");
-                tabs.add("coins_copper");
-                for (String s : tabs) {
-                    if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
-                        commands.add(s);
-                    }
-                }
-                return commands;
+                return Stream.of("owner", "materials", "coins_gold", "coins_silver", "coins_copper")
+                        .filter(s -> s.toLowerCase().startsWith(args[1].toLowerCase())).toList();
             }
             case 3 -> {
-                return commands;
+                return List.of();
             }
             default -> {
                 return null;
