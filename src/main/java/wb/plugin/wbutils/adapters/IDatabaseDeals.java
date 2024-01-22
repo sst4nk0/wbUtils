@@ -4,11 +4,11 @@ import wb.plugin.wbutils.entities.Deal;
 
 public interface IDatabaseDeals {
 
-    void setDeal(int dealId, Deal deal);
+    void addDeal(final Deal deal);
 
-    Deal getDeal(int dealId);
+    Deal getDeal(final int dealId);
+
+    void setDeal(final int dealId, final Deal deal);
 
     int getDealsQuantity();
-
-    void addDeal(Deal deal);
 }

@@ -7,26 +7,22 @@ import java.util.List;
 
 public class DatabaseDeals implements IDatabaseDeals {
 
-    private final int DEALS_QUANTITY = 25;
+    private static final int DEALS_QUANTITY = 25;
     private final List<Deal> deals = new ArrayList<>(DEALS_QUANTITY);
 
-    public void addDeal(Deal deal) {
+    public void addDeal(final Deal deal) {
         deals.add(deal);
+    }
+
+    public Deal getDeal(final int dealId) {
+        return deals.get(dealId - 1);
+    }
+
+    public void setDeal(final int dealId, final Deal deal) {
+        deals.set(dealId - 1, deal);
     }
 
     public int getDealsQuantity() {
         return DEALS_QUANTITY;
-    }
-
-    public Deal getDeal(int dealId) {
-        return deals.get(dealId - 1);
-    }
-
-    public void setDeal(int dealId, Deal deal) {
-        deals.set(dealId - 1, deal);
-    }
-
-    public String getMaterials(int dealId) {
-        return deals.get(dealId - 1).materials();
     }
 }
