@@ -20,6 +20,7 @@ import wb.plugin.wbutils.commands.DealInfoPlaceholder;
 import wb.plugin.wbutils.commands.DealInfoTabCompleter;
 import wb.plugin.wbutils.adapters.ISqlActions;
 import wb.plugin.wbutils.adapters.SqlActions;
+import wb.plugin.wbutils.usecases.ClearChatUseCase;
 import wb.plugin.wbutils.usecases.MiningActionUseCase;
 
 import java.sql.SQLException;
@@ -62,13 +63,11 @@ public final class WbUtils extends JavaPlugin implements Listener {
         registerCommand("dealbuy", new SystemDealBuyCommand(databaseDeals));
         registerCommand("dealrecount", new SystemDealRecountCommand(databaseDeals));
         registerCommand("payday", new PaydayCommand(sqlActions, databaseDeals));
-        registerCommand("clearchat", new ClearChatCommand());
+        registerCommand("clearchat", new ClearChatCommand(new ClearChatUseCase()));
         registerCommand("dospecialaction", new WoodcuttingActionCommand());
         registerCommand("dospecialaction2", new DoSpecialAction2Command(this));
 
-        final MiningActionUseCase miningActionUseCase = new MiningActionUseCase();
-        registerCommand("dospecialaction3", new MiningActionCommand(miningActionUseCase));
-
+        registerCommand("dospecialaction3", new MiningActionCommand(new MiningActionUseCase()));
         registerCommand("dealtakeitems", new SystemTakeItemsCommand(databaseDeals));
         registerCommand("purchasepayment", new PurchasePaymentCommand());
 
