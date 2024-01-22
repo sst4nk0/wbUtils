@@ -1,6 +1,6 @@
 // Команда для вызова диалога-знакомства с NPC
 
-package wb.plugin.wbutils.commands.system;
+package wb.plugin.wbutils.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,14 +16,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-public class DoSpecialAction2 implements CommandExecutor {
+public class DoSpecialAction2Command implements CommandExecutor {
 
     private final JavaPlugin plugin;
 
     /**
      * Initialize a constructor.
      */
-    public DoSpecialAction2(final JavaPlugin plugin) {
+    public DoSpecialAction2Command(final JavaPlugin plugin) {
         this.plugin = plugin;
     }
 

@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.deals;
+package wb.plugin.wbutils.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -7,12 +7,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import wb.plugin.wbutils.adapters.IDatabaseDeals;
 
-public class CommandDealInfo implements CommandExecutor {
+public class DealInfoCommand implements CommandExecutor {
 
     private final IDatabaseDeals databaseDeals;
 
-    public CommandDealInfo(final IDatabaseDeals databaseDeals) {
+    public DealInfoCommand(final IDatabaseDeals databaseDeals) {
         super();
         this.databaseDeals = databaseDeals;
     }

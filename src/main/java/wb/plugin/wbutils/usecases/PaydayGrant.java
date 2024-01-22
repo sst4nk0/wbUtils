@@ -1,6 +1,6 @@
 // Вызов PaydayGrant приведет к проведению пейдея на сервере
 
-package wb.plugin.wbutils.utilities;
+package wb.plugin.wbutils.usecases;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -8,7 +8,10 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import wb.plugin.wbutils.deals.IDatabaseDeals;
+import wb.plugin.wbutils.adapters.IDatabaseDeals;
+import wb.plugin.wbutils.adapters.ISqlActions;
+import wb.plugin.wbutils.utilities.ColorPalette;
+import wb.plugin.wbutils.utilities.TimeSyncReallife;
 
 import java.util.HashMap;
 

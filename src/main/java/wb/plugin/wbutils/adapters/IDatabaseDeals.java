@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.deals;
+package wb.plugin.wbutils.adapters;
 
 public interface IDatabaseDeals {
 

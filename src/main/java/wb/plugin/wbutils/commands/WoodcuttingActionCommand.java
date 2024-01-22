@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.commands.system.woodcutting;
+package wb.plugin.wbutils.commands;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
@@ -10,8 +10,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import wb.plugin.wbutils.entities.WoodType;
 
-public class WoodcuttingActionHandler implements CommandExecutor {
+public class WoodcuttingActionCommand implements CommandExecutor {
 
     private static final String PERMISSION_PREFIX = "wb.woodobtain.";
     private static final String DM_COMMAND_FORMAT = "dm open %s %s";

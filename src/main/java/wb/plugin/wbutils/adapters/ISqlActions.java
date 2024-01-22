@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.utilities;
+package wb.plugin.wbutils.adapters;
 
 import java.sql.Connection;
 import java.sql.SQLException;

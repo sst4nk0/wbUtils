@@ -1,11 +1,10 @@
-package wb.plugin.wbutils.utilities;
+package wb.plugin.wbutils.adapters;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import wb.plugin.wbutils.deals.IDatabaseDeals;
 
 import javax.sql.DataSource;
 import java.sql.Connection;

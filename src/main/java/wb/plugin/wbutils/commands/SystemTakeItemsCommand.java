@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.deals;
+package wb.plugin.wbutils.commands;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
@@ -7,12 +7,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import wb.plugin.wbutils.adapters.IDatabaseDeals;
 
-public class CommandSystemTakeItems implements CommandExecutor {
+public class SystemTakeItemsCommand implements CommandExecutor {
 
     private final IDatabaseDeals databaseDeals;
 
-    public CommandSystemTakeItems(final IDatabaseDeals databaseDeals) {
+    public SystemTakeItemsCommand(final IDatabaseDeals databaseDeals) {
         super();
         this.databaseDeals = databaseDeals;
     }

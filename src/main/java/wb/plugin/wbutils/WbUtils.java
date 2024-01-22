@@ -4,22 +4,22 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import wb.plugin.wbutils.commands.ClearChat;
-import wb.plugin.wbutils.commands.Payday;
-import wb.plugin.wbutils.commands.system.DoSpecialAction2;
-import wb.plugin.wbutils.commands.system.mining.MiningActionHandler;
-import wb.plugin.wbutils.commands.system.woodcutting.WoodcuttingActionHandler;
-import wb.plugin.wbutils.commands.system.PurchasePayment;
-import wb.plugin.wbutils.deals.CommandDealInfo;
-import wb.plugin.wbutils.deals.CommandSystemDealBuy;
-import wb.plugin.wbutils.deals.CommandSystemDealRecount;
-import wb.plugin.wbutils.deals.CommandSystemTakeItems;
-import wb.plugin.wbutils.deals.DatabaseDeals;
-import wb.plugin.wbutils.deals.IDatabaseDeals;
-import wb.plugin.wbutils.deals.PlaceholderDealInfo;
-import wb.plugin.wbutils.deals.TabCompleterDealInfo;
-import wb.plugin.wbutils.utilities.ISqlActions;
-import wb.plugin.wbutils.utilities.SqlActions;
+import wb.plugin.wbutils.commands.ClearChatCommand;
+import wb.plugin.wbutils.commands.PaydayCommand;
+import wb.plugin.wbutils.commands.DoSpecialAction2Command;
+import wb.plugin.wbutils.commands.MiningActionCommand;
+import wb.plugin.wbutils.commands.WoodcuttingActionCommand;
+import wb.plugin.wbutils.commands.PurchasePaymentCommand;
+import wb.plugin.wbutils.commands.DealInfoCommand;
+import wb.plugin.wbutils.commands.SystemDealBuyCommand;
+import wb.plugin.wbutils.commands.SystemDealRecountCommand;
+import wb.plugin.wbutils.commands.SystemTakeItemsCommand;
+import wb.plugin.wbutils.adapters.DatabaseDeals;
+import wb.plugin.wbutils.adapters.IDatabaseDeals;
+import wb.plugin.wbutils.commands.DealInfoPlaceholder;
+import wb.plugin.wbutils.commands.DealInfoTabCompleter;
+import wb.plugin.wbutils.adapters.ISqlActions;
+import wb.plugin.wbutils.adapters.SqlActions;
 
 import java.sql.SQLException;
 import java.util.Objects;
@@ -33,7 +33,7 @@ public final class WbUtils extends JavaPlugin implements Listener {
     public void onEnable() {
         databaseDeals = new DatabaseDeals();
 
-        new PlaceholderDealInfo(this, databaseDeals).register();
+        new DealInfoPlaceholder(this, databaseDeals).register();
 
         initializeDatabase();
         registerCommands();
@@ -54,18 +54,18 @@ public final class WbUtils extends JavaPlugin implements Listener {
     }
 
     private void registerCommands() {
-        registerCommand("dealinfo", new CommandDealInfo(databaseDeals));
-        registerCommand("dealbuy", new CommandSystemDealBuy(databaseDeals));
-        registerCommand("dealrecount", new CommandSystemDealRecount(databaseDeals));
-        registerCommand("payday", new Payday(sqlActions, databaseDeals));
-        registerCommand("clearchat", new ClearChat());
-        registerCommand("dospecialaction", new WoodcuttingActionHandler());
-        registerCommand("dospecialaction2", new DoSpecialAction2(this));
-        registerCommand("dospecialaction3", new MiningActionHandler());
-        registerCommand("dealtakeitems", new CommandSystemTakeItems(databaseDeals));
-        registerCommand("purchasepayment", new PurchasePayment());
+        registerCommand("dealinfo", new DealInfoCommand(databaseDeals));
+        registerCommand("dealbuy", new SystemDealBuyCommand(databaseDeals));
+        registerCommand("dealrecount", new SystemDealRecountCommand(databaseDeals));
+        registerCommand("payday", new PaydayCommand(sqlActions, databaseDeals));
+        registerCommand("clearchat", new ClearChatCommand());
+        registerCommand("dospecialaction", new WoodcuttingActionCommand());
+        registerCommand("dospecialaction2", new DoSpecialAction2Command(this));
+        registerCommand("dospecialaction3", new MiningActionCommand());
+        registerCommand("dealtakeitems", new SystemTakeItemsCommand(databaseDeals));
+        registerCommand("purchasepayment", new PurchasePaymentCommand());
 
-        registerTabCompleter("dealinfo", new TabCompleterDealInfo(databaseDeals));
+        registerTabCompleter("dealinfo", new DealInfoTabCompleter(databaseDeals));
     }
 
     private void registerCommand(final String name, final CommandExecutor executor) {

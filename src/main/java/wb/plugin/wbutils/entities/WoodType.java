@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.commands.system.woodcutting;
+package wb.plugin.wbutils.entities;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;

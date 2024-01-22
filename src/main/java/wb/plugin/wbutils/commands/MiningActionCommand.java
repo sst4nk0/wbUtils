@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.commands.system.mining;
+package wb.plugin.wbutils.commands;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
@@ -12,6 +12,8 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import wb.plugin.wbutils.entities.OreType;
+import wb.plugin.wbutils.entities.PickaxeType;
 import wb.plugin.wbutils.utilities.SoundDecay;
 
 import java.util.Random;
@@ -19,7 +21,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class MiningActionHandler implements CommandExecutor {
+public class MiningActionCommand implements CommandExecutor {
 
     /**
      * Flood cooldown for mining command.

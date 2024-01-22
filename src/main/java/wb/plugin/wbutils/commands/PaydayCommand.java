@@ -6,16 +6,16 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import wb.plugin.wbutils.deals.IDatabaseDeals;
-import wb.plugin.wbutils.utilities.ISqlActions;
-import wb.plugin.wbutils.utilities.PaydayGrant;
+import wb.plugin.wbutils.adapters.IDatabaseDeals;
+import wb.plugin.wbutils.adapters.ISqlActions;
+import wb.plugin.wbutils.usecases.PaydayGrant;
 
-public class Payday implements CommandExecutor {
+public class PaydayCommand implements CommandExecutor {
 
     private final ISqlActions sqlActions;
     private final IDatabaseDeals databaseDeals;
 
-    public Payday(final ISqlActions sqlActions, final IDatabaseDeals databaseDeals) {
+    public PaydayCommand(final ISqlActions sqlActions, final IDatabaseDeals databaseDeals) {
         this.sqlActions = sqlActions;
         this.databaseDeals = databaseDeals;
     }

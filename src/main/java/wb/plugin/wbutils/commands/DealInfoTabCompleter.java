@@ -1,19 +1,20 @@
-package wb.plugin.wbutils.deals;
+package wb.plugin.wbutils.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import wb.plugin.wbutils.adapters.IDatabaseDeals;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TabCompleterDealInfo implements TabCompleter {
+public class DealInfoTabCompleter implements TabCompleter {
 
     private final IDatabaseDeals databaseDeals;
 
-    public TabCompleterDealInfo(final IDatabaseDeals databaseDeals) {
+    public DealInfoTabCompleter(final IDatabaseDeals databaseDeals) {
         super();
         this.databaseDeals = databaseDeals;
     }

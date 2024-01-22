@@ -1,11 +1,12 @@
-package wb.plugin.wbutils.deals;
+package wb.plugin.wbutils.commands;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import wb.plugin.wbutils.adapters.IDatabaseDeals;
 
-public class PlaceholderDealInfo extends PlaceholderExpansion {
+public class DealInfoPlaceholder extends PlaceholderExpansion {
 
     private final JavaPlugin plugin;
     private final IDatabaseDeals databaseDeals;
@@ -13,7 +14,7 @@ public class PlaceholderDealInfo extends PlaceholderExpansion {
     /**
      * Initialize a constructor.
      */
-    public PlaceholderDealInfo(final JavaPlugin plugin, final IDatabaseDeals databaseDeals) {
+    public DealInfoPlaceholder(final JavaPlugin plugin, final IDatabaseDeals databaseDeals) {
         this.plugin = plugin;
         this.databaseDeals = databaseDeals;
     }

@@ -8,14 +8,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-public class SetSpawn implements CommandExecutor {
+public class SetSpawnCommand implements CommandExecutor {
 
     private final JavaPlugin plugin;
 
     /**
      * Initialize a constructor.
      */
-    public SetSpawn(final JavaPlugin plugin) {
+    public SetSpawnCommand(final JavaPlugin plugin) {
         this.plugin = plugin;
     }
 

@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.events;
+package wb.plugin.wbutils.adapters;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;

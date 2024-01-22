@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.deals;
+package wb.plugin.wbutils.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -7,17 +7,17 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.profile.PlayerTextures;
 import org.jetbrains.annotations.NotNull;
+import wb.plugin.wbutils.adapters.IDatabaseDeals;
 
 import java.util.HashMap;
 
-public class CommandSystemDealRecount implements CommandExecutor {
+public class SystemDealRecountCommand implements CommandExecutor {
 
     private final HashMap<String, Long> perUserCooldowns;  // кулдауны на флуд
     private final IDatabaseDeals databaseDeals;
 
-    public CommandSystemDealRecount(final IDatabaseDeals databaseDeals) {
+    public SystemDealRecountCommand(final IDatabaseDeals databaseDeals) {
         this.perUserCooldowns = new HashMap<>();
         this.databaseDeals = databaseDeals;
     }
