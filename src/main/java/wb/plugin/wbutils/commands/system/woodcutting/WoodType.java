@@ -20,8 +20,8 @@ public enum WoodType {
     private final String woodId;
     private final String woodName;
 
-    WoodType(final String commandArg, final String woodName) {
-        this.woodId = commandArg;
+    WoodType(final String woodId, final String woodName) {
+        this.woodId = woodId;
         this.woodName = woodName;
     }
 
