@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.adapters.database;
+package wb.plugin.wbutils.io;
 
 import java.io.Closeable;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.adapters.database;
+package wb.plugin.wbutils.io;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

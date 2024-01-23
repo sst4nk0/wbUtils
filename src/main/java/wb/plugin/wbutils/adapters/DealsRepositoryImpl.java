@@ -1,6 +1,6 @@
 package wb.plugin.wbutils.adapters;
 
-import wb.plugin.wbutils.adapters.database.DatabaseConnectionManager;
+import wb.plugin.wbutils.io.DatabaseConnectionManager;
 import wb.plugin.wbutils.entities.Deal;
 
 import java.sql.Connection;

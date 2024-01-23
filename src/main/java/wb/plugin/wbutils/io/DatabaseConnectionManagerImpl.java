@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.adapters.database;
+package wb.plugin.wbutils.io;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
