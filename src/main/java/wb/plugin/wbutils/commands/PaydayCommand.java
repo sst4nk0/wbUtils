@@ -7,21 +7,17 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import wb.plugin.wbutils.adapters.IDatabaseDeals;
-import wb.plugin.wbutils.adapters.ISqlActions;
-import wb.plugin.wbutils.usecases.PaydayGrant;
+import wb.plugin.wbutils.usecases.PaydayUseCase;
 
 import java.util.logging.Logger;
 
 public class PaydayCommand implements CommandExecutor {
 
     private static final Logger LOGGER = Logger.getLogger(PaydayCommand.class.getName());
-    private final ISqlActions sqlActions;
-    private final IDatabaseDeals databaseDeals;
+    private final PaydayUseCase paydayUseCase;
 
-    public PaydayCommand(final ISqlActions sqlActions, final IDatabaseDeals databaseDeals) {
-        this.sqlActions = sqlActions;
-        this.databaseDeals = databaseDeals;
+    public PaydayCommand(final PaydayUseCase paydayUseCase) {
+        this.paydayUseCase = paydayUseCase;
     }
 
     @Override
@@ -38,11 +34,10 @@ public class PaydayCommand implements CommandExecutor {
                 return true;
             }
 
-            new PaydayGrant(sqlActions, databaseDeals);
-            LOGGER.info(() -> "[" + sender.getName() + "] [CMD] [PAYDAY] [multiplier:" + args[0] + "]");
-        } else {
-            new PaydayGrant(sqlActions, databaseDeals);
+            LOGGER.info(() -> '[' + sender.getName() + "] [CMD] [PAYDAY] [multiplier:" + args[0] + ']');
         }
+
+        paydayUseCase.execute();
         return true;
     }
 }

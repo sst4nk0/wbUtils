@@ -1,22 +1,15 @@
-// Вызов TimeSyncReallife синхронизирует положение солнца в реальной жизни и игре
-
 package wb.plugin.wbutils.utilities;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class TimeSyncReallife{
+public class TimeSyncReallife {
 
-    public TimeSyncReallife(Player playersToNotify) {
-        run(playersToNotify);
-    }
-
-    public void run(Player playersToNotify) {
+    public static String run() {
         ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
         LocalDateTime timeNow = LocalDateTime.now();
         DateTimeFormatter clockFormat = DateTimeFormatter.ofPattern("HH:mm");
@@ -49,6 +42,6 @@ public class TimeSyncReallife{
             case 22 -> Bukkit.dispatchCommand(console, "time set 16000");
             case 23 -> Bukkit.dispatchCommand(console, "time set 17000");
         }
-        playersToNotify.sendMessage(ChatColor.YELLOW + String.format("的 Серверное время - %s", clockFormat.format(timeNow)));
+        return ChatColor.YELLOW + String.format("的 Серверное время - %s", clockFormat.format(timeNow));
     }
 }

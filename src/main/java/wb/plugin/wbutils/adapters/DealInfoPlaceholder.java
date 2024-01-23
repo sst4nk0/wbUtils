@@ -9,12 +9,12 @@ import wb.plugin.wbutils.entities.Deal;
 public class DealInfoPlaceholder extends PlaceholderExpansion {
 
     private final JavaPlugin plugin;
-    private final IDatabaseDeals databaseDeals;
+    private final DealsRepository databaseDeals;
 
     /**
      * Initialize a constructor.
      */
-    public DealInfoPlaceholder(final JavaPlugin plugin, final IDatabaseDeals databaseDeals) {
+    public DealInfoPlaceholder(final JavaPlugin plugin, final DealsRepository databaseDeals) {
         this.plugin = plugin;
         this.databaseDeals = databaseDeals;
     }

@@ -2,7 +2,7 @@ package wb.plugin.wbutils.adapters;
 
 import wb.plugin.wbutils.entities.Deal;
 
-public interface IDatabaseDeals {
+public interface DealsRepository {
 
     void addDeal(final Deal deal);
 
@@ -11,4 +11,8 @@ public interface IDatabaseDeals {
     void setDeal(final int dealId, final Deal deal);
 
     int getDealsQuantity();
+
+    void loadDealsInfo();
+
+    void saveDealsInfo();
 }

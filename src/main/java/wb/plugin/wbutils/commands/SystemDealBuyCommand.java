@@ -8,7 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import wb.plugin.wbutils.adapters.IDatabaseDeals;
+import wb.plugin.wbutils.adapters.DealsRepository;
 import wb.plugin.wbutils.entities.Deal;
 
 import java.util.logging.Logger;
@@ -16,9 +16,9 @@ import java.util.logging.Logger;
 public class SystemDealBuyCommand implements CommandExecutor {
 
     private static final Logger LOGGER = Logger.getLogger(SystemDealBuyCommand.class.getName());
-    private final IDatabaseDeals databaseDeals;
+    private final DealsRepository databaseDeals;
 
-    public SystemDealBuyCommand(final IDatabaseDeals databaseDeals) {
+    public SystemDealBuyCommand(final DealsRepository databaseDeals) {
         super();
         this.databaseDeals = databaseDeals;
     }

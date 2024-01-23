@@ -4,7 +4,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,7 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import wb.plugin.wbutils.entities.Deal;
-import wb.plugin.wbutils.adapters.IDatabaseDeals;
+import wb.plugin.wbutils.adapters.DealsRepository;
 
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -21,9 +20,9 @@ public class SystemDealRecountCommand implements CommandExecutor {
 
     private static final Logger LOGGER = Logger.getLogger(SystemDealRecountCommand.class.getName());
     private final HashMap<String, Long> perUserCooldowns;  // кулдауны на флуд
-    private final IDatabaseDeals databaseDeals;
+    private final DealsRepository databaseDeals;
 
-    public SystemDealRecountCommand(final IDatabaseDeals databaseDeals) {
+    public SystemDealRecountCommand(final DealsRepository databaseDeals) {
         this.perUserCooldowns = new HashMap<>();
         this.databaseDeals = databaseDeals;
     }

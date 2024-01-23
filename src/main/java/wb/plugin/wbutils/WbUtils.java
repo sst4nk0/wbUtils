@@ -14,34 +14,33 @@ import wb.plugin.wbutils.commands.DealInfoCommand;
 import wb.plugin.wbutils.commands.SystemDealBuyCommand;
 import wb.plugin.wbutils.commands.SystemDealRecountCommand;
 import wb.plugin.wbutils.commands.SystemTakeItemsCommand;
-import wb.plugin.wbutils.adapters.DatabaseDeals;
-import wb.plugin.wbutils.adapters.IDatabaseDeals;
+import wb.plugin.wbutils.adapters.DealsRepositoryImpl;
+import wb.plugin.wbutils.adapters.DealsRepository;
 import wb.plugin.wbutils.adapters.DealInfoPlaceholder;
 import wb.plugin.wbutils.commands.DealInfoTabCompleter;
-import wb.plugin.wbutils.adapters.ISqlActions;
-import wb.plugin.wbutils.adapters.SqlActions;
+import wb.plugin.wbutils.adapters.database.DatabaseConnectionManager;
+import wb.plugin.wbutils.adapters.database.DatabaseConnectionManagerImpl;
 import wb.plugin.wbutils.usecases.ClearChatUseCase;
 import wb.plugin.wbutils.usecases.DealInfoUseCase;
+import wb.plugin.wbutils.usecases.DealManagementUseCase;
 import wb.plugin.wbutils.usecases.MiningActionUseCase;
+import wb.plugin.wbutils.usecases.NotificationService;
+import wb.plugin.wbutils.usecases.PaydayUseCase;
 
-import java.sql.SQLException;
 import java.util.Objects;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class WbUtils extends JavaPlugin implements Listener {
 
-    private static final Logger LOGGER = Logger.getLogger(WbUtils.class.getName());
-    private ISqlActions sqlActions;
-    private IDatabaseDeals databaseDeals;
+    private static final Logger PLUGIN_LOGGER = Logger.getLogger(WbUtils.class.getName());
+    private DatabaseConnectionManager dbConnectionManager;
+    private DealsRepository dealsRepository;
 
     @Override
     public void onEnable() {
-        databaseDeals = new DatabaseDeals();
-
-        new DealInfoPlaceholder(this, databaseDeals).register();
-
-        initializeDatabase();
+        dbConnectionManager = new DatabaseConnectionManagerImpl(this);
+        dealsRepository = new DealsRepositoryImpl(dbConnectionManager);
+        new DealInfoPlaceholder(this, dealsRepository).register();
         registerCommands();
         loadConfiguration();
 
@@ -53,26 +52,20 @@ public final class WbUtils extends JavaPlugin implements Listener {
         FileDealsData.save(); */
     }
 
-    private void initializeDatabase() {
-        sqlActions = new SqlActions(this, databaseDeals);
-        sqlActions.initialize();
-        sqlActions.loadDealsInfo();
-    }
-
     private void registerCommands() {
-        registerCommand("dealinfo", new DealInfoCommand(databaseDeals));
-        registerCommand("dealbuy", new SystemDealBuyCommand(databaseDeals));
-        registerCommand("dealrecount", new SystemDealRecountCommand(databaseDeals));
-        registerCommand("payday", new PaydayCommand(sqlActions, databaseDeals));
+        registerCommand("dealinfo", new DealInfoCommand(dealsRepository));
+        registerCommand("dealbuy", new SystemDealBuyCommand(dealsRepository));
+        registerCommand("dealrecount", new SystemDealRecountCommand(dealsRepository));
+        registerCommand("payday", new PaydayCommand(new PaydayUseCase(dealsRepository,
+                new DealManagementUseCase(dealsRepository), new NotificationService())));
         registerCommand("clearchat", new ClearChatCommand(new ClearChatUseCase()));
         registerCommand("dospecialaction", new WoodcuttingActionCommand());
         registerCommand("dospecialaction2", new DoSpecialAction2Command(this));
-
         registerCommand("dospecialaction3", new MiningActionCommand(new MiningActionUseCase()));
-        registerCommand("dealtakeitems", new SystemTakeItemsCommand(databaseDeals));
+        registerCommand("dealtakeitems", new SystemTakeItemsCommand(dealsRepository));
         registerCommand("purchasepayment", new PurchasePaymentCommand());
 
-        registerTabCompleter("dealinfo", new DealInfoTabCompleter(new DealInfoUseCase(databaseDeals)));
+        registerTabCompleter("dealinfo", new DealInfoTabCompleter(new DealInfoUseCase(dealsRepository)));
     }
 
     private void registerCommand(final String name, final CommandExecutor executor) {
@@ -90,16 +83,11 @@ public final class WbUtils extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-        if (sqlActions == null) {
-            return;
+        if (dealsRepository != null) {
+            dealsRepository.saveDealsInfo();
         }
-
-        try {
-            sqlActions.saveDealsInfo();
-            sqlActions.getConnection().commit();
-            sqlActions.closeConnection();
-        } catch (final SQLException e) {
-            LOGGER.log(Level.SEVERE, "Error closing SQL connection", e);
+        if (dbConnectionManager != null) {
+            dbConnectionManager.closeAllConnectionsAsync().join();
         }
 
         /* вырезанный функционал

@@ -7,14 +7,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import wb.plugin.wbutils.adapters.IDatabaseDeals;
+import wb.plugin.wbutils.adapters.DealsRepository;
 import wb.plugin.wbutils.entities.Deal;
 
 public class SystemTakeItemsCommand implements CommandExecutor {
 
-    private final IDatabaseDeals databaseDeals;
+    private final DealsRepository databaseDeals;
 
-    public SystemTakeItemsCommand(final IDatabaseDeals databaseDeals) {
+    public SystemTakeItemsCommand(final DealsRepository databaseDeals) {
         super();
         this.databaseDeals = databaseDeals;
     }
