@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.io;
+package wb.plugin.wbutils.frameworks;
 
 import java.io.Closeable;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.adapters;
+package wb.plugin.wbutils.adapters.listeners;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class JoinQuitEvent implements Listener {
+public class JoinQuitListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(final @NotNull PlayerJoinEvent jEvent) {

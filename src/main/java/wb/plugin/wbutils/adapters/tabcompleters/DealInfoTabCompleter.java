@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.commands;
+package wb.plugin.wbutils.adapters.tabcompleters;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

@@ -1,6 +1,6 @@
 // Команда для вызова диалога-знакомства с NPC
 
-package wb.plugin.wbutils.commands;
+package wb.plugin.wbutils.adapters.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

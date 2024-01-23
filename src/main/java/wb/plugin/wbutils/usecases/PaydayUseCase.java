@@ -1,6 +1,6 @@
 package wb.plugin.wbutils.usecases;
 
-import wb.plugin.wbutils.adapters.DealsRepository;
+import wb.plugin.wbutils.adapters.repositories.DealsRepository;
 import wb.plugin.wbutils.entities.Deal;
 
 import java.util.Set;

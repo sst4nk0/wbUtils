@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.commands;
+package wb.plugin.wbutils.adapters.commands;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
@@ -7,7 +7,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import wb.plugin.wbutils.adapters.DealsRepository;
+import wb.plugin.wbutils.adapters.repositories.DealsRepository;
 import wb.plugin.wbutils.entities.Deal;
 
 public class SystemTakeItemsCommand implements CommandExecutor {

@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.adapters;
+package wb.plugin.wbutils.adapters.repositories;
 
 import wb.plugin.wbutils.entities.Deal;
 

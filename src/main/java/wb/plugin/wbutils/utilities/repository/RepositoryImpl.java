@@ -1,6 +1,6 @@
 package wb.plugin.wbutils.utilities.repository;
 
-import wb.plugin.wbutils.io.DatabaseConnectionManager;
+import wb.plugin.wbutils.frameworks.DatabaseConnectionManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;

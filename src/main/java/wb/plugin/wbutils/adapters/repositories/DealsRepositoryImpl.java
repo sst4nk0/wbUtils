@@ -1,6 +1,6 @@
-package wb.plugin.wbutils.adapters;
+package wb.plugin.wbutils.adapters.repositories;
 
-import wb.plugin.wbutils.io.DatabaseConnectionManager;
+import wb.plugin.wbutils.frameworks.DatabaseConnectionManager;
 import wb.plugin.wbutils.entities.Deal;
 import wb.plugin.wbutils.utilities.repository.RepositoryImpl;
 

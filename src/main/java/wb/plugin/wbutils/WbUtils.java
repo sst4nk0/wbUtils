@@ -1,25 +1,27 @@
 package wb.plugin.wbutils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import wb.plugin.wbutils.commands.ClearChatCommand;
-import wb.plugin.wbutils.commands.PaydayCommand;
-import wb.plugin.wbutils.commands.DoSpecialAction2Command;
-import wb.plugin.wbutils.commands.MiningActionCommand;
-import wb.plugin.wbutils.commands.WoodcuttingActionCommand;
-import wb.plugin.wbutils.commands.PurchasePaymentCommand;
-import wb.plugin.wbutils.commands.DealInfoCommand;
-import wb.plugin.wbutils.commands.SystemDealBuyCommand;
-import wb.plugin.wbutils.commands.SystemDealRecountCommand;
-import wb.plugin.wbutils.commands.SystemTakeItemsCommand;
-import wb.plugin.wbutils.adapters.DealsRepositoryImpl;
-import wb.plugin.wbutils.adapters.DealsRepository;
-import wb.plugin.wbutils.adapters.DealInfoPlaceholder;
-import wb.plugin.wbutils.commands.DealInfoTabCompleter;
-import wb.plugin.wbutils.io.DatabaseConnectionManager;
-import wb.plugin.wbutils.io.DatabaseConnectionManagerImpl;
+import wb.plugin.wbutils.adapters.commands.ClearChatCommand;
+import wb.plugin.wbutils.adapters.commands.PaydayCommand;
+import wb.plugin.wbutils.adapters.commands.DoSpecialAction2Command;
+import wb.plugin.wbutils.adapters.commands.MiningActionCommand;
+import wb.plugin.wbutils.adapters.commands.WoodcuttingActionCommand;
+import wb.plugin.wbutils.adapters.commands.PurchasePaymentCommand;
+import wb.plugin.wbutils.adapters.commands.DealInfoCommand;
+import wb.plugin.wbutils.adapters.commands.SystemDealBuyCommand;
+import wb.plugin.wbutils.adapters.commands.SystemDealRecountCommand;
+import wb.plugin.wbutils.adapters.commands.SystemTakeItemsCommand;
+import wb.plugin.wbutils.adapters.listeners.JoinQuitListener;
+import wb.plugin.wbutils.adapters.repositories.DealsRepositoryImpl;
+import wb.plugin.wbutils.adapters.repositories.DealsRepository;
+import wb.plugin.wbutils.adapters.placeholders.DealInfoPlaceholder;
+import wb.plugin.wbutils.adapters.tabcompleters.DealInfoTabCompleter;
+import wb.plugin.wbutils.frameworks.DatabaseConnectionManager;
+import wb.plugin.wbutils.frameworks.DatabaseConnectionManagerImpl;
 import wb.plugin.wbutils.usecases.ClearChatUseCase;
 import wb.plugin.wbutils.usecases.DealInfoUseCase;
 import wb.plugin.wbutils.usecases.DealManagementUseCase;
@@ -30,7 +32,7 @@ import wb.plugin.wbutils.usecases.PaydayUseCase;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-public final class WbUtils extends JavaPlugin implements Listener {
+public final class WbUtils extends JavaPlugin {
 
     private static final Logger PLUGIN_LOGGER = Logger.getLogger(WbUtils.class.getName());
     private DatabaseConnectionManager dbConnectionManager;
@@ -38,9 +40,10 @@ public final class WbUtils extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        getServer().getPluginManager().registerEvents(new JoinQuitListener(), this);
         dbConnectionManager = new DatabaseConnectionManagerImpl(this);
         dealsRepository = new DealsRepositoryImpl(dbConnectionManager);
-        new DealInfoPlaceholder(this, dealsRepository).register();
+        new DealInfoPlaceholder(dealsRepository).register();
         registerCommands();
         loadConfiguration();
 

@@ -1,7 +1,7 @@
 package wb.plugin.wbutils.usecases;
 
 import org.jetbrains.annotations.NotNull;
-import wb.plugin.wbutils.adapters.DealsRepository;
+import wb.plugin.wbutils.adapters.repositories.DealsRepository;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;

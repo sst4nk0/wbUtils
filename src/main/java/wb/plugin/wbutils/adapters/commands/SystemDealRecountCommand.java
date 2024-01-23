@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.commands;
+package wb.plugin.wbutils.adapters.commands;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import wb.plugin.wbutils.entities.Deal;
-import wb.plugin.wbutils.adapters.DealsRepository;
+import wb.plugin.wbutils.adapters.repositories.DealsRepository;
 
 import java.util.HashMap;
 import java.util.logging.Logger;

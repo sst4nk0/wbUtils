@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.io;
+package wb.plugin.wbutils.frameworks;
 
 import javax.sql.DataSource;
 import java.sql.Connection;

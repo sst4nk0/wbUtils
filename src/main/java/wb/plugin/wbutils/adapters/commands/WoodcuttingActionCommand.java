@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.commands;
+package wb.plugin.wbutils.adapters.commands;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;

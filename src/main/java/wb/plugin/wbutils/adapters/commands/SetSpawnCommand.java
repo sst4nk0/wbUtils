@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.commands;
+package wb.plugin.wbutils.adapters.commands;
 
 import org.bukkit.Location;
 import org.bukkit.command.Command;
