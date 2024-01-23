@@ -42,12 +42,10 @@ public class RepositoryImpl<T extends Entity> implements Repository<T, Integer> 
         try {
             connection.setAutoCommit(false);
             if (existsById(entity.getId())) {
-                System.out.println("Exists");
                 // Update existing entity
                 PreparedStatement statement = connection.prepareStatement(updateQuery);
                 List<Object> columnValues = entity.getColumnValues();
                 for (int i = 0; i < columnValues.size(); i++) {
-                    System.out.println(columnValues.get(i));
                     statement.setObject(i + 1, columnValues.get(i));
                 }
                 statement.setObject(columnValues.size() + 1, entity.getId()); // Set id for WHERE clause
