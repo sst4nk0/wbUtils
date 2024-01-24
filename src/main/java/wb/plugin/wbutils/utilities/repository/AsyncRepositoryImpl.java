@@ -77,7 +77,9 @@ public class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncRepository
                 return CompletableFuture.completedFuture(entity);
             } catch (SQLException e) {
                 try {
-                    connection.rollback();
+                    if (!connection.isClosed() && !connection.getAutoCommit()) {
+                        connection.rollback();
+                    }
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -95,7 +97,9 @@ public class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncRepository
                 return CompletableFuture.completedFuture(entity);
             } catch (SQLException e) {
                 try {
-                    connection.rollback();
+                    if (!connection.isClosed() && !connection.getAutoCommit()) {
+                        connection.rollback();
+                    }
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -145,7 +149,9 @@ public class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncRepository
                 return CompletableFuture.completedFuture(iterable);
             } catch (SQLException e) {
                 try {
-                    connection.rollback();
+                    if (!connection.isClosed() && !connection.getAutoCommit()) {
+                        connection.rollback();
+                    }
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
