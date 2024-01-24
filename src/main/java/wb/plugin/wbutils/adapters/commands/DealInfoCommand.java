@@ -51,8 +51,8 @@ public class DealInfoCommand implements CommandExecutor {
                 case "owner" -> {
                     Player target = Bukkit.getServer().getPlayerExact(playerName);
 
-                    LOGGER.info("[" + sender.getName() + "] [DEAL] [SET] [number:" + args[0] + "] [to:" + playerName + "] [from:" + deal.owner() + "]");
-                    Deal newDeal = new Deal(deal.id(), playerName, deal.coins_copper(), deal.coins_silver(), deal.coins_gold(), deal.materials());
+                    LOGGER.info("[" + sender.getName() + "] [DEAL] [SET] [number:" + args[0] + "] [to:" + playerName + "] [from:" + deal.getOwner() + "]");
+                    Deal newDeal = new Deal(deal.getId(), playerName, deal.getCopperCoins(), deal.getSilverCoins(), deal.getGoldCoins(), deal.getMaterials());
                     databaseDeals.setDeal(dealId, newDeal);
                     if (playerName.equals("-")) {
                         for (Player playersOnline : Bukkit.getOnlinePlayers()) {
@@ -68,27 +68,27 @@ public class DealInfoCommand implements CommandExecutor {
                     }
                 }
                 case "coins_gold" -> {
-                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.coins_gold() + "]");
+                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.getGoldCoins() + "]");
                     adminChangedDeal(sender, args);
-                    Deal newDeal = new Deal(deal.id(), deal.owner(), deal.coins_copper(), deal.coins_silver(), argValue, deal.materials());
+                    Deal newDeal = new Deal(deal.getId(), deal.getOwner(), deal.getCopperCoins(), deal.getSilverCoins(), argValue, deal.getMaterials());
                     databaseDeals.setDeal(dealId, newDeal);
                 }
                 case "coins_silver" -> {
-                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.coins_silver() + "]");
+                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.getSilverCoins() + "]");
                     adminChangedDeal(sender, args);
-                    Deal newDeal = new Deal(deal.id(), deal.owner(), deal.coins_copper(), argValue, deal.coins_gold(), deal.materials());
+                    Deal newDeal = new Deal(deal.getId(), deal.getOwner(), deal.getCopperCoins(), argValue, deal.getGoldCoins(), deal.getMaterials());
                     databaseDeals.setDeal(dealId, newDeal);
                 }
                 case "coins_copper" -> {
-                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.coins_copper() + "]");
+                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.getCopperCoins() + "]");
                     adminChangedDeal(sender, args);
-                    Deal newDeal = new Deal(deal.id(), deal.owner(), argValue, deal.coins_silver(), deal.coins_gold(), deal.materials());
+                    Deal newDeal = new Deal(deal.getId(), deal.getOwner(), argValue, deal.getSilverCoins(), deal.getGoldCoins(), deal.getMaterials());
                     databaseDeals.setDeal(dealId, newDeal);
                 }
                 case "materials" -> {
-                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.materials() + "]");
+                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.getMaterials() + "]");
                     adminChangedDeal(sender, args);
-                    Deal newDeal = new Deal(deal.id(), deal.owner(), deal.coins_copper(), deal.coins_silver(), deal.coins_gold(), argValue);
+                    Deal newDeal = new Deal(deal.getId(), deal.getOwner(), deal.getCopperCoins(), deal.getSilverCoins(), deal.getGoldCoins(), argValue);
                     databaseDeals.setDeal(dealId, newDeal);
                 }
                 default -> sender.sendMessage(ChatColor.GRAY + "的 Ошибка ввода. Пример: /dealinfo <deal_id> <stat> <value>");
@@ -108,29 +108,29 @@ public class DealInfoCommand implements CommandExecutor {
             switch (args[1]) {
                 case "owner" -> {
                     Player target = Bukkit.getServer().getPlayerExact(playerName);
-                    LOGGER.info("[" + sender.getName() + "] [DEAL] [SET] [number:" + args[0] + "] [to:" + playerName + "] [from:" + deal.owner() + "]");
+                    LOGGER.info("[" + sender.getName() + "] [DEAL] [SET] [number:" + args[0] + "] [to:" + playerName + "] [from:" + deal.getOwner() + "]");
                     if (target != null) { target.sendMessage(ChatColor.YELLOW + "我 Сделка №" + args[0] + " теперь ваша!"); }
-                    Deal newDeal = new Deal(deal.id(), playerName, deal.coins_copper(), deal.coins_silver(), deal.coins_gold(), deal.materials());
+                    Deal newDeal = new Deal(deal.getId(), playerName, deal.getCopperCoins(), deal.getSilverCoins(), deal.getGoldCoins(), deal.getMaterials());
                     databaseDeals.setDeal(dealId, newDeal);
                 }
                 case "coins_gold" -> {
-                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.coins_gold() + "]");
-                    Deal newDeal = new Deal(deal.id(), deal.owner(), deal.coins_copper(), deal.coins_silver(), argValue, deal.materials());
+                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.getGoldCoins() + "]");
+                    Deal newDeal = new Deal(deal.getId(), deal.getOwner(), deal.getCopperCoins(), deal.getSilverCoins(), argValue, deal.getMaterials());
                     databaseDeals.setDeal(dealId, newDeal);
                 }
                 case "coins_silver" -> {
-                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.coins_silver() + "]");
-                    Deal newDeal = new Deal(deal.id(), deal.owner(), deal.coins_copper(), argValue, deal.coins_gold(), deal.materials());
+                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.getSilverCoins() + "]");
+                    Deal newDeal = new Deal(deal.getId(), deal.getOwner(), deal.getCopperCoins(), argValue, deal.getGoldCoins(), deal.getMaterials());
                     databaseDeals.setDeal(dealId, newDeal);
                 }
                 case "coins_copper" -> {
-                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.coins_copper() + "]");
-                    Deal newDeal = new Deal(deal.id(), deal.owner(), argValue, deal.coins_silver(), deal.coins_gold(), deal.materials());
+                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.getCopperCoins() + "]");
+                    Deal newDeal = new Deal(deal.getId(), deal.getOwner(), argValue, deal.getSilverCoins(), deal.getGoldCoins(), deal.getMaterials());
                     databaseDeals.setDeal(dealId, newDeal);
                 }
                 case "materials" -> {
-                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.materials() + "]");
-                    Deal newDeal = new Deal(deal.id(), deal.owner(), deal.coins_copper(), deal.coins_silver(), deal.coins_gold(), argValue);
+                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.getMaterials() + "]");
+                    Deal newDeal = new Deal(deal.getId(), deal.getOwner(), deal.getCopperCoins(), deal.getSilverCoins(), deal.getGoldCoins(), argValue);
                     databaseDeals.setDeal(dealId, newDeal);
                 }
                 default -> LOGGER.info("[CONSOLE] [msg] [Ошибка ввода. Пример: /dealinfo <deal_id> <stat> <value>]");

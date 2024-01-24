@@ -19,8 +19,8 @@ public class DealManagementUseCase {
 
         for (int dealId = 1; dealId <= databaseDeals.getDealsQuantity(); dealId++) {
             Deal deal = databaseDeals.getDeal(dealId);
-            if (Integer.parseInt(deal.materials()) < -7) {
-                Deal newDeal = new Deal(deal.id(), "-", deal.coins_copper(), deal.coins_silver(), deal.coins_gold(), "16");
+            if (Integer.parseInt(deal.getMaterials()) < -7) {
+                Deal newDeal = new Deal(deal.getId(), "-", deal.getCopperCoins(), deal.getSilverCoins(), deal.getGoldCoins(), "16");
                 databaseDeals.setDeal(dealId, newDeal);
                 resetDeals.add(newDeal);
             }
@@ -34,7 +34,7 @@ public class DealManagementUseCase {
 
         for (int dealId = 1; dealId <= databaseDeals.getDealsQuantity(); dealId++) {
             Deal deal = databaseDeals.getDeal(dealId);
-            if (Integer.parseInt(deal.materials()) < -7) {
+            if (Integer.parseInt(deal.getMaterials()) < -7) {
                 endangeredDeals.add(deal);
             }
         }

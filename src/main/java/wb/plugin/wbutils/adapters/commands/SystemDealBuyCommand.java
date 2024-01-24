@@ -47,7 +47,7 @@ public class SystemDealBuyCommand implements CommandExecutor {
         databaseDeals.setDeal(dealId, deal);
 
         final Player target = Bukkit.getServer().getPlayerExact(owner);
-        LOGGER.info(() -> "[CONSOLE] [DEAL] [BUY] [number:" + dealId + "] [to:" + owner + "] [from:" + deal.owner() + ']');
+        LOGGER.info(() -> "[CONSOLE] [DEAL] [BUY] [number:" + dealId + "] [to:" + owner + "] [from:" + deal.getOwner() + ']');
         if (target != null) {
             final String content = "我 Сделка №" + dealIdString + " теперь ваша!";
             target.sendMessage(Component.text(content, NamedTextColor.YELLOW));

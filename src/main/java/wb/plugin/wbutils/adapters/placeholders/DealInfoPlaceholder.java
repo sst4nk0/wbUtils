@@ -17,12 +17,12 @@ public class DealInfoPlaceholder extends PlaceholderExpansion implements DealUpd
     private static final ConcurrentMap<String, Function<Deal, String>> DEAL_PROPERTIES = new ConcurrentHashMap<>();
 
     static {
-        DEAL_PROPERTIES.put("dealowner", Deal::owner);
-        DEAL_PROPERTIES.put("dealcopper", Deal::coins_copper);
-        DEAL_PROPERTIES.put("dealsilver", Deal::coins_silver);
-        DEAL_PROPERTIES.put("dealgold", Deal::coins_gold);
-        DEAL_PROPERTIES.put("dealmaterials", Deal::materials);
-        DEAL_PROPERTIES.put("dealstatus", deal -> Integer.parseInt(deal.materials()) > -1 ? " " : "(сделка неустойчива)");
+        DEAL_PROPERTIES.put("dealowner", Deal::getOwner);
+        DEAL_PROPERTIES.put("dealcopper", Deal::getCopperCoins);
+        DEAL_PROPERTIES.put("dealsilver", Deal::getSilverCoins);
+        DEAL_PROPERTIES.put("dealgold", Deal::getGoldCoins);
+        DEAL_PROPERTIES.put("dealmaterials", Deal::getMaterials);
+        DEAL_PROPERTIES.put("dealstatus", deal -> Integer.parseInt(deal.getMaterials()) > -1 ? " " : "(сделка неустойчива)");
     }
 
     private final DealsRepository databaseDeals;

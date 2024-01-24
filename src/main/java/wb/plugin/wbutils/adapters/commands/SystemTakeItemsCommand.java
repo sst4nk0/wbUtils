@@ -39,9 +39,9 @@ public class SystemTakeItemsCommand implements CommandExecutor {
             player.getInventory().setItemInOffHand(null);
             final int dealId = Integer.parseInt(args[1]);
             final Deal deal = databaseDeals.getDeal(dealId);
-            final int newQuantity = Integer.parseInt(deal.materials()) + amountInHand;
-            final Deal newDeal = new Deal(deal.id(), deal.owner(), deal.coins_copper(), deal.coins_silver(),
-                    deal.coins_gold(), Integer.toString(newQuantity));
+            final int newQuantity = Integer.parseInt(deal.getMaterials()) + amountInHand;
+            final Deal newDeal = new Deal(deal.getId(), deal.getOwner(), deal.getCopperCoins(), deal.getSilverCoins(),
+                    deal.getGoldCoins(), Integer.toString(newQuantity));
             databaseDeals.setDeal(dealId, newDeal);
             return true;
         }

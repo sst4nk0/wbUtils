@@ -63,9 +63,9 @@ public class SystemDealRecountCommand implements CommandExecutor {
         final String dealIdString = args[0];
         final int dealId = Integer.parseInt(dealIdString);
         final Deal deal = databaseDeals.getDeal(dealId);
-        int coins_copper = Integer.parseInt(deal.coins_copper());
-        int coins_silver = Integer.parseInt(deal.coins_silver());
-        int coins_gold = Integer.parseInt(deal.coins_gold());
+        int coins_copper = Integer.parseInt(deal.getCopperCoins());
+        int coins_silver = Integer.parseInt(deal.getSilverCoins());
+        int coins_gold = Integer.parseInt(deal.getGoldCoins());
         boolean changed = false;
 
         final int maxStackSize = 64;
@@ -88,7 +88,7 @@ public class SystemDealRecountCommand implements CommandExecutor {
 
         if (changed) {
             final Player player = Bukkit.getPlayerExact(senderName);
-            final Deal newDeal = new Deal(deal.id(), deal.owner(), Integer.toString(coins_copper), Integer.toString(coins_silver), Integer.toString(coins_gold), deal.materials());
+            final Deal newDeal = new Deal(deal.getId(), deal.getOwner(), Integer.toString(coins_copper), Integer.toString(coins_silver), Integer.toString(coins_gold), deal.getMaterials());
             databaseDeals.setDeal(dealId, newDeal);
 
             final TextComponent greenContent = Component.text("Всё, пересчитал. " +

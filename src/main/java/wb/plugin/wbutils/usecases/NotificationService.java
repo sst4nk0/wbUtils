@@ -5,7 +5,6 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
 import wb.plugin.wbutils.entities.Deal;
 import wb.plugin.wbutils.utilities.ColorPalette;
 import wb.plugin.wbutils.utilities.TimeSyncRealLife;
@@ -24,7 +23,7 @@ public class NotificationService {
         }
 
         for (Deal deal : resetDeals) {
-            final Player player = Bukkit.getPlayerExact(deal.owner());
+            final Player player = Bukkit.getPlayerExact(deal.getOwner());
             if (player == null) {
                 continue;
             }
@@ -34,7 +33,7 @@ public class NotificationService {
         }
 
         for (Deal deal : endangeredDeals) {
-            final Player player = Bukkit.getPlayerExact(deal.owner());
+            final Player player = Bukkit.getPlayerExact(deal.getOwner());
             if (player == null) {
                 continue;
             }
