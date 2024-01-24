@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Spliterator;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.StreamSupport;
 
@@ -71,17 +72,7 @@ public class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncRepository
         return getConnection().thenCompose(connection -> existsById(entity.getId()).thenCompose(exists -> {
             try {
                 connection.setAutoCommit(false);
-                PreparedStatement statement;
-                List<Object> columnValues = entity.getColumnValues();
-                if (Boolean.TRUE.equals(exists)) {
-                    statement = connection.prepareStatement(updateQuery);
-                    setColumnValues(columnValues, statement);
-                    statement.setObject(columnValues.size() + 1, entity.getId());
-                } else {
-                    statement = connection.prepareStatement(saveQuery);
-                    setColumnValues(columnValues, statement);
-                }
-                statement.executeUpdate();
+                executeWrite(entity, connection, exists);
                 connection.commit();
                 return CompletableFuture.completedFuture(entity);
             } catch (SQLException e) {
@@ -95,13 +86,72 @@ public class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncRepository
         })).whenComplete((result, throwable) -> closeConnection());
     }
 
+    public CompletableFuture<T> save(T entity, Connection connection) {
+        Objects.requireNonNull(entity, "Entity must not be null");
+
+        return existsById(entity.getId()).thenCompose(exists -> {
+            try {
+                executeWrite(entity, connection, exists);
+                return CompletableFuture.completedFuture(entity);
+            } catch (SQLException e) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                return CompletableFuture.completedFuture(null);
+            }
+        });
+    }
+
+    private void executeWrite(T entity, Connection connection, Boolean exists) throws SQLException {
+        PreparedStatement statement;
+        List<Object> columnValues = entity.getColumnValues();
+        if (Boolean.TRUE.equals(exists)) {
+            statement = prepareUpdate(entity, connection, columnValues);
+        } else {
+            statement = prepareSave(connection, columnValues);
+        }
+        statement.executeUpdate();
+    }
+
+    private PreparedStatement prepareUpdate(T entity, Connection connection, List<Object> columnValues) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(updateQuery);
+        setColumnValues(columnValues, statement);
+        statement.setObject(columnValues.size() + 1, entity.getId());
+        return statement;
+    }
+
+    private PreparedStatement prepareSave(Connection connection, List<Object> columnValues) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(saveQuery);
+        setColumnValues(columnValues, statement);
+        return statement;
+    }
+
     @Override
     public CompletableFuture<Iterable<T>> saveAll(Iterable<T> entities) {
-        return CompletableFuture.supplyAsync(() -> {
-            Objects.requireNonNull(entities, "Entities must not be null");
-            // TODO: commit only when necessary (save is used)
-            return StreamSupport.stream(entities.spliterator(), true).map(this::save).map(CompletableFuture::join).toList();
-        });
+        Objects.requireNonNull(entities, "Entities must not be null");
+
+        return getConnection().thenCompose(connection -> {
+            try {
+                connection.setAutoCommit(false);
+                final Spliterator<T> spliterator = entities.spliterator();
+                final List<CompletableFuture<T>> futures = StreamSupport.stream(spliterator, false)
+                        .map(entity -> save(entity, connection))
+                        .toList();
+                CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+                connection.commit();
+                Iterable<T> iterable = StreamSupport.stream(spliterator, true).toList();
+                return CompletableFuture.completedFuture(iterable);
+            } catch (SQLException e) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                throw new RuntimeException(e);
+            }
+        }).whenComplete((result, throwable) -> closeConnection());
     }
 
     @Override
