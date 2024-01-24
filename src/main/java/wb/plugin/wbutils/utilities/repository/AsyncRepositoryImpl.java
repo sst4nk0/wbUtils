@@ -15,7 +15,7 @@ import java.util.Spliterator;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.StreamSupport;
 
-public class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncRepository<T, Integer> {
+public abstract class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncRepository<T, Integer> {
 
     private final DatabaseConnectionManager connectionManager;
     private final Class<T> entityClass;
@@ -27,7 +27,7 @@ public class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncRepository
     private final String countQuery;
     private final ThreadLocal<Connection> connectionThreadLocal = new ThreadLocal<>();
 
-    public AsyncRepositoryImpl(DatabaseConnectionManager connectionManager, Class<T> entityClass, String saveQuery, String updateQuery, String deleteQuery, String selectQuery, String selectAllQuery, String countQuery) {
+    protected AsyncRepositoryImpl(DatabaseConnectionManager connectionManager, Class<T> entityClass, String saveQuery, String updateQuery, String deleteQuery, String selectQuery, String selectAllQuery, String countQuery) {
         this.connectionManager = connectionManager;
         this.entityClass = entityClass;
         this.saveQuery = saveQuery;

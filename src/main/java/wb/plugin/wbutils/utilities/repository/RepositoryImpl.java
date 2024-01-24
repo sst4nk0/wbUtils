@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class RepositoryImpl<T extends Entity> implements Repository<T, Integer> {
+public abstract class RepositoryImpl<T extends Entity<T>> implements Repository<T, Integer> {
 
     private final DatabaseConnectionManager connectionManager;
     private final Class<T> entityClass;
@@ -23,7 +23,7 @@ public class RepositoryImpl<T extends Entity> implements Repository<T, Integer> 
     private final String selectAllQuery;
     private final String countQuery;
 
-    public RepositoryImpl(DatabaseConnectionManager connectionManager, Class<T> entityClass, String saveQuery, String updateQuery, String deleteQuery, String selectQuery, String selectAllQuery, String countQuery) {
+    protected RepositoryImpl(DatabaseConnectionManager connectionManager, Class<T> entityClass, String saveQuery, String updateQuery, String deleteQuery, String selectQuery, String selectAllQuery, String countQuery) {
         this.connectionManager = connectionManager;
         this.entityClass = entityClass;
         this.saveQuery = saveQuery;
