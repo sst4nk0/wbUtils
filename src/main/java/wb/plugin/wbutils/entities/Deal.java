@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
-public final class Deal implements Entity {
+public final class Deal extends Entity<Deal> {
     private final int id;
     private final String owner;
     private final String coins_copper;

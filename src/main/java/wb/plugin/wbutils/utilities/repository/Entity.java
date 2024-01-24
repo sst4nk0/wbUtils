@@ -3,11 +3,11 @@ package wb.plugin.wbutils.utilities.repository;
 import java.sql.ResultSet;
 import java.util.List;
 
-public interface Entity {
+public abstract class Entity<T> {
 
-    List<Object> getColumnValues();
+    public abstract List<Object> getColumnValues();
 
-    Entity fromResultSet(ResultSet resultSet);
+    public abstract T fromResultSet(ResultSet resultSet);
 
-    int getId();
+    public abstract int getId();
 }

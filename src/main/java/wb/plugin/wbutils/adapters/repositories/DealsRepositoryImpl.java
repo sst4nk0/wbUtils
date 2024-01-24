@@ -2,13 +2,13 @@ package wb.plugin.wbutils.adapters.repositories;
 
 import wb.plugin.wbutils.frameworks.DatabaseConnectionManager;
 import wb.plugin.wbutils.entities.Deal;
-import wb.plugin.wbutils.utilities.repository.RepositoryImpl;
+import wb.plugin.wbutils.utilities.repository.AsyncRepositoryImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class DealsRepositoryImpl extends RepositoryImpl<Deal> implements DealsRepository {
+public class DealsRepositoryImpl extends AsyncRepositoryImpl<Deal> implements DealsRepository {
 
     private static final Logger LOGGER = Logger.getLogger(DealsRepositoryImpl.class.getName());
     private static final int DEALS_QUANTITY = 25;
@@ -26,15 +26,15 @@ public class DealsRepositoryImpl extends RepositoryImpl<Deal> implements DealsRe
     }
 
     public void addDeal(final Deal deal) {
-        save(deal);
+        save(deal).join();
     }
 
     public Deal getDeal(final int dealId) {
-        return findById(dealId).orElse(null);
+        return findById(dealId).join().orElse(null);
     }
 
     public void setDeal(final int dealId, final Deal deal) {
-        save(deal);
+        save(deal).join();
     }
 
     public int getDealsQuantity() {
@@ -42,10 +42,10 @@ public class DealsRepositoryImpl extends RepositoryImpl<Deal> implements DealsRe
     }
 
     public void saveDealsInfo() {
-        saveAll(deals);
+        saveAll(deals).join();
     }
 
     public void loadDealsInfo() {
-        deals = (List<Deal>) findAll();
+        deals = findAll().join();
     }
 }
