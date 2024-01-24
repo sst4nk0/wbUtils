@@ -7,14 +7,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import wb.plugin.wbutils.entities.Deal;
 import wb.plugin.wbutils.utilities.ColorPalette;
-import wb.plugin.wbutils.utilities.TimeSyncRealLife;
+import wb.plugin.wbutils.adapters.TimeSyncRealLife;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 public class NotificationService {
 
     public void sendNotifications(Set<Deal> resetDeals, Set<Deal> endangeredDeals) {
-        final TextComponent messageToSend = TimeSyncRealLife.getMessageLocalTime(); // Sync every payday
+        final LocalDateTime now = LocalDateTime.now();
+        final TextComponent messageToSend = TimeSyncRealLife.getMessage(now);
+        TimeSyncRealLife.synchronizeWith(now, Bukkit.getServer().getConsoleSender());
         for (final Player playerOnline : Bukkit.getOnlinePlayers()) {
             playerOnline.sendMessage(Component.empty());
             playerOnline.sendMessage(messageToSend);
