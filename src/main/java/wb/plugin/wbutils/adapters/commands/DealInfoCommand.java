@@ -45,6 +45,7 @@ public class DealInfoCommand implements CommandExecutor {
             if (argValue.equals("-")) argValue = "0";
             if (dealId <= 0 || dealId > databaseDeals.getDealsQuantity()) return true;
 
+            System.out.println("DealInfoCommand.onCommand: dealId = " + dealId);
             Deal deal = databaseDeals.getDeal(dealId);
             switch (args[1]) {
                 case "owner" -> {
@@ -101,6 +102,7 @@ public class DealInfoCommand implements CommandExecutor {
             int dealId = Integer.parseInt(args[0].replaceAll("\\D+",""));
             String argValue = playerName.replaceAll("\\D+","");
             if (dealId <= 0 || dealId > databaseDeals.getDealsQuantity()) return true;
+            System.out.println("DealInfoCommand.onCommand.else: dealId = " + dealId);
             Deal deal = databaseDeals.getDeal(dealId);
 
             switch (args[1]) {

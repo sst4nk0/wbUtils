@@ -1,7 +1,9 @@
 package wb.plugin.wbutils.adapters.repositories;
 
-import wb.plugin.wbutils.frameworks.DatabaseConnectionManager;
+import org.jetbrains.annotations.Nullable;
+import wb.plugin.wbutils.adapters.listeners.DealUpdateListener;
 import wb.plugin.wbutils.entities.Deal;
+import wb.plugin.wbutils.frameworks.DatabaseConnectionManager;
 import wb.plugin.wbutils.utilities.repository.AsyncRepositoryImpl;
 
 import java.util.ArrayList;
@@ -18,34 +20,32 @@ public class DealsRepositoryImpl extends AsyncRepositoryImpl<Deal> implements De
     private static final String SELECT_QUERY = "SELECT * FROM wb_deals WHERE id = ?";
     private static final String SELECT_ALL_QUERY = "SELECT * FROM wb_deals";
     private static final String COUNT_QUERY = "SELECT COUNT(*) FROM wb_deals";
-    private List<Deal> deals = new ArrayList<>(DEALS_QUANTITY);
+    private final List<DealUpdateListener> listeners = new ArrayList<>();
 
-    public DealsRepositoryImpl(DatabaseConnectionManager connectionManager) {
+    public DealsRepositoryImpl(final DatabaseConnectionManager connectionManager) {
         super(connectionManager, Deal.class, SAVE_QUERY, UPDATE_QUERY, DELETE_QUERY, SELECT_QUERY, SELECT_ALL_QUERY, COUNT_QUERY);
-        loadDealsInfo();
+    }
+
+    public void addDealUpdateListener(DealUpdateListener listener) {
+        listeners.add(listener);
     }
 
     public void addDeal(final Deal deal) {
         save(deal).join();
     }
 
-    public Deal getDeal(final int dealId) {
+    public @Nullable Deal getDeal(final int dealId) {
         return findById(dealId).join().orElse(null);
     }
 
     public void setDeal(final int dealId, final Deal deal) {
         save(deal).join();
+        for (DealUpdateListener listener : listeners) {
+            listener.onDealUpdated(dealId, deal);
+        }
     }
 
     public int getDealsQuantity() {
         return DEALS_QUANTITY;
-    }
-
-    public void saveDealsInfo() {
-        saveAll(deals).join();
-    }
-
-    public void loadDealsInfo() {
-        deals = findAll().join();
     }
 }

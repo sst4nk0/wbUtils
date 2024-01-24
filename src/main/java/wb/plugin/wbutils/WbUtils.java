@@ -86,9 +86,6 @@ public final class WbUtils extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (dealsRepository != null) {
-            dealsRepository.saveDealsInfo();
-        }
         if (dbConnectionManager != null) {
             dbConnectionManager.closeAllConnectionsAsync().join();
         }

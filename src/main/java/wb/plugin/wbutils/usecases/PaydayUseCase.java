@@ -21,7 +21,6 @@ public class PaydayUseCase {
     public void execute() {
         Set<Deal> resetDeals = dealResetService.resetDealOwners();
         Set<Deal> endangeredDeals = dealResetService.prepareDealNotifications();
-        databaseDeals.saveDealsInfo();
         notificationService.sendNotifications(resetDeals, endangeredDeals);
     }
 }

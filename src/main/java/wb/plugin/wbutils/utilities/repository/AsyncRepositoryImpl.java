@@ -58,6 +58,8 @@ public class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncRepository
         Connection connection = connectionThreadLocal.get();
         if (connection != null) {
             return connectionManager.closeConnectionAsync(connection).thenRun(connectionThreadLocal::remove);
+        } else {
+            connectionThreadLocal.remove();
         }
         return CompletableFuture.completedFuture(null);
     }
@@ -71,7 +73,7 @@ public class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncRepository
                 connection.setAutoCommit(false);
                 PreparedStatement statement;
                 List<Object> columnValues = entity.getColumnValues();
-                if (exists) {
+                if (Boolean.TRUE.equals(exists)) {
                     statement = connection.prepareStatement(updateQuery);
                     setColumnValues(columnValues, statement);
                     statement.setObject(columnValues.size() + 1, entity.getId());
@@ -107,24 +109,20 @@ public class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncRepository
         Objects.requireNonNull(id, "Id must not be null");
 
         return getConnection().thenCompose(connection -> CompletableFuture.supplyAsync(() -> {
-            try {
-                PreparedStatement statement = connection.prepareStatement(selectQuery);
+            try (final PreparedStatement statement = connection.prepareStatement(selectQuery)) {
                 statement.setObject(1, id);
 
-                ResultSet resultSet = statement.executeQuery();
+                final ResultSet resultSet = statement.executeQuery();
+                T entity = null;
                 if (resultSet.next()) {
-                    T entity = entityClass.getDeclaredConstructor().newInstance().fromResultSet(resultSet);
-                    return Optional.ofNullable(entity);
-                } else {
-                    return Optional.empty();
+                    entity = entityClass.getDeclaredConstructor().newInstance().fromResultSet(resultSet);
                 }
+                return Optional.ofNullable(entity);
             } catch (SQLException | InvocationTargetException | InstantiationException | IllegalAccessException |
                      NoSuchMethodException e) {
                 throw new RuntimeException(e);
-            } finally {
-                closeConnection().join();
             }
-        }));
+        })).whenComplete((result, throwable) -> closeConnection());
     }
 
     @Override

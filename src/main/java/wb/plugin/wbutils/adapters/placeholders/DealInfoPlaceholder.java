@@ -4,15 +4,39 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import wb.plugin.wbutils.adapters.listeners.DealUpdateListener;
 import wb.plugin.wbutils.adapters.repositories.DealsRepository;
 import wb.plugin.wbutils.entities.Deal;
 
-public class DealInfoPlaceholder extends PlaceholderExpansion {
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.function.Function;
+
+public class DealInfoPlaceholder extends PlaceholderExpansion implements DealUpdateListener {
+
+    private static final ConcurrentMap<String, Function<Deal, String>> DEAL_PROPERTIES = new ConcurrentHashMap<>();
+
+    static {
+        DEAL_PROPERTIES.put("dealowner", Deal::owner);
+        DEAL_PROPERTIES.put("dealcopper", Deal::coins_copper);
+        DEAL_PROPERTIES.put("dealsilver", Deal::coins_silver);
+        DEAL_PROPERTIES.put("dealgold", Deal::coins_gold);
+        DEAL_PROPERTIES.put("dealmaterials", Deal::materials);
+        DEAL_PROPERTIES.put("dealstatus", deal -> Integer.parseInt(deal.materials()) > -1 ? " " : "(сделка неустойчива)");
+    }
 
     private final DealsRepository databaseDeals;
+    private final ConcurrentMap<Integer, Deal> dealCache;
 
     public DealInfoPlaceholder(final DealsRepository databaseDeals) {
         this.databaseDeals = databaseDeals;
+        this.dealCache = new ConcurrentHashMap<>();
+        this.databaseDeals.addDealUpdateListener(this);
+    }
+
+    @Override
+    public void onDealUpdated(int dealId, Deal deal) {
+        dealCache.put(dealId, deal);
     }
 
     @Override
@@ -42,26 +66,29 @@ public class DealInfoPlaceholder extends PlaceholderExpansion {
 
     @Override
     public @Nullable String onRequest(final OfflinePlayer player, final @NotNull String params) {
-        System.out.println("Identifier: " + params);
-        if (params.startsWith("deal")) {
-            final String[] identifierSplit = params.split("_");
-            final String dealProperty = identifierSplit[0];
-            final int dealId = Integer.parseInt(identifierSplit[1]);
-            final Deal deal = databaseDeals.getDeal(dealId);
-            if (deal == null) {
+        if (!params.startsWith("deal")) {
+            return null;
+        }
+
+        final String[] identifierSplit = params.split("_");
+        final String dealProperty = identifierSplit[0];
+        final int dealId = Integer.parseInt(identifierSplit[1]);
+
+        Deal deal = dealCache.get(dealId);
+        if (deal == null) {
+            deal = databaseDeals.getDeal(dealId);
+            if (deal != null) {
+                dealCache.put(dealId, deal);
+            } else {
                 return null;
             }
-
-            return switch (dealProperty) {
-                case "dealowner" -> deal.owner();
-                case "dealcopper" -> deal.coins_copper();
-                case "dealsilver" -> deal.coins_silver();
-                case "dealgold" -> deal.coins_gold();
-                case "dealmaterials" -> deal.materials();
-                case "dealstatus" -> Integer.parseInt(deal.materials()) > -1 ? " " : "(сделка неустойчива)";
-                default -> throw new IllegalStateException("Unexpected params: " + params);
-            };
         }
-        return null;
+
+        final Function<Deal, String> dealFunction = DEAL_PROPERTIES.get(dealProperty);
+        if (dealFunction != null) {
+            return dealFunction.apply(deal);
+        } else {
+            throw new IllegalArgumentException("Unknown deal property: " + dealProperty);
+        }
     }
 }
