@@ -5,6 +5,7 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 import wb.plugin.wbutils.entities.Deal;
 import wb.plugin.wbutils.utilities.ColorPalette;
 import wb.plugin.wbutils.utilities.TimeSyncRealLife;
@@ -24,6 +25,9 @@ public class NotificationService {
 
         for (Deal deal : resetDeals) {
             final Player player = Bukkit.getPlayerExact(deal.owner());
+            if (player == null) {
+                continue;
+            }
             player.sendMessage(Component.text("我 Ваша сделка была разорвана.", ColorPalette.JEWELZ_PURPLE));
             player.playSound(player.getLocation(), "custom.pagania.warning-1", 1, 1);
             player.sendMessage(Component.empty());
@@ -31,6 +35,9 @@ public class NotificationService {
 
         for (Deal deal : endangeredDeals) {
             final Player player = Bukkit.getPlayerExact(deal.owner());
+            if (player == null) {
+                continue;
+            }
             player.sendMessage(Component.text("我 Ваша сделка вот-вот будет разорвана.", ColorPalette.JEWELZ_PURPLE));
             player.playSound(player.getLocation(), "custom.pagania.warning-1", 1, 1);
             player.sendMessage(Component.empty());
