@@ -17,6 +17,8 @@ import java.util.stream.StreamSupport;
 
 public abstract class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncRepository<T, Integer> {
 
+    private static final String NULL_ID_MESSAGE = "Id must not be null";
+    private static final String NULL_ENTITY_MESSAGE = "Entity must not be null";
     private final DatabaseConnectionManager connectionManager;
     private final Class<T> entityClass;
     private final String saveQuery;
@@ -27,7 +29,9 @@ public abstract class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncR
     private final String countQuery;
     private final ThreadLocal<Connection> connectionThreadLocal = new ThreadLocal<>();
 
-    protected AsyncRepositoryImpl(DatabaseConnectionManager connectionManager, Class<T> entityClass, String saveQuery, String updateQuery, String deleteQuery, String selectQuery, String selectAllQuery, String countQuery) {
+    protected AsyncRepositoryImpl(final DatabaseConnectionManager connectionManager, final Class<T> entityClass,
+                                  final String saveQuery, final String updateQuery, final String deleteQuery,
+                                  final String selectQuery, final String selectAllQuery, final String countQuery) {
         this.connectionManager = connectionManager;
         this.entityClass = entityClass;
         this.saveQuery = saveQuery;
@@ -38,14 +42,15 @@ public abstract class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncR
         this.countQuery = countQuery;
     }
 
-    private static void setColumnValues(List<Object> columnValues, PreparedStatement statement) throws SQLException {
+    private static void setColumnValues(final List<Object> columnValues,
+                                        final PreparedStatement statement) throws SQLException {
         for (int i = 0; i < columnValues.size(); i++) {
             statement.setObject(i + 1, columnValues.get(i));
         }
     }
 
     private CompletableFuture<Connection> getConnection() {
-        Connection connection = connectionThreadLocal.get();
+        final Connection connection = connectionThreadLocal.get();
         if (connection == null) {
             return connectionManager.getConnectionAsync().thenApply(conn -> {
                 connectionThreadLocal.set(conn);
@@ -56,7 +61,7 @@ public abstract class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncR
     }
 
     private CompletableFuture<Void> closeConnection() {
-        Connection connection = connectionThreadLocal.get();
+        final Connection connection = connectionThreadLocal.get();
         if (connection != null) {
             return connectionManager.closeConnectionAsync(connection).thenRun(connectionThreadLocal::remove);
         } else {
@@ -66,16 +71,16 @@ public abstract class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncR
     }
 
     @Override
-    public CompletableFuture<Boolean> existsById(Integer id) {
-        Objects.requireNonNull(id, "Id must not be null");
+    public CompletableFuture<Boolean> existsById(final Integer id) {
+        Objects.requireNonNull(id, NULL_ID_MESSAGE);
 
         return getConnection().thenCompose(connection -> CompletableFuture.supplyAsync(() -> {
-            try {
-                PreparedStatement statement = connection.prepareStatement(selectQuery);
+            try (PreparedStatement statement = connection.prepareStatement(selectQuery)) {
                 statement.setObject(1, id);
 
-                ResultSet resultSet = statement.executeQuery();
-                return resultSet.next();
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    return resultSet.next();
+                }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -83,21 +88,22 @@ public abstract class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncR
     }
 
     @Override
-    public CompletableFuture<Optional<T>> findById(Integer id) {
-        Objects.requireNonNull(id, "Id must not be null");
+    public CompletableFuture<Optional<T>> findById(final Integer id) {
+        Objects.requireNonNull(id, NULL_ID_MESSAGE);
 
         return getConnection().thenCompose(connection -> CompletableFuture.supplyAsync(() -> {
-            try (final PreparedStatement statement = connection.prepareStatement(selectQuery)) {
+            try (PreparedStatement statement = connection.prepareStatement(selectQuery)) {
                 statement.setObject(1, id);
 
-                final ResultSet resultSet = statement.executeQuery();
-                T entity = null;
-                if (resultSet.next()) {
-                    entity = entityClass.getDeclaredConstructor().newInstance().fromResultSet(resultSet);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    T entity = null;
+                    if (resultSet.next()) {
+                        entity = entityClass.getDeclaredConstructor().newInstance().fromResultSet(resultSet);
+                    }
+                    return Optional.ofNullable(entity);
                 }
-                return Optional.ofNullable(entity);
-            } catch (SQLException | InvocationTargetException | InstantiationException | IllegalAccessException |
-                     NoSuchMethodException e) {
+            } catch (SQLException | InvocationTargetException | InstantiationException | IllegalAccessException
+                     | NoSuchMethodException e) {
                 throw new RuntimeException(e);
             }
         })).whenComplete((result, throwable) -> closeConnection());
@@ -106,16 +112,15 @@ public abstract class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncR
     @Override
     public CompletableFuture<List<T>> findAll() {
         return getConnection().thenCompose(connection -> CompletableFuture.supplyAsync(() -> {
-            List<T> entities = new ArrayList<>();
-            try {
-                PreparedStatement statement = connection.prepareStatement(selectAllQuery);
-                ResultSet resultSet = statement.executeQuery();
+            final List<T> entities = new ArrayList<>();
+            try (PreparedStatement statement = connection.prepareStatement(selectAllQuery);
+                 ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    T entity = entityClass.getDeclaredConstructor().newInstance().fromResultSet(resultSet);
+                    final T entity = entityClass.getDeclaredConstructor().newInstance().fromResultSet(resultSet);
                     entities.add(entity);
                 }
-            } catch (SQLException | InvocationTargetException | InstantiationException | IllegalAccessException |
-                     NoSuchMethodException e) {
+            } catch (SQLException | InvocationTargetException | InstantiationException | IllegalAccessException
+                     | NoSuchMethodException e) {
                 throw new RuntimeException(e);
             }
             return entities;
@@ -123,25 +128,25 @@ public abstract class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncR
     }
 
     @Override
-    public CompletableFuture<List<T>> findAllById(Iterable<Integer> ids) {
+    public CompletableFuture<List<T>> findAllById(final Iterable<Integer> ids) {
         Objects.requireNonNull(ids, "Ids must not be null");
 
         return getConnection().thenCompose(connection -> CompletableFuture.supplyAsync(() -> {
-            List<T> entities = new ArrayList<>();
-            try {
-                for (Integer id : ids) {
-                    Objects.requireNonNull(id, "Id must not be null");
-                    PreparedStatement statement = connection.prepareStatement(selectQuery);
+            final List<T> entities = new ArrayList<>();
+            try (PreparedStatement statement = connection.prepareStatement(selectQuery)) {
+                for (final Integer id : ids) {
+                    Objects.requireNonNull(id, NULL_ID_MESSAGE);
                     statement.setObject(1, id);
 
-                    ResultSet resultSet = statement.executeQuery();
-                    if (resultSet.next()) {
-                        T entity = entityClass.getDeclaredConstructor().newInstance().fromResultSet(resultSet);
-                        entities.add(entity);
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        if (resultSet.next()) {
+                            final T entity = entityClass.getDeclaredConstructor().newInstance().fromResultSet(resultSet);
+                            entities.add(entity);
+                        }
                     }
                 }
-            } catch (SQLException | InvocationTargetException | InstantiationException | IllegalAccessException |
-                     NoSuchMethodException e) {
+            } catch (SQLException | InvocationTargetException | InstantiationException | IllegalAccessException
+                     | NoSuchMethodException e) {
                 throw new RuntimeException(e);
             }
             return entities;
@@ -149,8 +154,8 @@ public abstract class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncR
     }
 
     @Override
-    public CompletableFuture<T> save(T entity) {
-        Objects.requireNonNull(entity, "Entity must not be null");
+    public CompletableFuture<T> save(final T entity) {
+        Objects.requireNonNull(entity, NULL_ENTITY_MESSAGE);
 
         return getConnection().thenCompose(connection -> existsById(entity.getId()).thenCompose(exists -> {
             try {
@@ -171,8 +176,8 @@ public abstract class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncR
         })).whenComplete((result, throwable) -> closeConnection());
     }
 
-    public CompletableFuture<T> save(T entity, Connection connection) {
-        Objects.requireNonNull(entity, "Entity must not be null");
+    public CompletableFuture<T> save(final T entity, final Connection connection) {
+        Objects.requireNonNull(entity, NULL_ENTITY_MESSAGE);
 
         return existsById(entity.getId()).thenCompose(exists -> {
             try {
@@ -191,39 +196,44 @@ public abstract class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncR
         });
     }
 
-    private void executeWrite(T entity, Connection connection, Boolean exists) throws SQLException {
-        PreparedStatement statement;
-        List<Object> columnValues = entity.getColumnValues();
+    private void executeWrite(final T entity, final Connection connection, final Boolean exists) throws SQLException {
+        final List<Object> columnValues = entity.getColumnValues();
         if (Boolean.TRUE.equals(exists)) {
-            statement = prepareUpdate(entity, connection, columnValues);
+            try (PreparedStatement statement = prepareUpdate(entity.getId(), connection, columnValues)) {
+                statement.executeUpdate();
+            }
         } else {
-            statement = prepareSave(connection, columnValues);
+            try (PreparedStatement statement = prepareSave(connection, columnValues)) {
+                statement.executeUpdate();
+            }
         }
-        statement.executeUpdate();
     }
 
-    private PreparedStatement prepareUpdate(T entity, Connection connection, List<Object> columnValues) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement(updateQuery);
+    private PreparedStatement prepareUpdate(final Integer entityId, final Connection connection,
+                                            final List<Object> columnValues) throws SQLException {
+        final PreparedStatement statement = connection.prepareStatement(updateQuery);
         setColumnValues(columnValues, statement);
-        statement.setObject(columnValues.size() + 1, entity.getId());
+        statement.setInt(columnValues.size() + 1, entityId);
         return statement;
     }
 
-    private PreparedStatement prepareSave(Connection connection, List<Object> columnValues) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement(saveQuery);
+    private PreparedStatement prepareSave(final Connection connection,
+                                          final List<Object> columnValues) throws SQLException {
+        final PreparedStatement statement = connection.prepareStatement(saveQuery);
         setColumnValues(columnValues, statement);
         return statement;
     }
 
     @Override
-    public CompletableFuture<List<T>> saveAll(Iterable<T> entities) {
+    public CompletableFuture<List<T>> saveAll(final Iterable<T> entities) {
         Objects.requireNonNull(entities, "Entities must not be null");
 
         return getConnection().thenCompose(connection -> {
             try {
                 connection.setAutoCommit(false);
                 final Spliterator<T> spliterator = entities.spliterator();
-                final List<CompletableFuture<T>> futures = StreamSupport.stream(spliterator, false).map(entity -> save(entity, connection)).toList();
+                final List<CompletableFuture<T>> futures = StreamSupport.stream(spliterator, false)
+                        .map(entity -> save(entity, connection)).toList();
                 CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
                 connection.commit();
                 return CompletableFuture.completedFuture(StreamSupport.stream(spliterator, true).toList());
@@ -243,9 +253,8 @@ public abstract class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncR
     @Override
     public CompletableFuture<Long> count() {
         return getConnection().thenCompose(connection -> CompletableFuture.supplyAsync(() -> {
-            try {
-                PreparedStatement statement = connection.prepareStatement(countQuery);
-                ResultSet resultSet = statement.executeQuery();
+            try (PreparedStatement statement = connection.prepareStatement(countQuery);
+                 ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     return resultSet.getLong(1);
                 } else {
@@ -258,12 +267,11 @@ public abstract class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncR
     }
 
     @Override
-    public CompletableFuture<Void> deleteById(Integer id) {
-        Objects.requireNonNull(id, "Id must not be null");
+    public CompletableFuture<Void> deleteById(final Integer id) {
+        Objects.requireNonNull(id, NULL_ID_MESSAGE);
 
         return getConnection().thenCompose(connection -> CompletableFuture.runAsync(() -> {
-            try {
-                PreparedStatement statement = connection.prepareStatement(deleteQuery);
+            try (PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
                 statement.setObject(1, id);
                 statement.executeUpdate();
             } catch (SQLException e) {
@@ -273,31 +281,31 @@ public abstract class AsyncRepositoryImpl<T extends Entity<T>> implements AsyncR
     }
 
     @Override
-    public CompletableFuture<Void> delete(T entity) {
-        Objects.requireNonNull(entity, "Entity must not be null");
-
-        Integer id = entity.getId();
+    public CompletableFuture<Void> delete(final T entity) {
+        Objects.requireNonNull(entity, NULL_ENTITY_MESSAGE);
+        final int id = entity.getId();
         return deleteById(id);
     }
 
     @Override
-    public CompletableFuture<Void> deleteAllById(Iterable<Integer> ids) {
+    public CompletableFuture<Void> deleteAllById(final Iterable<Integer> ids) {
         Objects.requireNonNull(ids, "Ids must not be null");
-        return CompletableFuture.allOf(StreamSupport.stream(ids.spliterator(), false).map(this::deleteById).toArray(CompletableFuture[]::new));
+        return CompletableFuture.allOf(StreamSupport.stream(ids.spliterator(), false)
+                .map(this::deleteById).toArray(CompletableFuture[]::new));
     }
 
     @Override
-    public CompletableFuture<Void> deleteAll(Iterable<T> entities) {
+    public CompletableFuture<Void> deleteAll(final Iterable<T> entities) {
         Objects.requireNonNull(entities, "Entities must not be null");
 
-        return CompletableFuture.allOf(StreamSupport.stream(entities.spliterator(), false).map(this::delete).toArray(CompletableFuture[]::new));
+        return CompletableFuture.allOf(StreamSupport.stream(entities.spliterator(), false)
+                .map(this::delete).toArray(CompletableFuture[]::new));
     }
 
     @Override
     public CompletableFuture<Void> deleteAll() {
         return getConnection().thenCompose(connection -> CompletableFuture.runAsync(() -> {
-            try {
-                PreparedStatement statement = connection.prepareStatement(deleteQuery);
+            try (PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
                 statement.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
