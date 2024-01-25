@@ -1,30 +1,31 @@
 package wb.plugin.wbutils.frameworks.repository;
 
+import java.util.List;
 import java.util.Optional;
 
-public interface Repository<T, Id> {
+public interface Repository<T, I> {
+
+    boolean existsById(I id);
+
+    Optional<T> findById(I id);
+
+    List<T> findAll();
+
+    List<T> findAllById(Iterable<I> ids);
 
     T save(T entity);
 
-    Iterable<T> saveAll(Iterable<T> entities);
-
-    Optional<T> findById(Id id);
-
-    boolean existsById(Id id);
-
-    Iterable<T> findAll();
-
-    Iterable<T> findAllById(Iterable<Id> ids);
+    List<T> saveAll(Iterable<T> entities);
 
     long count();
 
-    void deleteById(Id id);
+    void deleteById(I id);
 
     void delete(T entity);
 
-    void deleteAllById(Iterable<? extends Id> ids);
+    void deleteAllById(Iterable<I> ids);
 
-    void deleteAll(Iterable<? extends T> entities);
+    void deleteAll(Iterable<T> entities);
 
     void deleteAll();
 }

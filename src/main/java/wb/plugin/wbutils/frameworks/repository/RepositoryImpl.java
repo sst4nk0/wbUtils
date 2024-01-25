@@ -35,6 +35,98 @@ public abstract class RepositoryImpl<T extends Entity<T>> implements Repository<
     }
 
     @Override
+    public boolean existsById(Integer id) {
+        Objects.requireNonNull(id, "Id must not be null");
+        // TODO: select one
+
+        final Connection connection = connectionManager.getConnectionAsync().join();
+        try {
+            PreparedStatement statement = connection.prepareStatement(selectQuery);
+            statement.setObject(1, id);
+
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            connectionManager.closeConnectionAsync(connection);
+        }
+    }
+
+    @Override
+    public Optional<T> findById(Integer id) {
+        Objects.requireNonNull(id, "Id must not be null");
+        final Connection connection = connectionManager.getConnectionAsync().join();
+        try {
+            PreparedStatement statement = connection.prepareStatement(selectQuery);
+            statement.setObject(1, id);
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                T entity = (T) entityClass.getDeclaredConstructor().newInstance().fromResultSet(resultSet);
+                return Optional.ofNullable(entity);
+            } else {
+                return Optional.empty();
+            }
+        } catch (SQLException | InvocationTargetException | InstantiationException | IllegalAccessException |
+                 NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        } finally {
+            connectionManager.closeConnectionAsync(connection);
+        }
+    }
+
+    @Override
+    public List<T> findAll() {
+        final Connection connection = connectionManager.getConnectionAsync().join();
+        List<T> entities = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement(selectAllQuery);
+
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                T entity = (T) entityClass.getDeclaredConstructor().newInstance().fromResultSet(resultSet);
+                entities.add(entity);
+            }
+        } catch (SQLException | InvocationTargetException | InstantiationException | IllegalAccessException |
+                 NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        } finally {
+            connectionManager.closeConnectionAsync(connection);
+        }
+        return entities;
+    }
+
+    @Override
+    public List<T> findAllById(Iterable<Integer> ids) {
+        Objects.requireNonNull(ids, "Ids must not be null");
+
+        final Connection connection = connectionManager.getConnectionAsync().join();
+        List<T> entities = new ArrayList<>();
+        try {
+            for (Integer id : ids) {
+                Objects.requireNonNull(id, "Id must not be null");
+                // Select all with id
+                PreparedStatement statement = connection.prepareStatement(selectQuery);
+                statement.setObject(1, id);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    // TODO: unhardcode
+                    T entity = (T) entityClass.getDeclaredConstructor().newInstance().fromResultSet(resultSet);
+                    entities.add(entity);
+                }
+            }
+        } catch (SQLException | InvocationTargetException | InstantiationException | IllegalAccessException |
+                 NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        } finally {
+            connectionManager.closeConnectionAsync(connection);
+        }
+        return entities;
+    }
+
+    @Override
     public T save(T entity) {
         Objects.requireNonNull(entity, "Entity must not be null");
 
@@ -87,98 +179,6 @@ public abstract class RepositoryImpl<T extends Entity<T>> implements Repository<
     }
 
     @Override
-    public Optional<T> findById(Integer id) {
-        Objects.requireNonNull(id, "Id must not be null");
-        final Connection connection = connectionManager.getConnectionAsync().join();
-        try {
-            PreparedStatement statement = connection.prepareStatement(selectQuery);
-            statement.setObject(1, id);
-
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                T entity = (T) entityClass.getDeclaredConstructor().newInstance().fromResultSet(resultSet);
-                return Optional.ofNullable(entity);
-            } else {
-                return Optional.empty();
-            }
-        } catch (SQLException | InvocationTargetException | InstantiationException | IllegalAccessException |
-                 NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnectionAsync(connection);
-        }
-    }
-
-    @Override
-    public boolean existsById(Integer id) {
-        Objects.requireNonNull(id, "Id must not be null");
-        // TODO: select one
-
-        final Connection connection = connectionManager.getConnectionAsync().join();
-        try {
-            PreparedStatement statement = connection.prepareStatement(selectQuery);
-            statement.setObject(1, id);
-
-            ResultSet resultSet = statement.executeQuery();
-            return resultSet.next();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnectionAsync(connection);
-        }
-    }
-
-    @Override
-    public Iterable<T> findAll() {
-        final Connection connection = connectionManager.getConnectionAsync().join();
-        List<T> entities = new ArrayList<>();
-        try {
-            PreparedStatement statement = connection.prepareStatement(selectAllQuery);
-
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                T entity = (T) entityClass.getDeclaredConstructor().newInstance().fromResultSet(resultSet);
-                entities.add(entity);
-            }
-        } catch (SQLException | InvocationTargetException | InstantiationException | IllegalAccessException |
-                 NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnectionAsync(connection);
-        }
-        return entities;
-    }
-
-    @Override
-    public Iterable<T> findAllById(Iterable<Integer> ids) {
-        Objects.requireNonNull(ids, "Ids must not be null");
-
-        final Connection connection = connectionManager.getConnectionAsync().join();
-        List<T> entities = new ArrayList<>();
-        try {
-            for (Integer id : ids) {
-                Objects.requireNonNull(id, "Id must not be null");
-                // Select all with id
-                PreparedStatement statement = connection.prepareStatement(selectQuery);
-                statement.setObject(1, id);
-
-                ResultSet resultSet = statement.executeQuery();
-                if (resultSet.next()) {
-                    // TODO: unhardcode
-                    T entity = (T) entityClass.getDeclaredConstructor().newInstance().fromResultSet(resultSet);
-                    entities.add(entity);
-                }
-            }
-        } catch (SQLException | InvocationTargetException | InstantiationException | IllegalAccessException |
-                 NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnectionAsync(connection);
-        }
-        return entities;
-    }
-
-    @Override
     public long count() {
         final Connection connection = connectionManager.getConnectionAsync().join();
         try {
@@ -223,7 +223,7 @@ public abstract class RepositoryImpl<T extends Entity<T>> implements Repository<
     }
 
     @Override
-    public void deleteAllById(Iterable<? extends Integer> ids) {
+    public void deleteAllById(Iterable<Integer> ids) {
         Objects.requireNonNull(ids, "Ids must not be null");
 
         final Connection connection = connectionManager.getConnectionAsync().join();
@@ -244,7 +244,7 @@ public abstract class RepositoryImpl<T extends Entity<T>> implements Repository<
     }
 
     @Override
-    public void deleteAll(Iterable<? extends T> entities) {
+    public void deleteAll(Iterable<T> entities) {
         Objects.requireNonNull(entities, "Entities must not be null");
 
         for (T entity : entities) {

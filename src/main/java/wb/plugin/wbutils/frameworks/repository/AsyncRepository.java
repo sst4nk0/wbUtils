@@ -6,17 +6,17 @@ import java.util.concurrent.CompletableFuture;
 
 public interface AsyncRepository<T, I> {
 
-    CompletableFuture<T> save(T entity);
-
-    CompletableFuture<Iterable<T>> saveAll(Iterable<T> entities);
+    CompletableFuture<Boolean> existsById(I id);
 
     CompletableFuture<Optional<T>> findById(I id);
-
-    CompletableFuture<Boolean> existsById(I id);
 
     CompletableFuture<List<T>> findAll();
 
     CompletableFuture<List<T>> findAllById(Iterable<I> ids);
+
+    CompletableFuture<T> save(T entity);
+
+    CompletableFuture<List<T>> saveAll(Iterable<T> entities);
 
     CompletableFuture<Long> count();
 
