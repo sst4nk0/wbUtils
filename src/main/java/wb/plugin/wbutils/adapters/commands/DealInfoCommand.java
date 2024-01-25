@@ -1,5 +1,7 @@
 package wb.plugin.wbutils.adapters.commands;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -7,147 +9,101 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import wb.plugin.wbutils.entities.Deal;
-import wb.plugin.wbutils.adapters.repositories.DealsRepository;
+import wb.plugin.wbutils.usecases.DealInfoUseCase;
 
 import java.util.logging.Logger;
 
 public class DealInfoCommand implements CommandExecutor {
 
     private static final Logger LOGGER = Logger.getLogger(DealInfoCommand.class.getName());
-    private final DealsRepository databaseDeals;
+    private final DealInfoUseCase dealInfoUseCase;
 
-    public DealInfoCommand(final DealsRepository databaseDeals) {
-        super();
-        this.databaseDeals = databaseDeals;
+    public DealInfoCommand(final DealInfoUseCase dealInfoUseCase) {
+        this.dealInfoUseCase = dealInfoUseCase;
     }
 
-    /**
-     * Do something.
-     * @param sender  sender
-     * @param command command
-     * @param label   label
-     * @param args    args
-     * @return some boolean
-     */
     @Override
     public boolean onCommand(final @NotNull CommandSender sender, final @NotNull Command command, final @NotNull String label, final @NotNull String[] args) {
+        final String senderName = sender.getName();
+        final DealInfoResult result;
         if (sender instanceof Player) {
-            if (!sender.hasPermission("wbutils.dealinfo")) return true;
-            if (args.length != 3) {
-                sender.sendMessage(ChatColor.GRAY + "的 Ошибка ввода. Пример: /dealinfo <deal_id> <stat> <value>");
+            if (!sender.hasPermission("wbutils.dealinfo")) {
                 return true;
             }
-            final String playerName = args[2];
-            args[0] = args[0].replaceAll("\\D+","");
-            int dealId = Integer.parseInt(args[0]);
-            String argValue = playerName.replaceAll("[^\\d-]", "");
-            if (argValue.equals("-")) argValue = "0";
-            if (dealId <= 0 || dealId > databaseDeals.getDealsQuantity()) return true;
-
-            System.out.println("DealInfoCommand.onCommand: dealId = " + dealId);
-            Deal deal = databaseDeals.getDeal(dealId);
-            switch (args[1]) {
-                case "owner" -> {
-                    Player target = Bukkit.getServer().getPlayerExact(playerName);
-
-                    LOGGER.info("[" + sender.getName() + "] [DEAL] [SET] [number:" + args[0] + "] [to:" + playerName + "] [from:" + deal.getOwner() + "]");
-                    Deal newDeal = new Deal(deal.getId(), playerName, deal.getCopperCoins(), deal.getSilverCoins(), deal.getGoldCoins(), deal.getMaterials());
-                    databaseDeals.setDeal(dealId, newDeal);
-                    if (playerName.equals("-")) {
-                        for (Player playersOnline : Bukkit.getOnlinePlayers()) {
-                            playersOnline.sendMessage(ChatColor.RED + "我 Администратор " + sender.getName() + " обнулил сделку №" + args[0]);
-                        }
-                        return true;
-                    }
-                    for (Player playersOnline : Bukkit.getOnlinePlayers()) {
-                        playersOnline.sendMessage(ChatColor.RED + "我 Администратор " + sender.getName() + " дал " + playerName + " сделку №" + args[0]);
-                    }
-                    if (target != null) {
-                        target.sendMessage(ChatColor.YELLOW + "我 Сделка №" + args[0] + " теперь ваша!");
-                    }
-                }
-                case "coins_gold" -> {
-                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.getGoldCoins() + "]");
-                    adminChangedDeal(sender, args);
-                    Deal newDeal = new Deal(deal.getId(), deal.getOwner(), deal.getCopperCoins(), deal.getSilverCoins(), argValue, deal.getMaterials());
-                    databaseDeals.setDeal(dealId, newDeal);
-                }
-                case "coins_silver" -> {
-                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.getSilverCoins() + "]");
-                    adminChangedDeal(sender, args);
-                    Deal newDeal = new Deal(deal.getId(), deal.getOwner(), deal.getCopperCoins(), argValue, deal.getGoldCoins(), deal.getMaterials());
-                    databaseDeals.setDeal(dealId, newDeal);
-                }
-                case "coins_copper" -> {
-                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.getCopperCoins() + "]");
-                    adminChangedDeal(sender, args);
-                    Deal newDeal = new Deal(deal.getId(), deal.getOwner(), argValue, deal.getSilverCoins(), deal.getGoldCoins(), deal.getMaterials());
-                    databaseDeals.setDeal(dealId, newDeal);
-                }
-                case "materials" -> {
-                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.getMaterials() + "]");
-                    adminChangedDeal(sender, args);
-                    Deal newDeal = new Deal(deal.getId(), deal.getOwner(), deal.getCopperCoins(), deal.getSilverCoins(), deal.getGoldCoins(), argValue);
-                    databaseDeals.setDeal(dealId, newDeal);
-                }
-                default -> sender.sendMessage(ChatColor.GRAY + "的 Ошибка ввода. Пример: /dealinfo <deal_id> <stat> <value>");
+            if (args.length != 3) {
+                sender.sendMessage(Component.text("Ошибка ввода. Пример: /dealinfo <deal_id> <stat> <value>", NamedTextColor.GRAY));
+                return true;
             }
         } else {
             if (args.length < 3) {
                 LOGGER.info("[CONSOLE] [MSG] [Ошибка ввода. Пример: /dealinfo <deal_id> <stat> <value>]");
                 return true;
             }
-            final String playerName = args[2];
-            int dealId = Integer.parseInt(args[0].replaceAll("\\D+",""));
-            String argValue = playerName.replaceAll("\\D+","");
-            if (dealId <= 0 || dealId > databaseDeals.getDealsQuantity()) return true;
-            System.out.println("DealInfoCommand.onCommand.else: dealId = " + dealId);
-            Deal deal = databaseDeals.getDeal(dealId);
+        }
 
-            switch (args[1]) {
-                case "owner" -> {
-                    Player target = Bukkit.getServer().getPlayerExact(playerName);
-                    LOGGER.info("[" + sender.getName() + "] [DEAL] [SET] [number:" + args[0] + "] [to:" + playerName + "] [from:" + deal.getOwner() + "]");
-                    if (target != null) { target.sendMessage(ChatColor.YELLOW + "我 Сделка №" + args[0] + " теперь ваша!"); }
-                    Deal newDeal = new Deal(deal.getId(), playerName, deal.getCopperCoins(), deal.getSilverCoins(), deal.getGoldCoins(), deal.getMaterials());
-                    databaseDeals.setDeal(dealId, newDeal);
+        result = dealInfoUseCase.execute(senderName, args);
+        final String dealId = args[0];
+        final String playerName = args[2];
+        final String contentDealModified = "我 Администратор " + senderName + " изменил статистику сделки №" + dealId;
+        switch (result) {
+            case INVALID_INPUT -> {
+                sender.sendMessage(Component.text("Ошибка ввода.", NamedTextColor.GRAY));
+                return true;
+            }
+            case DEAL_NOT_FOUND -> {
+                sender.sendMessage(Component.text("Сделка не найдена.", NamedTextColor.GRAY));
+                return true;
+            }
+            case OWNER_CHANGED -> {
+                sender.sendMessage(Component.text("Владелец сделки изменен.", NamedTextColor.GRAY));
+
+                final Player target = Bukkit.getServer().getPlayerExact(playerName);
+                final String broadcastContent = "我 Администратор " + senderName + " дал " + playerName + " сделку №" + dealId;
+                Bukkit.broadcast(Component.text(broadcastContent, NamedTextColor.RED));
+                if (target != null) {
+                    final String content = "我 Сделка №" + dealId + " теперь ваша!";
+                    target.sendMessage(Component.text(content, NamedTextColor.YELLOW));
                 }
-                case "coins_gold" -> {
-                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.getGoldCoins() + "]");
-                    Deal newDeal = new Deal(deal.getId(), deal.getOwner(), deal.getCopperCoins(), deal.getSilverCoins(), argValue, deal.getMaterials());
-                    databaseDeals.setDeal(dealId, newDeal);
-                }
-                case "coins_silver" -> {
-                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.getSilverCoins() + "]");
-                    Deal newDeal = new Deal(deal.getId(), deal.getOwner(), deal.getCopperCoins(), argValue, deal.getGoldCoins(), deal.getMaterials());
-                    databaseDeals.setDeal(dealId, newDeal);
-                }
-                case "coins_copper" -> {
-                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.getCopperCoins() + "]");
-                    Deal newDeal = new Deal(deal.getId(), deal.getOwner(), argValue, deal.getSilverCoins(), deal.getGoldCoins(), deal.getMaterials());
-                    databaseDeals.setDeal(dealId, newDeal);
-                }
-                case "materials" -> {
-                    LOGGER.info("[" + sender.getName() + "] [DEAL] [STATS] [number:" + args[0] + "] [" + args[1] + ":" + playerName + "] [previous:" + deal.getMaterials() + "]");
-                    Deal newDeal = new Deal(deal.getId(), deal.getOwner(), deal.getCopperCoins(), deal.getSilverCoins(), deal.getGoldCoins(), argValue);
-                    databaseDeals.setDeal(dealId, newDeal);
-                }
-                default -> LOGGER.info("[CONSOLE] [msg] [Ошибка ввода. Пример: /dealinfo <deal_id> <stat> <value>]");
+                return true;
+            }
+            case GOLD_COINS_CHANGED -> {
+                sender.sendMessage(Component.text("Количество золотых монет изменено.", NamedTextColor.GRAY));
+
+                Bukkit.broadcast(Component.text(contentDealModified, NamedTextColor.RED));
+                return true;
+            }
+            case SILVER_COINS_CHANGED -> {
+                sender.sendMessage(Component.text("Количество серебряных монет изменено.", NamedTextColor.GRAY));
+
+                Bukkit.broadcast(Component.text(contentDealModified, NamedTextColor.RED));
+                return true;
+            }
+            case COPPER_COINS_CHANGED -> {
+                sender.sendMessage(Component.text("Количество медных монет изменено.", NamedTextColor.GRAY));
+
+                Bukkit.broadcast(Component.text(contentDealModified, NamedTextColor.RED));
+                return true;
+            }
+            case MATERIALS_CHANGED -> {
+                sender.sendMessage(Component.text("Количество материалов изменено.", NamedTextColor.GRAY));
+
+                Bukkit.broadcast(Component.text(contentDealModified, NamedTextColor.RED));
+                return true;
+            }
+            case UNKNOWN_STAT -> {
+                sender.sendMessage(Component.text("Неизвестный параметр.", NamedTextColor.GRAY));
+                return true;
+            }
+            case DEAL_OWNER_RESET -> {
+                sender.sendMessage(Component.text("Владелец сделки сброшен.", NamedTextColor.GRAY));
+
+                final String content = "我 Администратор " + senderName + " обнулил сделку №" + dealId;
+                Bukkit.broadcast(Component.text(content, NamedTextColor.RED));
+                return true;
             }
         }
+
+
         return true;
     }
-
-    /**
-     * Send info that admin has changed a deal.
-     * @param sender sender
-     * @param args   args
-     */
-    private void adminChangedDeal(final CommandSender sender, final String[] args) {
-        for (Player playersOnline : Bukkit.getOnlinePlayers()) {
-            playersOnline.sendMessage(ChatColor.RED + "我 Администратор " + sender.getName() + " изменил статистику сделки №" + args[0]);
-        }
-    }
-
 }

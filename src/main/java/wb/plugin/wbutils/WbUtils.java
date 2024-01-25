@@ -56,7 +56,7 @@ public final class WbUtils extends JavaPlugin {
     }
 
     private void registerCommands() {
-        registerCommand("dealinfo", new DealInfoCommand(dealsRepository));
+        registerCommand("dealinfo", new DealInfoCommand(new DealInfoUseCase(dealsRepository)));
         registerCommand("dealbuy", new SystemDealBuyCommand(dealsRepository));
         registerCommand("dealrecount", new SystemDealRecountCommand(dealsRepository));
         registerCommand("payday", new PaydayCommand(new PaydayUseCase(dealsRepository,
