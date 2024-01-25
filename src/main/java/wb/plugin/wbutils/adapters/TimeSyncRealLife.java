@@ -58,7 +58,7 @@ public final class TimeSyncRealLife {
     public static int convertTime(final @NotNull LocalDateTime currentTime) {
         final @NotNull LocalDateTime fullMoon = adjustFullMoonTime(getFullMoonTime(currentTime), currentTime);
         final double differenceDays = calculateDifferenceDays(currentTime, fullMoon);
-        final int moonPhase = calculateMoonPhase(differenceDays);
+        final byte moonPhase = calculateMoonPhase(differenceDays);
         final long epochSecond = currentTime.toEpochSecond(ZoneOffset.UTC);
         final int minecraftTime = calculateMinecraftTime(epochSecond);
         return minecraftTime + MINECRAFT_DAY_LENGTH * moonPhase;
@@ -88,8 +88,9 @@ public final class TimeSyncRealLife {
         return durationSeconds / (double) SECONDS_IN_DAY;
     }
 
-    private static int calculateMoonPhase(final double differenceDays) {
-        return (int) Math.floor(differenceDays / STEP);
+    private static byte calculateMoonPhase(final double differenceDays) {
+        final double adjustedDifferenceDays = STEP / 2d + differenceDays;
+        return (byte) (Math.floor(adjustedDifferenceDays / STEP) % 8);
     }
 
     private static int calculateMinecraftTime(final long epochSecond) {
