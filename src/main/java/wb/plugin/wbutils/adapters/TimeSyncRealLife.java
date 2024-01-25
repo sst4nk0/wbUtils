@@ -28,7 +28,7 @@ public final class TimeSyncRealLife {
     private static final double SECONDS_IN_MINUTE = 60d;
 
     static {
-        final LocalDateTime fullMoonDate = LocalDateTime.of(2023, 9, 29, 7, 50, 0);
+        final LocalDateTime fullMoonDate = LocalDateTime.of(2024, 1, 25, 17, 54);
         FULL_MOON_EPOCH_UTC = fullMoonDate.toEpochSecond(ZoneOffset.UTC);
         SECONDS_IN_DAY = (int) (HOURS_IN_DAY * MINUTES_IN_HOUR * SECONDS_IN_MINUTE);
     }
