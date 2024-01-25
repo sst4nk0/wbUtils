@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.utilities.repository;
+package wb.plugin.wbutils.frameworks.repository;
 
 import java.sql.ResultSet;
 import java.util.List;

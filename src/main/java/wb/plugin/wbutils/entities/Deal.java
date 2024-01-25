@@ -2,7 +2,7 @@ package wb.plugin.wbutils.entities;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import wb.plugin.wbutils.utilities.repository.Entity;
+import wb.plugin.wbutils.frameworks.repository.Entity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

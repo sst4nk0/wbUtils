@@ -4,7 +4,7 @@ import org.jetbrains.annotations.Nullable;
 import wb.plugin.wbutils.adapters.listeners.DealUpdateListener;
 import wb.plugin.wbutils.entities.Deal;
 import wb.plugin.wbutils.frameworks.DatabaseConnectionManager;
-import wb.plugin.wbutils.utilities.repository.AsyncRepositoryImpl;
+import wb.plugin.wbutils.frameworks.repository.AsyncRepositoryImpl;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package wb.plugin.wbutils.utilities.repository;
+package wb.plugin.wbutils.frameworks.repository;
 
 import java.util.Optional;
 
@@ -9,7 +9,6 @@ public interface Repository<T, Id> {
     Iterable<T> saveAll(Iterable<T> entities);
 
     Optional<T> findById(Id id);
-
 
     boolean existsById(Id id);
 
