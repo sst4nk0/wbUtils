@@ -10,6 +10,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -19,8 +21,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class NpcInteractionsCommand implements CommandExecutor {
 
-    private static final String PERMISSION_PREFIX = "wb.talkpresent.";
-    private static final String EFFECT_SLOWNESS = "minecraft:slowness";
     private final @NonNull JavaPlugin plugin;
 
     public NpcInteractionsCommand(final @NonNull JavaPlugin plugin) {
@@ -56,7 +56,7 @@ public class NpcInteractionsCommand implements CommandExecutor {
             openMerchant(playerName, "merchant_forest");
         } else {
             grantPermission(playerName, permission);
-            applyEffect(playerName, EFFECT_SLOWNESS, 14, 3);
+            applyEffect(player, PotionEffectType.SLOW, 14, 3);
             final @NonNull String npcName = "Купец: ";
             sendMessage(player, ChatColor.DARK_GREEN + npcName + ChatColor.GREEN + "Чего ты пришёл? Не видно, что я не могу сейчас говорить?");
             playSound(player, Sound.ENTITY_EVOKER_HURT, 1, 1);
@@ -99,7 +99,7 @@ public class NpcInteractionsCommand implements CommandExecutor {
             openMerchant(playerName, "merchant_tool_mineshaft");
         } else {
             grantPermission(playerName, permission);
-            applyEffect(playerName, EFFECT_SLOWNESS, 14, 3);
+            applyEffect(player, PotionEffectType.SLOW, 14, 3);
             sendMessage(player, ChatColor.DARK_GREEN + "Главный шахтёр: " + ChatColor.GREEN + "В здравѥ естѥ, не видѣти тобє тутєм раншэ. Полагаю ты будетъ дѣлати для мнѥ работу что я даяти тобє..");
             playSound(player, Sound.ENTITY_EVOKER_HURT, 1, 1);
             // ---
@@ -145,11 +145,11 @@ public class NpcInteractionsCommand implements CommandExecutor {
      */
     private void handleSeakipparIdle(final @NonNull Player player) {
         final String playerName = player.getName();
-        if (player.hasPermission(PERMISSION_PREFIX + "wb.talkpresent.5")) {
+        if (player.hasPermission("wb.talkpresent.5")) {
             openMerchant(playerName, "seaskipper");
         } else {
             grantPermission(playerName, "wb.talkpresent.5");
-            applyEffect(playerName, EFFECT_SLOWNESS, 14, 3);
+            applyEffect(player, PotionEffectType.SLOW, 14, 3);
             final @NonNull String npcName = "Капитан: ";
             sendMessage(player, ChatColor.DARK_GREEN + npcName + ChatColor.GREEN + "Привет дружище! Привет мой друг! Рад тебя видеть, хоть и не видел тебя раньше.");
             // ---
@@ -511,11 +511,10 @@ public class NpcInteractionsCommand implements CommandExecutor {
         Bukkit.dispatchCommand(console, "lp user " + playerName + " permission set " + permission);
     }
 
-    private void applyEffect(final @NonNull String playerName, final @NonNull String effect,
+    private void applyEffect(final @NonNull Player player, final @NonNull PotionEffectType effect,
                              final @IntRange(from = 0, to = 1000000) int duration,
                              final @IntRange(from = 0, to = 255) int amplifier) {
-        ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-        Bukkit.dispatchCommand(console, "effect give " + playerName + ' ' + effect + ' ' + duration + ' ' + amplifier + " true");
+        player.addPotionEffect(new PotionEffect(effect, duration, amplifier, false, false));
     }
 
     private void sendMessage(final @NonNull Player player, @NonNull String message) {
