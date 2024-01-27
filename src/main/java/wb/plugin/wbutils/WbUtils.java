@@ -1,13 +1,11 @@
 package wb.plugin.wbutils;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import wb.plugin.wbutils.adapters.commands.ClearChatCommand;
 import wb.plugin.wbutils.adapters.commands.PaydayCommand;
-import wb.plugin.wbutils.adapters.commands.DoSpecialAction2Command;
+import wb.plugin.wbutils.adapters.commands.NpcInteractionsCommand;
 import wb.plugin.wbutils.adapters.commands.MiningActionCommand;
 import wb.plugin.wbutils.adapters.commands.WoodcuttingActionCommand;
 import wb.plugin.wbutils.adapters.commands.PurchasePaymentCommand;
@@ -63,7 +61,7 @@ public final class WbUtils extends JavaPlugin {
                 new DealManagementUseCase(dealsRepository), new NotificationService())));
         registerCommand("clearchat", new ClearChatCommand(new ClearChatUseCase()));
         registerCommand("dospecialaction", new WoodcuttingActionCommand());
-        registerCommand("dospecialaction2", new DoSpecialAction2Command(this));
+        registerCommand("dospecialaction2", new NpcInteractionsCommand(this));
         registerCommand("dospecialaction3", new MiningActionCommand(new MiningActionUseCase()));
         registerCommand("dealtakeitems", new SystemTakeItemsCommand(dealsRepository));
         registerCommand("purchasepayment", new PurchasePaymentCommand());
