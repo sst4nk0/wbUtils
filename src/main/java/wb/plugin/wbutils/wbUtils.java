@@ -59,7 +59,6 @@ public final class wbUtils extends JavaPlugin implements Listener {
         SqlActions sqlactions = new SqlActions();
         sqlactions.saveDealsInfo();
 
-
         /* вырезанный функционал
         FileDealsData.save();
         saveConfig(); */
